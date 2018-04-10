@@ -1,0 +1,68 @@
+.btn {
+  margin: 2px; }
+
+/*input[type='text'], input[type='number'], button {
+    border-radius: 0px;
+}
+
+button.tab {
+    margin-left: 5px;
+    border-width: 0px 0px 1px 0px;
+    border-color: #666;
+    transition: background ease 0.2s;
+    :focus {
+        background-color: #F1F1F1;
+    }
+}
+
+
+select {
+    border-radius: 0px;
+}
+
+option:focus {
+    outline-color: transparent;
+}
+
+.multi-select {
+    >div {
+        //width: 100%;
+        border: 1px solid $grey;
+        >input{
+            width: 85%;
+            border: 0px;
+            margin-bottom: 0px;
+            :focus {
+                border: 0px;
+            }
+        }
+        >button {
+            width: 15%;
+            padding: 0px;
+            margin-bottom: 0px;
+            border: 0px;
+        }
+    }
+    ul {
+        width: 100%;
+        border: 1px solid $grey;
+        list-style: none;
+        >li>label {
+            font-weight: normal;
+        }
+    }
+}
+
+.range-input {
+    input {
+        width: 75%;
+        margin-bottom: 5%;
+    }
+    label {
+        display: block;
+        //width: 25%;
+        font-size: 1.3rem;
+        font-weight: lighter;
+        margin-bottom: 0%;
+    }
+}*/

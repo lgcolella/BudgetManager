@@ -1,0 +1,9 @@
+{
+    "name": "budget-manager",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/ken-korn/budget-manager.git",
+    "author": "Ken Korn",
+    "license": "MIT"
+}
+  
