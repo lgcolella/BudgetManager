@@ -2,8 +2,8 @@
   "name": "budget-manager",
   "version": "1.0.0",
   "main": "src/index.js",
-  "repository": "https://github.com/ken-korn/budget-manager.git",
-  "author": "Ken Korn",
+  "repository": "https://github.com/lgcolella/BudgetManager.git",
+  "author": "lgcolella",
   "license": "MIT",
   "dependencies": {
     "css-loader": "^0.28.11",
@@ -13,6 +13,7 @@
     "style-loader": "^0.20.3"
   },
   "scripts": {
+    "postinstall": "cd ./src && npm i sqlite3 && cd ../ && node ./node_modules/electron-rebuild/lib/src/cli.js -m ./src/node_modules/sqlite3git status",
     "dev": "node ./node_modules/concurrently/src/main.js \"npm run dev:main\" \"npm run dev:app\"",
     "dev:full": "node ./node_modules/concurrently/src/main.js \"npm run dev\" \"npm run sass:watch\"",
     "dev:rebuild": "npm run build && npm run dev",
@@ -41,6 +42,7 @@
     "babel-preset-react": "^6.24.1",
     "concurrently": "^3.5.1",
     "electron-packager": "^12.0.0",
+    "electron-rebuild": "^1.7.3",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.10.0",

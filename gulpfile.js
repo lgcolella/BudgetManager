@@ -18,6 +18,11 @@ gulp.task('json', function(){
     gulp.src(['src/package.json']).pipe( gulp.dest(outputPath) );
 });
 
+/*NODE_MODULES*/
+gulp.task('node_modules', function(){
+    gulp.src(['src/node_modules/*']).pipe( gulp.dest(outputPath+'/node_modules') );
+});
+
 /*CSS*/
 
 /*gulp.task('vendor-css', function(){
@@ -50,5 +55,5 @@ gulp.task('clean:dist', function(){
     gulp.src('dist').pipe(clean());
 });
 
-gulp.task('assets', ['html','json']);
+gulp.task('assets', ['html','json','node_modules']);
 gulp.task('clean', ['clean:build','clean:dist']);

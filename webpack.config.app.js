@@ -37,6 +37,9 @@ module.exports = {
     plugins: [
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin()
-    ]
+    ],
+    externals: {
+        sqlite3: 'sqlite3'
+    }
 
 };
