@@ -4,6 +4,7 @@ const webpack = require('webpack');
 
 module.exports = {
 
+    target: 'electron-renderer',
     entry: {
         'app': path.resolve(__dirname, 'src/app/app.js'),
         'vendor': path.resolve(__dirname, 'src/app/vendor.js'),
@@ -37,6 +38,9 @@ module.exports = {
     plugins: [
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin()
-    ]
+    ],
+    externals: {
+        sqlite3: 'sqlite3'
+    }
 
 };

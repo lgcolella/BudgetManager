@@ -2,8 +2,8 @@
   "name": "budget-manager",
   "version": "1.0.0",
   "main": "src/index.js",
-  "repository": "https://github.com/ken-korn/budget-manager.git",
-  "author": "Ken Korn",
+  "repository": "https://github.com/lgcolella/BudgetManager.git",
+  "author": "lgcolella",
   "license": "MIT",
   "dependencies": {
     "css-loader": "^0.28.11",

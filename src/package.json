@@ -1,9 +1,12 @@
 {
-    "name": "budget-manager",
-    "version": "1.0.0",
-    "main": "index.js",
-    "repository": "https://github.com/ken-korn/budget-manager.git",
-    "author": "Ken Korn",
-    "license": "MIT"
+  "name": "budget-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
-  

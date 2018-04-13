@@ -1,10 +1,11 @@
 import React from 'react';
 import {SideNav, SideNavButton} from './components/sideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
-/*import MultiSelect from './components/multiSelect.jsx';
-import RangeInput from './components/rangeInput.jsx';*/
+import Storage from '../storage.js';
 
-function getData(){
+var defaultStorage = new Storage();
+
+/*function getData(){
     return [
         { wallet: 'Casa', activity: 'Ricarica Cell', amount: 40,date:'2016-05-18' , fromDate: '2016-05-18',toDate: '2018-12-05' , period: '2 anni'},
         { wallet: 'Casa', activity: 'Gas', amount: -270,date:'2017-07-07' , fromDate: '2017-05-18', toDate: '2018-12-05' , period: '1 anni'},
@@ -14,7 +15,7 @@ function getData(){
         { wallet: 'Hobby', activity: 'Vittoria concorso', amount: +107, date:'2018-01-14' , fromDate: '',toDate: '' , period: ''},
 
     ];
-};
+};*/
 
 var Utils = {
 
@@ -81,7 +82,7 @@ export default class Home extends React.Component {
 
     constructor(props){
         super(props);
-        var data = getData();
+        var data = defaultStorage.getData();
         this.state = {
             'data': data,
             'dataToRender': data
@@ -110,10 +111,12 @@ export default class Home extends React.Component {
         });*/
 
         if (result){
+            var newData = this.state.data.concat(newActivity);
             this.setState({
-                data: this.state.data.concat(newActivity),
-                dataToRender: this.state.data.concat(newActivity)
+                data: newData,
+                dataToRender: newData
             });
+            defaultStorage.setData(newData);
         } else {
             return result;
         };
@@ -203,11 +206,11 @@ export default class Home extends React.Component {
         if (typeof dataToRender[indexInDataToRender] !== 'undefined'){
             var a = dataToRender.splice(indexInDataToRender, 1);
         }
-        console.log(data, indexInData);
         this.setState({
             data,
             dataToRender
         });
+        defaultStorage.setData(data);
     }
 
     render() {
