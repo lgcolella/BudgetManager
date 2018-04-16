@@ -57,7 +57,7 @@ var Utils = {
         for (let object in array){
             var result = true;
             for (let property  in searchedObj){
-                var cond = searchedObj.hasOwnProperty(property) && searchedObj[property] === array[object][property] /*&& JSON.stringify(array[object]).length === JSON.stringify(searchedObj).length*/;
+                var cond = searchedObj.hasOwnProperty(property) && searchedObj[property] === array[object][property];
                 if (cond===true){
                     var index = Number(object);
                 } else {
@@ -87,9 +87,18 @@ export default class Home extends React.Component {
             'data': data,
             'dataToRender': data
         };
-        this.filterData = this.filterData.bind(this);
+        this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
+        this.filterData = this.filterData.bind(this);
         this.deleteActivity = this.deleteActivity.bind(this);
+    }
+
+    importData(data){
+        this.setState({
+            data: data,
+            dataToRender: data
+        });
+        defaultStorage.setData(data);
     }
 
     addActivity(newActivity){
@@ -99,17 +108,7 @@ export default class Home extends React.Component {
         if (typeof this.state.data[indexInData] !== 'undefined'){
             result = false;
         }
-        /*this.state.data.forEach(function(object){
-            var wallets = object.wallet === newActivity.wallet;
-            var activities = object.activity === newActivity.activity;
-            var amount = object.amount === newActivity.amount;
-            var date = object.date === newActivity.date;
-
-            if (wallets && activities && amount && date){
-                result = false;
-            }
-        });*/
-
+        
         if (result){
             var newData = this.state.data.concat(newActivity);
             this.setState({
@@ -124,8 +123,9 @@ export default class Home extends React.Component {
     }
 
     filterData(filters){
-        /*console.table(filters);
-        console.table(this.state.data);*/
+        
+        //console.table(filters);
+        //console.table(this.state.data);
 
         function check(value, objectType){
             var result = true;
@@ -216,7 +216,6 @@ export default class Home extends React.Component {
     render() {
 
         var data = this.state.data;
-        //console.table(data);
         var dataToRender = this.state.dataToRender;
 
         var dataInfo = {
@@ -252,7 +251,7 @@ export default class Home extends React.Component {
 
         return (
             <div>
-                <SideNav wallets={dataInfo.wallets} activity={dataInfo.activity} onAddActivity={this.addActivity}></SideNav>
+                <SideNav allData={this.state.data} wallets={dataInfo.wallets} activity={dataInfo.activity} onAddActivity={this.addActivity} onImportData={this.importData}></SideNav>
                 <SideNavButton></SideNavButton>
                 <div className='row'>
                     <div className='col s12'>
