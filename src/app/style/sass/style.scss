@@ -8,68 +8,27 @@ $grey: #D1D1D1;
     margin: 2px;
 }
 
-/*input[type='text'], input[type='number'], button {
-    border-radius: 0px;
-}
 
-button.tab {
-    margin-left: 5px;
-    border-width: 0px 0px 1px 0px;
-    border-color: #666;
-    transition: background ease 0.2s;
-    :focus {
-        background-color: #F1F1F1;
+#modal-calculator {
+
+    width: 55%;
+    max-height: 80%;
+
+    button.btn-large, input[type="text"], p {
+        font-size: 1.8em;
     }
-}
 
+    p {
+        margin: 0px;
+    }
 
-select {
-    border-radius: 0px;
-}
+    button {
 
-option:focus {
-    outline-color: transparent;
-}
-
-.multi-select {
-    >div {
-        //width: 100%;
-        border: 1px solid $grey;
-        >input{
-            width: 85%;
-            border: 0px;
-            margin-bottom: 0px;
-            :focus {
-                border: 0px;
-            }
+        &.btn {
+            width: 100%;
+            box-shadow: none;
         }
-        >button {
-            width: 15%;
-            padding: 0px;
-            margin-bottom: 0px;
-            border: 0px;
-        }
-    }
-    ul {
-        width: 100%;
-        border: 1px solid $grey;
-        list-style: none;
-        >li>label {
-            font-weight: normal;
-        }
-    }
-}
 
-.range-input {
-    input {
-        width: 75%;
-        margin-bottom: 5%;
     }
-    label {
-        display: block;
-        //width: 25%;
-        font-size: 1.3rem;
-        font-weight: lighter;
-        margin-bottom: 0%;
-    }
-}*/
+
+}
