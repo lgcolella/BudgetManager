@@ -216,15 +216,24 @@ export default class Home extends React.Component {
 
     sortColumns(event, dataToSort){
 
-        (function toggleIcon(){
+        const aLessThanB = (function toggleIconAndSetTypeOfSort(){
             var el = event.target;
             var elSimilars = document.querySelectorAll('#table-overview thead th i');
+            if ( el.innerText === 'sort' || el.innerText === 'arrow_drop_up' ){
+                var newIcon = 'arrow_drop_down';
+                var aMinusB = -1;
+            } else if ( el.innerText === 'arrow_drop_down' ){
+                var newIcon = 'arrow_drop_up';
+                var aMinusB = 1;
+            };
             Array.from(elSimilars).forEach(function(i, index){
-                i.innerText = 'sort';
+                if (i === el){
+                    el.innerText = newIcon;
+                } else {
+                    i.innerText = 'sort';
+                }
             });
-            if ( el.innerText === 'sort' ){ var newIcon = 'arrow_drop_down' }
-            else { var newIcon = 'sort' };
-            el.innerText = newIcon;
+            return aMinusB;
         })();
 
         var columnIndex = (() => {
@@ -255,8 +264,10 @@ export default class Home extends React.Component {
         })(columnIndex);
 
         var sortedValues = valuesToSort.sort(function(a, b){
-            if (a < b){ return -1 }
-            else if (a > b){ return 1 }
+            a = (typeof a === 'string' ? a.toLowerCase() : a);
+            b = (typeof a === 'string' ? b.toLowerCase() : b);
+            if (a < b){ return aLessThanB }
+            else if (a > b){ return -aLessThanB }
             else { return 0 };
         });
 

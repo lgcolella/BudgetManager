@@ -1,9 +1,11 @@
-$grey-blue: #3c686f;
+/*$grey-blue: #3c686f;
 $yellow: #eebb1b;
 $azure: #C5E2E5;
 $black: #666;
-$grey: #D1D1D1;
+$grey: #D1D1D1;*/
+$black: #343434;
 $green: #26a69a;
+$red: #F44336;
 
 table {
 
@@ -15,7 +17,7 @@ table {
         i:hover {
             color: $green;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: color .25s ease;
         }
     }
 
@@ -25,6 +27,17 @@ table {
     margin: 2px;
 }
 
+.btn-flat {
+    transition: background-color .25s ease;
+    &:hover {
+        background-color: $green;
+        color: $black;
+    }
+    &.modal-close:hover {
+        background-color: $red;
+        color: $black;
+    }
+}
 
 #modal-calculator {
 
@@ -44,6 +57,7 @@ table {
         &.btn {
             width: 100%;
             box-shadow: none;
+            padding: 0px;
         }
 
     }
