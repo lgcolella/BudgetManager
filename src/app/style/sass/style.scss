@@ -3,6 +3,23 @@ $yellow: #eebb1b;
 $azure: #C5E2E5;
 $black: #666;
 $grey: #D1D1D1;
+$green: #26a69a;
+
+table {
+
+    th {
+        font-size: 1.2em;
+        * {
+            float: right;
+        }
+        i:hover {
+            color: $green;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+    }
+
+}
 
 .btn {
     margin: 2px;

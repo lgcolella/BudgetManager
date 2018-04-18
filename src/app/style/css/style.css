@@ -1,3 +1,12 @@
+table th {
+  font-size: 1.2em; }
+  table th * {
+    float: right; }
+  table th i:hover {
+    color: #26a69a;
+    cursor: pointer;
+    transition: color 0.2s; }
+
 .btn {
   margin: 2px; }
 

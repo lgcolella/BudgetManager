@@ -91,6 +91,7 @@ export default class Home extends React.Component {
         this.addActivity = this.addActivity.bind(this);
         this.filterData = this.filterData.bind(this);
         this.deleteActivity = this.deleteActivity.bind(this);
+        this.sortColumns = this.sortColumns.bind(this);
     }
 
     importData(data){
@@ -213,6 +214,68 @@ export default class Home extends React.Component {
         defaultStorage.setData(data);
     }
 
+    sortColumns(event, dataToSort){
+
+        (function toggleIcon(){
+            var el = event.target;
+            var elSimilars = document.querySelectorAll('#table-overview thead th i');
+            Array.from(elSimilars).forEach(function(i, index){
+                i.innerText = 'sort';
+            });
+            if ( el.innerText === 'sort' ){ var newIcon = 'arrow_drop_down' }
+            else { var newIcon = 'sort' };
+            el.innerText = newIcon;
+        })();
+
+        var columnIndex = (() => {
+            var el = event.target;
+            while (el.nodeName !== 'TH'){
+                el = el.parentNode;
+            };
+            var index = 0;
+            while (el.previousSibling !== null){
+                el = el.previousSibling;
+                index += 1;
+            }
+            return index;
+        })();
+        
+        var valuesToSort = ((columnIndex) => {
+            var values = [];
+            var tableRows = document.querySelectorAll('#table-overview>tbody>tr');
+            Array.from(tableRows).forEach(function(tr, index){
+                Array.from(tr.childNodes).forEach(function(td, index){
+                    if (index === columnIndex){
+                        var value = ( td.innerText.indexOf('€') !== -1 ? Number(td.innerText.replace('€', '')) : td.innerText );
+                        values.push(value);
+                    };
+                });
+            });
+            return values;
+        })(columnIndex);
+
+        var sortedValues = valuesToSort.sort(function(a, b){
+            if (a < b){ return -1 }
+            else if (a > b){ return 1 }
+            else { return 0 };
+        });
+
+        var sortedDataToRender = this.state.dataToRender.sort(function(obj1, obj2){
+
+            var prop1 = obj1[dataToSort];
+            var prop2 = obj2[dataToSort];
+            if ( sortedValues.indexOf(prop1) < sortedValues.indexOf(prop2) ){ return -1 }
+            else if ( sortedValues.indexOf(prop1) > sortedValues.indexOf(prop2) ){ return 1 }
+            else { return 0 };
+
+        });
+
+        this.setState({
+            dataToRender: sortedDataToRender
+        });
+
+    }
+
     render() {
 
         var data = this.state.data;
@@ -261,14 +324,14 @@ export default class Home extends React.Component {
                 <div className='divider'></div>
                 <div className='row'>
                     <div className='col s9'>
-                        <table className='highlight centered'>
+                        <table id='table-overview' className='highlight centered'>
                             <thead>
                             <tr>
                                 <th></th>
-                                <th>Portafoglio</th>
-                                <th>Attività</th>
-                                <th>Importo</th>
-                                <th>Data</th>
+                                <th>Portafoglio <i className='material-icons' onClick={(event) => this.sortColumns(event, 'wallet')}>sort</i></th>
+                                <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
+                                <th>Importo <i className='material-icons' onClick={(event) => this.sortColumns(event, 'amount')}>sort</i></th>
+                                <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
                                 {/*<th>Da</th>
                                 <th>A</th>*/}
                                 <th></th>
