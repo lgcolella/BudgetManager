@@ -12,6 +12,16 @@ table th {
     cursor: pointer;
     transition: color .25s ease; }
 
+table td i {
+  color: #343434;
+  margin: 0px 5px; }
+  table td i:hover {
+    color: #26a69a;
+    cursor: pointer;
+    transition: color .25s ease; }
+  table td i.delete:hover {
+    color: #F44336; }
+
 .btn {
   margin: 2px; }
 

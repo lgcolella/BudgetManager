@@ -21,6 +21,21 @@ table {
         }
     }
 
+    td {
+        i {
+            color: $black;
+            margin: 0px 5px;
+            &:hover {
+                color: $green;
+                cursor: pointer;
+                transition: color .25s ease;
+            }
+            &.delete:hover {
+                color: $red;
+            }
+        }
+    }
+
 }
 
 .btn {

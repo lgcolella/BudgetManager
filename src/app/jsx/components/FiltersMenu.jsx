@@ -95,7 +95,7 @@ export default class FiltersMenu extends React.Component {
 
 
     render(){
-
+        console.log(this.props);
         function getOptionsFromArray(array){
             return array.map(function(value){
                 return <option key={value}>{value}</option>

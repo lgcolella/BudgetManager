@@ -1,7 +1,8 @@
+import Storage from '../storage.js';
 import React from 'react';
 import {SideNav, SideNavButton} from './components/sideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
-import Storage from '../storage.js';
+import {EditActivity, EditActivityId} from './components/editActivity.jsx';
 
 var defaultStorage = new Storage();
 
@@ -89,6 +90,7 @@ export default class Home extends React.Component {
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
+        this.editActivity = this.editActivity.bind(this);
         this.filterData = this.filterData.bind(this);
         this.deleteActivity = this.deleteActivity.bind(this);
         this.sortColumns = this.sortColumns.bind(this);
@@ -121,6 +123,10 @@ export default class Home extends React.Component {
             return result;
         };
         
+    }
+
+    editActivity(currentActivity){
+        console.log(EditActivity.addActivity);
     }
 
     filterData(filters){
@@ -312,7 +318,10 @@ export default class Home extends React.Component {
                     <td>{object.date}</td>
                     {/*<td>{object.fromDate}</td>
                     <td>{object.toDate}</td>*/}
-                    <td><a href='#!'><i className='material-icons red-text' onClick={() => this.deleteActivity(object)}>delete</i></a></td>
+                    <td>
+                        <a href='#!'><i className='material-icons delete' onClick={() => this.deleteActivity(object)}>delete</i></a>
+                        <a href='#!'><i className='material-icons modal-trigger' data-target={EditActivityId}>edit</i></a>
+                    </td>
                 </tr>
             );
         });
@@ -356,6 +365,7 @@ export default class Home extends React.Component {
                     <div className='col s3'>
                         <FiltersMenu dataInfo={dataInfo} onChange={this.filterData}></FiltersMenu>
                     </div>
+                    <EditActivity allData={this.state.data} wallets={dataInfo.wallets} activity={dataInfo.activity} onAddActivity={this.addActivity} onImportData={this.importData}></EditActivity>
                 </div>
             </div>
         );
