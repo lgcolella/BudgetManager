@@ -1,9 +1,11 @@
 import Storage from '../storage.js';
+import Utils from './functions/utils.js';
 import React from 'react';
 import {SideNav, SideNavButton} from './components/sideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
-import {EditActivity, EditActivityId} from './components/editActivity.jsx';
+import EditActivity from './components/EditActivity.jsx';
 
+const editActivityModalId = 'edit-activity-modal';
 var defaultStorage = new Storage();
 
 /*function getData(){
@@ -18,67 +20,6 @@ var defaultStorage = new Storage();
     ];
 };*/
 
-var Utils = {
-
-    getAllValuesOfProperty: function(objectsList, property, distinct){
-        var result = [];
-        objectsList.forEach(function(object, index){
-            var value = object[property];
-            if ( distinct === true || result.indexOf(value) === -1 ){
-                result.push(value);
-            };
-        });
-        return result;
-    },
-
-    getSumfromArray: function(array){
-        var sum = 0;
-        array.forEach(function(value){
-            sum += Number(value);
-        });
-        return sum;
-    },
-
-    getMinAndMaxFromArray: function(array){
-        var min = 0;
-        var max = 0;
-        array.forEach(function(value){
-            value = Number(value);
-            min = Math.min(min, value);
-            max = Math.max(max, value);
-        });
-        return {
-            min,
-            max
-        };
-    },
-
-    getIndexOfObjInArray: function(searchedObj, array){
-
-        for (let object in array){
-            var result = true;
-            for (let property  in searchedObj){
-                var cond = searchedObj.hasOwnProperty(property) && searchedObj[property] === array[object][property];
-                if (cond===true){
-                    var index = Number(object);
-                } else {
-                    result = false;
-                }
-            }
-
-            if (result === true){
-                return index;
-            };
-        }
-
-        return -1;
-
-    }
-
-
-
-};
-
 export default class Home extends React.Component {
 
     constructor(props){
@@ -86,7 +27,8 @@ export default class Home extends React.Component {
         var data = defaultStorage.getData();
         this.state = {
             'data': data,
-            'dataToRender': data
+            'dataToRender': data,
+            'activityToEdit': undefined
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -106,28 +48,32 @@ export default class Home extends React.Component {
 
     addActivity(newActivity){
 
-        var result = true;
-        var indexInData = Utils.getIndexOfObjInArray(newActivity, this.state.data);
-        if (typeof this.state.data[indexInData] !== 'undefined'){
-            result = false;
-        }
+        var idList = Utils.getAllValuesOfProperty(this.state.data, 'id');
+        var id = Utils.generateId(idList);
         
-        if (result){
-            var newData = this.state.data.concat(newActivity);
-            this.setState({
-                data: newData,
-                dataToRender: newData
-            });
-            defaultStorage.setData(newData);
-        } else {
-            return result;
-        };
+        newActivity['id'] = id;
+        var newData = this.state.data.concat(newActivity);
+        this.setState({
+            data: newData,
+            dataToRender: newData
+        });
+        defaultStorage.setData(newData);
         
     }
 
-    editActivity(currentActivity){
-        console.log(EditActivity.addActivity);
-    }
+    editActivity(editedActivity){
+        
+        function mapCb(object){
+            return (editedActivity.id === object.id ? editedActivity : object);
+        };
+        var newData = this.state.data.map(mapCb);
+
+        this.setState({
+            data: newData,
+            dataToRender: this.state.data.map(mapCb),
+        });
+        defaultStorage.setData(newData);
+    };
 
     filterData(filters){
         
@@ -202,22 +148,18 @@ export default class Home extends React.Component {
     }
 
     deleteActivity(selectedActivity){
-        var data = this.state.data;
-        var dataToRender = this.state.dataToRender;
 
-        var indexInData = Utils.getIndexOfObjInArray(selectedActivity, data);
-        if (typeof data[indexInData] !== 'undefined'){
-            data.splice(indexInData, 1);
-        }
-        var indexInDataToRender = Utils.getIndexOfObjInArray(selectedActivity, dataToRender);
-        if (typeof dataToRender[indexInDataToRender] !== 'undefined'){
-            var a = dataToRender.splice(indexInDataToRender, 1);
-        }
+        function filterCb(object){
+            return ( selectedActivity.id === object.id ? false : true );
+        };
+
+        var newData = this.state.data.filter(filterCb);
         this.setState({
-            data,
-            dataToRender
+            data: newData,
+            dataToRender: this.state.dataToRender.filter(filterCb)
         });
-        defaultStorage.setData(data);
+
+        defaultStorage.setData(newData);
     }
 
     sortColumns(event, dataToSort){
@@ -294,7 +236,6 @@ export default class Home extends React.Component {
     }
 
     render() {
-
         var data = this.state.data;
         var dataToRender = this.state.dataToRender;
 
@@ -307,10 +248,10 @@ export default class Home extends React.Component {
         let tbodyHTML = dataToRender.map((object) => {
 
             var type = (Number(object.amount) > 0 ? <i className='material-icons green-text'>arrow_upward</i> : <i className='material-icons red-text'>arrow_downward</i> );
-            var reactKey = object.wallet + object.activity + object.amount.toString() + object.date;
         
             return (
-                <tr key={reactKey}>
+                <tr key={object.id}>
+                    <td>{object.id}</td>
                     <td>{type}</td>
                     <td>{object.wallet}</td>
                     <td>{object.activity}</td>
@@ -320,7 +261,8 @@ export default class Home extends React.Component {
                     <td>{object.toDate}</td>*/}
                     <td>
                         <a href='#!'><i className='material-icons delete' onClick={() => this.deleteActivity(object)}>delete</i></a>
-                        <a href='#!'><i className='material-icons modal-trigger' data-target={EditActivityId}>edit</i></a>
+                        <a href='#!'><i className='material-icons modal-trigger' data-target={editActivityModalId}
+                        onClick={() => {this.setState({activityToEdit: object})}}>edit</i></a>
                     </td>
                 </tr>
             );
@@ -347,6 +289,7 @@ export default class Home extends React.Component {
                         <table id='table-overview' className='highlight centered'>
                             <thead>
                             <tr>
+                                <th>ID</th>
                                 <th></th>
                                 <th>Portafoglio <i className='material-icons' onClick={(event) => this.sortColumns(event, 'wallet')}>sort</i></th>
                                 <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
@@ -365,7 +308,7 @@ export default class Home extends React.Component {
                     <div className='col s3'>
                         <FiltersMenu dataInfo={dataInfo} onChange={this.filterData}></FiltersMenu>
                     </div>
-                    <EditActivity allData={this.state.data} wallets={dataInfo.wallets} activity={dataInfo.activity} onAddActivity={this.addActivity} onImportData={this.importData}></EditActivity>
+                    <EditActivity id={editActivityModalId} data={dataInfo} activityToEdit={this.state.activityToEdit} onSubmit={this.editActivity} ></EditActivity>
                 </div>
             </div>
         );

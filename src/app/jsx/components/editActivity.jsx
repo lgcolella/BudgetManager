@@ -1,34 +1,27 @@
 import React from 'react';
 import ModalBox from '../wrappers/modalBox.jsx';
 
-const EditActivityId = 'edit-activity-form';
-
-function getOptionsFromArray(array){
-    return array.map(function(value){
-        return <option key={value}>{value}</option>
-    });
-}
-
-class EditActivity extends React.Component {
+export default class EditActivity extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
-            id: EditActivityId,
+            id: props.id,
             createNewWallet: false,
             submitError: false,
             errorText: ''
         };
         this.addActivity = this.addActivity.bind(this);
         this.handleWalletSelect = this.handleWalletSelect.bind(this);
-        this.destroyMaterializePlugin = this.destroyMaterializePlugin.bind(this);
+        this.prefillInputs = this.prefillInputs.bind(this);
     }
 
     addActivity(){
 
         var date = new Date(document.getElementById(this.state.id + '__date').value);
-        var date = date.getFullYear() + '-' + ('0' + date.getMonth()).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        var date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
         var activity = {
+            id: this.props.activityToEdit.id,
             wallet: document.getElementById(this.state.id + '__wallet').value,
             activity: document.getElementById(this.state.id + '__activity').value,
             amount: Number(document.getElementById(this.state.id + '__amount').value),
@@ -41,14 +34,7 @@ class EditActivity extends React.Component {
         var dateCond = typeof activity.date === 'string' && activity.date.slice(0,3) !== 'NaN' && activity.date.length >= 8;
 
         if (walletCond && activityCond && amountCond && dateCond){
-            this.setState({ submitError: false });
-            var result = this.props.onAdd(activity);
-            if (result === false){
-                this.setState({
-                    submitError: true,
-                    errorText: "Ci dispiace, ma non puoi inserire due record uguali."
-                });
-            };
+            this.props.onSubmit(activity);
         } else {
             this.setState({
                 submitError: true,
@@ -70,42 +56,72 @@ class EditActivity extends React.Component {
         };
     }
 
+    prefillInputs(){
+        var activityToEdit = this.props.activityToEdit;
+        if ( typeof activityToEdit !== 'undefined' ){
+            if ( typeof activityToEdit.wallet !== 'undefined' ){
+                var elem = document.getElementById(this.state.id + '__wallet').childNodes[0];
+                while (elem !== null){
+                    elem.defaultSelected = elem.value === activityToEdit.wallet;
+                    elem = elem.nextSibling;
+                }
+            };
+            if ( typeof activityToEdit.activity !== 'undefined' ){
+                document.getElementById(this.state.id + '__activity').value = activityToEdit.activity;
+            };
+            if ( typeof activityToEdit.amount !== 'undefined' ){
+                document.getElementById(this.state.id + '__amount').value = activityToEdit.amount;
+            };
+            if ( typeof activityToEdit.date !== 'undefined'){
+                document.getElementById(this.state.id + '__date').value = activityToEdit.date;
+            }
+        }
+    }
+
     componentDidMount(){
+
+        var elem = document.getElementById(this.state.id + '__activity');
+        var data = (() => {
+            var result = {};
+            this.props.data.activity.forEach((value) => {result[value] = null;});
+            return result;
+        })();
+        M.Autocomplete.init(elem, {
+            data
+        });
+
         var elem = document.getElementById(this.state.id + '__date');
         M.Datepicker.init(elem);
-
-        var elem = document.getElementById(this.state.id + '__wallet');
-        if (elem.tagName === 'SELECT'){
-            M.FormSelect.init(elem);
-        };
-
-        var elem = document.getElementById(this.state.id + '__activity');
-        var data = {};
-        this.props.activity.forEach(function(value){
-            data[value] = null;
-        });
-        M.Autocomplete.init(elem, {
-            data
-        });
     }
 
-    componentDidUpdate(){
-        /*var elem = document.getElementById(this.state.id + '__wallet');
-        if (elem.tagName === 'SELECT'){
-            M.FormSelect.init(elem);
+    componentDidUpdate(prevProps){
+        this.prefillInputs();
+
+        if (typeof prevProps.activity === 'undefined' && typeof this.props.activityToEdit.activity !== 'undefined' ||
+         this.props.activityToEdit.activity !== prevProps.activityToEdit.activity){
+            var elem = document.getElementById(this.state.id + '__activity');
+            var data = (() => {
+                var result = {};
+                this.props.data.activity.forEach((value) => {result[value] = null;});
+                return result;
+            })();
+            M.Autocomplete.getInstance(elem).updateData(data);
         };
 
-        var elem = document.getElementById(this.state.id + '__activity');
-        var data = {};
-        this.props.activity.forEach(function(value){
-            data[value] = null;
-        });
-        M.Autocomplete.init(elem, {
-            data
-        });*/
-
+        if (typeof prevProps.wallet === 'undefined' && typeof this.props.activityToEdit.wallet !== 'undefined' || 
+        this.props.activityToEdit.wallet !== prevProps.activityToEdit.wallet){
+            var elem = document.getElementById(this.state.id + '__wallet');
+            if (elem.tagName === 'SELECT'){
+                if ( typeof M.FormSelect.getInstance(elem) !== 'undefined' ){
+                    M.FormSelect.getInstance(elem).destroy();
+                }
+                M.FormSelect.init(elem);
+            };
+         }
+        
+        M.updateTextFields();
     }
-    
+
     render(){
 
         /*Choose right wallet input*/
@@ -114,14 +130,21 @@ class EditActivity extends React.Component {
             var walletInput = ( <input type='text' id={this.state.id + '__wallet'}></input> );
             var buttonText = 'SCEGLI';
         } else {
-            var walletInput = (
-                <select id={this.state.id + '__wallet'}>
-                    {getOptionsFromArray(this.props.wallets)}
-                </select>
-            );
+            var walletInput = (() => {
+                if (typeof this.props.activityToEdit !== 'undefined'){
+                    return (
+                        <select id={this.state.id + '__wallet'}>
+                            {this.props.data.wallets.map((value) => {
+                                return <option key={value}>{value}</option>;
+                            })}
+                        </select>
+                    )
+                };
+            })();
             var buttonText = 'NUOVO';
         };
         /*!Choose right wallet input*/
+        
 
         /*Error box*/
         if (this.state.submitError === true){
@@ -131,9 +154,8 @@ class EditActivity extends React.Component {
             var errorBoxStyle = {display: 'none'};
         }
         /*!Error box*/
-
         return(
-            <ModalBox id={EditActivityId}>
+            <ModalBox id={this.state.id}>
                 <div>
                     <form>
                         <div>
@@ -180,7 +202,7 @@ class EditActivity extends React.Component {
                     </div>
                     <div className="modal-footer">
                         <a href="#!" className="modal-action modal-close waves-effect waves-red btn-flat">Chiudi</a>
-                        <a href="#!" className="modal-action waves-effect waves-green btn-flat" onClick={this.addActivity}>OK</a>
+                        <a href="#!" className="modal-action modal-close waves-effect waves-green btn-flat" onClick={this.addActivity}>OK</a>
                     </div>
                 </div>
             </ModalBox>
@@ -188,10 +210,3 @@ class EditActivity extends React.Component {
     }
 
 };
-
-
-
-module.exports = {
-    EditActivity,
-    EditActivityId
-}

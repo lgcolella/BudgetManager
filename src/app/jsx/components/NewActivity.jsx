@@ -24,7 +24,7 @@ export default class NewActivity extends React.Component {
     addActivity(){
 
         var date = new Date(document.getElementById(this.state.id + '__date').value);
-        var date = date.getFullYear() + '-' + ('0' + date.getMonth()).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        var date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
         var activity = {
             wallet: document.getElementById(this.state.id + '__wallet').value,
             activity: document.getElementById(this.state.id + '__activity').value,
