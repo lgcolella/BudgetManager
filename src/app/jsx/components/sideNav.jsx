@@ -1,7 +1,8 @@
 const {dialog} = require('electron').remote;
 import fs from 'fs';
 import React from 'react';
-import NewActivity from './NewActivity.jsx';
+//import NewActivity from './NewActivity.jsx';
+import EditActivity from './EditActivity.jsx';
 import Calculator from './Calculator.jsx';
 import ModalBox from '../wrappers/modalBox.jsx';
 const sideNavId = 'slide-out';
@@ -93,9 +94,15 @@ class SideNav extends React.Component {
                 <li><a className="subheader">Passa a</a></li>
                 <li><a href={'#'+modalCalculatorId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className='material-icons'>exposure</i>Calcolatrice</a></li>
             </ul>
-            <ModalBox id={modalNewActivityId}>
+            {/*<ModalBox id={modalNewActivityId}>
                 <NewActivity wallets={this.props.wallets} activity={this.props.activity} onAdd={this.props.onAddActivity}></NewActivity>
-            </ModalBox>
+            </ModalBox>*/}
+            <EditActivity
+                id={modalNewActivityId}
+                wallets={this.props.wallets}
+                activity={this.props.activity}
+                onSubmit={this.props.onAddActivity}
+            ></EditActivity>
             <ModalBox id={modalCalculatorId}>
                 <Calculator></Calculator>
             </ModalBox>

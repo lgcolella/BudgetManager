@@ -14,14 +14,16 @@ export default class EditActivity extends React.Component {
         this.addActivity = this.addActivity.bind(this);
         this.handleWalletSelect = this.handleWalletSelect.bind(this);
         this.prefillInputs = this.prefillInputs.bind(this);
+        this.clearInputs = this.clearInputs.bind(this);
     }
 
     addActivity(){
 
         var date = new Date(document.getElementById(this.state.id + '__date').value);
         var date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        var id = ( typeof this.props.activityToEdit !== 'undefined' ? this.props.activityToEdit.id : undefined);
         var activity = {
-            id: this.props.activityToEdit.id,
+            id,
             wallet: document.getElementById(this.state.id + '__wallet').value,
             activity: document.getElementById(this.state.id + '__activity').value,
             amount: Number(document.getElementById(this.state.id + '__amount').value),
@@ -35,12 +37,22 @@ export default class EditActivity extends React.Component {
 
         if (walletCond && activityCond && amountCond && dateCond){
             this.props.onSubmit(activity);
+            M.Modal.getInstance(document.getElementById(this.state.id)).close();
         } else {
             this.setState({
                 submitError: true,
                 errorText: "Errore nell'inserimento dei dati. Accertati che siano stati compilati correttamente tutti i campi."
             });
         };
+    }
+
+    clearInputs(){
+        document.getElementById(this.state.id + '__activity').value = "";
+        document.getElementById(this.state.id + '__amount').value = "";
+        document.getElementById(this.state.id + '__date').value = "";
+        this.setState({
+            submitError: false
+        });
     }
 
     handleWalletSelect(){
@@ -83,7 +95,7 @@ export default class EditActivity extends React.Component {
         var elem = document.getElementById(this.state.id + '__activity');
         var data = (() => {
             var result = {};
-            this.props.data.activity.forEach((value) => {result[value] = null;});
+            this.props.activity.forEach((value) => {result[value] = null;});
             return result;
         })();
         M.Autocomplete.init(elem, {
@@ -95,31 +107,30 @@ export default class EditActivity extends React.Component {
     }
 
     componentDidUpdate(prevProps){
-        this.prefillInputs();
 
-        if (typeof prevProps.activity === 'undefined' && typeof this.props.activityToEdit.activity !== 'undefined' ||
-         this.props.activityToEdit.activity !== prevProps.activityToEdit.activity){
-            var elem = document.getElementById(this.state.id + '__activity');
-            var data = (() => {
-                var result = {};
-                this.props.data.activity.forEach((value) => {result[value] = null;});
-                return result;
-            })();
-            M.Autocomplete.getInstance(elem).updateData(data);
+        if (typeof this.props.activityToEdit !== 'undefined'){
+            this.prefillInputs();
         };
 
-        if (typeof prevProps.wallet === 'undefined' && typeof this.props.activityToEdit.wallet !== 'undefined' || 
-        this.props.activityToEdit.wallet !== prevProps.activityToEdit.wallet){
-            var elem = document.getElementById(this.state.id + '__wallet');
-            if (elem.tagName === 'SELECT'){
-                if ( typeof M.FormSelect.getInstance(elem) !== 'undefined' ){
-                    M.FormSelect.getInstance(elem).destroy();
-                }
-                M.FormSelect.init(elem);
-            };
-         }
+        var elem = document.getElementById(this.state.id + '__activity');
+        var data = (() => {
+            var result = {};
+            this.props.activity.forEach((value) => {result[value] = null;});
+            return result;
+        })();
+        M.Autocomplete.getInstance(elem).updateData(data);
+
+        var elem = document.getElementById(this.state.id + '__wallet');
+        if (elem.tagName === 'SELECT'){
+            if ( typeof M.FormSelect.getInstance(elem) !== 'undefined' ){
+                M.FormSelect.getInstance(elem).destroy();
+            }
+            M.FormSelect.init(elem);
+        };
         
-        M.updateTextFields();
+        if (typeof this.props.activityToEdit !== 'undefined'){
+            M.updateTextFields();
+        };
     }
 
     render(){
@@ -131,15 +142,13 @@ export default class EditActivity extends React.Component {
             var buttonText = 'SCEGLI';
         } else {
             var walletInput = (() => {
-                if (typeof this.props.activityToEdit !== 'undefined'){
-                    return (
-                        <select id={this.state.id + '__wallet'}>
-                            {this.props.data.wallets.map((value) => {
-                                return <option key={value}>{value}</option>;
-                            })}
-                        </select>
-                    )
-                };
+                return (
+                    <select id={this.state.id + '__wallet'}>
+                        {this.props.wallets.map((value) => {
+                            return <option key={value}>{value}</option>;
+                        })}
+                    </select>
+                );
             })();
             var buttonText = 'NUOVO';
         };
@@ -201,8 +210,9 @@ export default class EditActivity extends React.Component {
                         </div>
                     </div>
                     <div className="modal-footer">
+                        <a href="#!" className="modal-action waves-effect waves-red btn-flat" onClick={this.clearInputs}>Resetta</a>
                         <a href="#!" className="modal-action modal-close waves-effect waves-red btn-flat">Chiudi</a>
-                        <a href="#!" className="modal-action modal-close waves-effect waves-green btn-flat" onClick={this.addActivity}>OK</a>
+                        <a href="#!" className="modal-action waves-effect waves-green btn-flat" onClick={this.addActivity}>OK</a>
                     </div>
                 </div>
             </ModalBox>

@@ -271,7 +271,7 @@ export default class Home extends React.Component {
         function getBalance(){
             var amounts = Utils.getAllValuesOfProperty(dataToRender, 'amount', true);
             var sum = Utils.getSumfromArray(amounts);
-            return sum.toString();
+            return sum.toFixed(2).toString();
         }; 
 
         return (
@@ -308,7 +308,13 @@ export default class Home extends React.Component {
                     <div className='col s3'>
                         <FiltersMenu dataInfo={dataInfo} onChange={this.filterData}></FiltersMenu>
                     </div>
-                    <EditActivity id={editActivityModalId} data={dataInfo} activityToEdit={this.state.activityToEdit} onSubmit={this.editActivity} ></EditActivity>
+                    <EditActivity
+                        id={editActivityModalId}
+                        wallets={dataInfo.wallets}
+                        activity={dataInfo.activity}
+                        activityToEdit={this.state.activityToEdit}
+                        onSubmit={this.editActivity}
+                    ></EditActivity>
                 </div>
             </div>
         );
