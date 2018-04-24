@@ -4,6 +4,7 @@ import React from 'react';
 import {SideNav, SideNavButton} from './components/sideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
 import EditActivity from './components/EditActivity.jsx';
+import { throttle } from 'rxjs/operator/throttle';
 
 const editActivityModalId = 'edit-activity-modal';
 var defaultStorage = new Storage();
@@ -39,6 +40,7 @@ export default class Home extends React.Component {
         this.addFilters = this.addFilters.bind(this);
         this.filterData = this.filterData.bind(this);
         this.sortColumns = this.sortColumns.bind(this);
+        this.checkActivity = this.checkActivity.bind(this);
     }
 
     importData(data){
@@ -271,6 +273,30 @@ export default class Home extends React.Component {
 
     }
 
+    checkActivity(event){
+        var data = this.state.data;
+        var inputValue = event.target.value;
+
+        if (inputValue === 'all'){
+            var data = data.map((activity) => {
+                activity['selected'] = event.target.checked;
+                return activity;
+            });
+        } else {
+            var id = Number(inputValue);
+            var data = data.map((activity) => {
+                if (activity.id === id){
+                    activity['selected'] = event.target.checked;
+                };
+                return activity;
+            });
+        };
+        
+        this.setState({
+            data
+        });
+    }
+
     render() {
         var data = this.state.data;
         var dataToRender = this.filterData();
@@ -284,10 +310,16 @@ export default class Home extends React.Component {
         let tbodyHTML = dataToRender.map((object) => {
 
             var type = (Number(object.amount) > 0 ? <i className='material-icons green-text'>arrow_upward</i> : <i className='material-icons red-text'>arrow_downward</i> );
-        
+            var selected = (typeof object.selected === 'undefined' ? false : object.selected );
+            
             return (
                 <tr key={object.id}>
-                    <td>{object.id}</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value={object.id} checked={selected} onChange={(event) => this.checkActivity(event)}></input>
+                            <span></span>
+                        </label>
+                    </td>
                     <td>{type}</td>
                     <td>{object.wallet}</td>
                     <td>{object.activity}</td>
@@ -305,7 +337,10 @@ export default class Home extends React.Component {
         });
         
         function getBalance(){
-            var amounts = Utils.getAllValuesOfProperty(dataToRender, 'amount', true);
+            var selectedDataToRender = dataToRender.filter(function(activity){
+                return activity['selected'];
+            });
+            var amounts = Utils.getAllValuesOfProperty(selectedDataToRender, 'amount', true);
             var sum = Utils.getSumfromArray(amounts);
             return sum.toFixed(2).toString();
         }; 
@@ -330,7 +365,12 @@ export default class Home extends React.Component {
                         <table id='table-overview' className='highlight centered'>
                             <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" value={'all'} onClick={(event) => this.checkActivity(event)}></input>
+                                        <span></span>
+                                    </label>
+                                </th>
                                 <th></th>
                                 <th>Portafoglio <i className='material-icons' onClick={(event) => this.sortColumns(event, 'wallet')}>sort</i></th>
                                 <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
