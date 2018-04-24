@@ -103,7 +103,14 @@ export default class EditActivity extends React.Component {
         });
 
         var elem = document.getElementById(this.state.id + '__date');
-        M.Datepicker.init(elem);
+        M.Datepicker.init(elem, {
+            format: 'yyyy-mm-dd',
+            showClearBtn: true,
+            i18n: {
+                'cancel': 'Cancella',
+                'clear': 'Pulisci'
+            },
+        });
     }
 
     componentDidUpdate(prevProps){

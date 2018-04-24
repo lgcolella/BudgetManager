@@ -26,15 +26,18 @@ export default class Home extends React.Component {
         super(props);
         var data = defaultStorage.getData();
         this.state = {
+            'id': 'homepage',
             'data': data,
             'dataToRender': data,
-            'activityToEdit': undefined
+            'activityToEdit': undefined,
+            'filters': undefined
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
         this.editActivity = this.editActivity.bind(this);
-        this.filterData = this.filterData.bind(this);
         this.deleteActivity = this.deleteActivity.bind(this);
+        this.addFilters = this.addFilters.bind(this);
+        this.filterData = this.filterData.bind(this);
         this.sortColumns = this.sortColumns.bind(this);
     }
 
@@ -73,10 +76,48 @@ export default class Home extends React.Component {
             dataToRender: this.state.data.map(mapCb),
         });
         defaultStorage.setData(newData);
-    };
+    }
 
-    filterData(filters){
+    deleteActivity(selectedActivity){
+
+        function filterCb(object){
+            return ( selectedActivity.id === object.id ? false : true );
+        };
+
+        var newData = this.state.data.filter(filterCb);
+        this.setState({
+            data: newData,
+            dataToRender: this.state.dataToRender.filter(filterCb)
+        });
+
+        defaultStorage.setData(newData);
+    }
+
+    addFilters(filters, event){
+
+
+        if (filters === 'searchedValue'){
+            var filters = (typeof this.state.filters === 'undefined' ? {} : this.state.filters);
+            filters['searchedValue'] = event.target.value;
+        } else {
+            var oldFilters = (typeof this.state.filters === 'undefined' ? {} : this.state.filters);
+            if (oldFilters.hasOwnProperty('searchedValue')){
+                filters['searchedValue'] = oldFilters['searchedValue'];
+            }
+        }
         
+        this.setState({
+            filters
+        });
+    }
+
+    filterData(){
+        
+        if (typeof this.state.filters === 'undefined'){
+            return this.state.dataToRender;
+        } else {
+            var filters = this.state.filters;
+        }
         //console.table(filters);
         //console.table(this.state.data);
 
@@ -137,29 +178,24 @@ export default class Home extends React.Component {
 
                 return result;
             })();
-            
+            var searchedValueCond = (function(){
+                if (check(filters.searchedValue)){
+                    var searchedValue = filters.searchedValue.toLowerCase();
+                    var valueFoundInWallet = object.wallet.toLowerCase().indexOf(searchedValue) !== -1;
+                    var valueFoundInActivity = object.activity.toLowerCase().indexOf(searchedValue) !== -1;
+                    var valueFoundInAmount = object.amount.toString().indexOf(searchedValue) !== -1;
+                    var valueFoundInDate = object.date.indexOf(searchedValue) !== -1;
+                    return valueFoundInWallet || valueFoundInActivity || valueFoundInAmount || valueFoundInDate;
+                } else {
+                    return !check(searchedValue);
+                };
+            })();
 
-            var result = walletCond && activityCond && minAmountCond && maxAmountCond && dataCond;
+            var result = walletCond && activityCond && minAmountCond && maxAmountCond && dataCond && searchedValueCond;
             return result;
         });
-        this.setState({
-            dataToRender
-        });
-    }
-
-    deleteActivity(selectedActivity){
-
-        function filterCb(object){
-            return ( selectedActivity.id === object.id ? false : true );
-        };
-
-        var newData = this.state.data.filter(filterCb);
-        this.setState({
-            data: newData,
-            dataToRender: this.state.dataToRender.filter(filterCb)
-        });
-
-        defaultStorage.setData(newData);
+        
+        return dataToRender;
     }
 
     sortColumns(event, dataToSort){
@@ -237,7 +273,7 @@ export default class Home extends React.Component {
 
     render() {
         var data = this.state.data;
-        var dataToRender = this.state.dataToRender;
+        var dataToRender = this.filterData();
 
         var dataInfo = {
             wallets: Utils.getAllValuesOfProperty(data, 'wallet', false),
@@ -279,7 +315,12 @@ export default class Home extends React.Component {
                 <SideNav allData={this.state.data} wallets={dataInfo.wallets} activity={dataInfo.activity} onAddActivity={this.addActivity} onImportData={this.importData}></SideNav>
                 <SideNavButton></SideNavButton>
                 <div className='row'>
-                    <div className='col s12'>
+                    <div className='input-field col s6'>
+                        <i className='material-icons prefix'>search</i>
+                        <input id={this.state.id + '__search-input'} type='text' onKeyUp={(event) => this.addFilters('searchedValue', event)}></input>
+                        <label htmlFor={this.state.id + '__search-input'}>Cerca</label>
+                    </div>
+                    <div className='col s6'>
                         <h4 className='right'>Saldo: {getBalance()}€</h4>
                     </div>
                 </div>
@@ -306,7 +347,7 @@ export default class Home extends React.Component {
                         </table>
                     </div>
                     <div className='col s3'>
-                        <FiltersMenu dataInfo={dataInfo} onChange={this.filterData}></FiltersMenu>
+                        <FiltersMenu dataInfo={dataInfo} onChange={this.addFilters}></FiltersMenu>
                     </div>
                     <EditActivity
                         id={editActivityModalId}
