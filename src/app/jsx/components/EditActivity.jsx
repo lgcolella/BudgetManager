@@ -27,7 +27,8 @@ export default class EditActivity extends React.Component {
             wallet: document.getElementById(this.state.id + '__wallet').value,
             activity: document.getElementById(this.state.id + '__activity').value,
             amount: Number(document.getElementById(this.state.id + '__amount').value),
-            date
+            date,
+            comment: document.getElementById(this.state.id + '__comment').value,
         }
 
         var walletCond = typeof activity.wallet === 'string' && activity.wallet.length > 1;
@@ -37,6 +38,9 @@ export default class EditActivity extends React.Component {
 
         if (walletCond && activityCond && amountCond && dateCond){
             this.props.onSubmit(activity);
+            this.setState({
+                submitError: false
+            });
             M.Modal.getInstance(document.getElementById(this.state.id)).close();
         } else {
             this.setState({
@@ -50,6 +54,8 @@ export default class EditActivity extends React.Component {
         document.getElementById(this.state.id + '__activity').value = "";
         document.getElementById(this.state.id + '__amount').value = "";
         document.getElementById(this.state.id + '__date').value = "";
+        document.getElementById(this.state.id + '__comment').value = "";
+        M.textareaAutoResize(document.getElementById(this.state.id + '__comment'));
         this.setState({
             submitError: false
         });
@@ -86,6 +92,9 @@ export default class EditActivity extends React.Component {
             };
             if ( typeof activityToEdit.date !== 'undefined'){
                 document.getElementById(this.state.id + '__date').value = activityToEdit.date;
+            }
+            if ( typeof activityToEdit.comment !== 'undefined'){
+                document.getElementById(this.state.id + '__comment').value = activityToEdit.comment;
             }
         }
     }
@@ -208,6 +217,13 @@ export default class EditActivity extends React.Component {
                                 <i className="material-icons prefix">date_range</i>
                                 <input type='text' id={this.state.id + '__date'} className='datepicker'></input>
                                 <label onClick={() => {document.getElementById(this.state.id + '__date').click();}}>Data</label>
+                            </div>
+                        </div>
+                        <div className='row'>
+                            <div className='input-field col s12'>
+                                <i className="material-icons prefix">comment</i>
+                                <textarea id={this.state.id + '__comment'} className='materialize-textarea'></textarea>
+                                <label htmlFor={this.state.id + '__comment'}>Commento</label>
                             </div>
                         </div>
                     </form>

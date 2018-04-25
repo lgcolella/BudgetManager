@@ -122,8 +122,6 @@ export default class Home extends React.Component {
         } else {
             var filters = this.state.filters;
         }
-        //console.table(filters);
-        //console.table(this.state.data);
 
         function check(value, objectType){
             var result = true;
@@ -188,7 +186,8 @@ export default class Home extends React.Component {
                     var valueFoundInActivity = object.activity.toLowerCase().indexOf(searchedValue) !== -1;
                     var valueFoundInAmount = object.amount.toString().indexOf(searchedValue) !== -1;
                     var valueFoundInDate = object.date.indexOf(searchedValue) !== -1;
-                    return valueFoundInWallet || valueFoundInActivity || valueFoundInAmount || valueFoundInDate;
+                    var valueFoundInComment = object.comment.indexOf(searchedValue) !== -1;
+                    return valueFoundInWallet || valueFoundInActivity || valueFoundInAmount || valueFoundInDate || valueFoundInComment;
                 } else {
                     return !check(searchedValue);
                 };
@@ -298,6 +297,16 @@ export default class Home extends React.Component {
         });
     }
 
+    componentDidMount(){
+        var elem = document.querySelectorAll('.tooltipped');
+        M.Tooltip.init(elem);
+    }
+
+    componentDidUpdate(){
+        var elem = document.querySelectorAll('.tooltipped');
+        M.Tooltip.init(elem);
+    }
+
     render() {
         var data = this.state.data;
         var dataToRender = this.filterData();
@@ -312,7 +321,7 @@ export default class Home extends React.Component {
 
             var type = (Number(object.amount) > 0 ? <i className='material-icons green-text'>arrow_upward</i> : <i className='material-icons red-text'>arrow_downward</i> );
             var selected = (typeof object.selected === 'undefined' ? true : object.selected );
-            
+
             return (
                 <tr key={object.id}>
                     <td>
@@ -331,7 +340,9 @@ export default class Home extends React.Component {
                     <td>
                         <a href='#!'><i className='material-icons delete' onClick={() => this.deleteActivity(object)}>delete</i></a>
                         <a href='#!'><i className='material-icons modal-trigger' data-target={editActivityModalId}
-                        onClick={() => {this.setState({activityToEdit: object})}}>edit</i></a>
+                            onClick={() => {this.setState({activityToEdit: object})}}>edit</i>
+                        </a>
+                        <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
                     </td>
                 </tr>
             );
