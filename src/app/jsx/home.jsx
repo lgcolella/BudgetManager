@@ -311,12 +311,32 @@ export default class Home extends React.Component {
         var data = this.state.data;
         var dataToRender = this.filterData();
 
-        var dataInfo = {
-            wallets: Utils.getAllValuesOfProperty(data, 'wallet', false),
-            activity: Utils.getAllValuesOfProperty(data, 'activity', false),
-            minAmount: Utils.getMinAndMaxFromArray( Utils.getAllValuesOfProperty(data, 'amount') ).min,
-            maxAmount: Utils.getMinAndMaxFromArray( Utils.getAllValuesOfProperty(data, 'amount') ).max,
-        };
+        var dataInfo = (() => {
+
+            var allActivitiesNum = data.length;
+            var allPositiveActivitiesNum = 0;
+            var allNegativeActivitiesNum = 0;
+            var allWallets = [];
+            var allMaxAmount = data[0].amount;
+            var allMinAmount = data[0].amount;
+
+            data.forEach(function(activity, index){
+                if (allWallets.indexOf(activity.wallet) === -1){ allWallets.push(activity.wallet) };
+                if (activity.amount > 0){ allPositiveActivitiesNum += 1 };
+                if (activity.amount < 0){ allNegativeActivitiesNum += 1 };
+                if (activity.amount > allMaxAmount){ allMaxAmount = activity.amount };
+                if (activity.amount < allMinAmount){ allMinAmount = activity.amount };
+            });
+
+            var selectedActivitiesNum = dataToRender.length;
+
+            return {
+                wallets: Utils.getAllValuesOfProperty(data, 'wallet', false),
+                activity: Utils.getAllValuesOfProperty(data, 'activity', false),
+                minAmount: Utils.getMinAndMaxFromArray( Utils.getAllValuesOfProperty(data, 'amount') ).min,
+                maxAmount: Utils.getMinAndMaxFromArray( Utils.getAllValuesOfProperty(data, 'amount') ).max,
+            }
+        })();
         let tbodyHTML = dataToRender.map((object) => {
 
             var type = (Number(object.amount) > 0 ? <i className='material-icons green-text'>arrow_upward</i> : <i className='material-icons red-text'>arrow_downward</i> );
@@ -338,11 +358,11 @@ export default class Home extends React.Component {
                     {/*<td>{object.fromDate}</td>
                     <td>{object.toDate}</td>*/}
                     <td>
-                        <a href='#!'><i className='material-icons delete' onClick={() => this.deleteActivity(object)}>delete</i></a>
+                        <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
                         <a href='#!'><i className='material-icons modal-trigger' data-target={editActivityModalId}
                             onClick={() => {this.setState({activityToEdit: object})}}>edit</i>
                         </a>
-                        <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
+                        <a href='#!'><i className='material-icons delete' onClick={() => this.deleteActivity(object)}>delete</i></a>
                     </td>
                 </tr>
             );
@@ -377,6 +397,25 @@ export default class Home extends React.Component {
                     </div>
                     <div className='col s6'>
                         <h4 className='right'>Saldo: {getBalance()}€</h4>
+                    </div>
+                </div>
+                <div className='divider'></div>
+                <div className='row'>
+                    <div className='col s12'>
+                        <table className='striped centered'>
+                            <tbody>
+                                <tr>
+                                    <th>Numero attività</th><td>7/10</td>
+                                    <th>Attività positive</th><td>3/10</td>
+                                    <th>Attività negative</th><td>3/10</td>
+                                </tr>
+                                <tr>
+                                    <th>Numero portafogli</th><td>1/5</td>
+                                    <th>Importo minimo</th><td>-45€</td>
+                                    <th>Importo massimo</th><td>310€</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div className='divider'></div>
