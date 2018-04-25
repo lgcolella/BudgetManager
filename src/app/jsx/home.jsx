@@ -7,6 +7,8 @@ import EditActivity from './components/EditActivity.jsx';
 import { throttle } from 'rxjs/operator/throttle';
 
 const editActivityModalId = 'edit-activity-modal';
+const filtersMenuId = 'filters-menu';
+const tableOverviewId = 'table-overview';
 var defaultStorage = new Storage();
 
 /*function getData(){
@@ -151,7 +153,6 @@ export default class Home extends React.Component {
         };
 
         var dataToRender = this.state.data.filter(function(object){
-
 
             var walletCond = ( check(filters.wallet, 'Array') && filters.wallet.indexOf(object.wallet) !== -1 ) || !check(filters.wallet, 'Array');
             var activityCond = ( check(filters.activity, 'Array') && filters.activity.indexOf(object.activity) !== -1 ) || !check(filters.activity, 'Array');
@@ -310,7 +311,7 @@ export default class Home extends React.Component {
         let tbodyHTML = dataToRender.map((object) => {
 
             var type = (Number(object.amount) > 0 ? <i className='material-icons green-text'>arrow_upward</i> : <i className='material-icons red-text'>arrow_downward</i> );
-            var selected = (typeof object.selected === 'undefined' ? false : object.selected );
+            var selected = (typeof object.selected === 'undefined' ? true : object.selected );
             
             return (
                 <tr key={object.id}>
@@ -338,7 +339,7 @@ export default class Home extends React.Component {
         
         function getBalance(){
             var selectedDataToRender = dataToRender.filter(function(activity){
-                return activity['selected'];
+                return ( typeof activity['selected'] === 'undefined' ? true : activity['selected'] );
             });
             var amounts = Utils.getAllValuesOfProperty(selectedDataToRender, 'amount', true);
             var sum = Utils.getSumfromArray(amounts);
@@ -347,7 +348,15 @@ export default class Home extends React.Component {
 
         return (
             <div>
-                <SideNav allData={this.state.data} wallets={dataInfo.wallets} activity={dataInfo.activity} onAddActivity={this.addActivity} onImportData={this.importData}></SideNav>
+                <SideNav
+                    allData={this.state.data}
+                    wallets={dataInfo.wallets}
+                    activity={dataInfo.activity}
+                    tableOverviewId={tableOverviewId}
+                    filtersMenuId={filtersMenuId}
+                    onAddActivity={this.addActivity}
+                    onImportData={this.importData}
+                ></SideNav>
                 <SideNavButton></SideNavButton>
                 <div className='row'>
                     <div className='input-field col s6'>
@@ -362,12 +371,12 @@ export default class Home extends React.Component {
                 <div className='divider'></div>
                 <div className='row'>
                     <div className='col s9'>
-                        <table id='table-overview' className='highlight centered'>
+                        <table id={tableOverviewId} className='highlight centered'>
                             <thead>
                             <tr>
                                 <th>
                                     <label>
-                                        <input type="checkbox" value={'all'} onClick={(event) => this.checkActivity(event)}></input>
+                                        <input type="checkbox" value={'all'} defaultChecked={true} onClick={(event) => this.checkActivity(event)}></input>
                                         <span></span>
                                     </label>
                                 </th>
@@ -387,7 +396,11 @@ export default class Home extends React.Component {
                         </table>
                     </div>
                     <div className='col s3'>
-                        <FiltersMenu dataInfo={dataInfo} onChange={this.addFilters}></FiltersMenu>
+                        <FiltersMenu
+                            id={filtersMenuId}
+                            dataInfo={dataInfo}
+                            onChange={this.addFilters}
+                        ></FiltersMenu>
                     </div>
                     <EditActivity
                         id={editActivityModalId}

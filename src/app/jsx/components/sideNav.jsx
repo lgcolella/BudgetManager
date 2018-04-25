@@ -1,10 +1,9 @@
-const {dialog} = require('electron').remote;
 import fs from 'fs';
 import React from 'react';
-//import NewActivity from './NewActivity.jsx';
 import EditActivity from './EditActivity.jsx';
 import Calculator from './Calculator.jsx';
 import ModalBox from '../wrappers/modalBox.jsx';
+const {dialog} = require('electron').remote;
 const sideNavId = 'slide-out';
 const modalCalculatorId = 'modal-calculator';
 const modalNewActivityId = 'modal-newactivity';
@@ -16,10 +15,12 @@ class SideNav extends React.Component {
         this.state = {
             'id': sideNavId,
             'instance': undefined,
+            'openedFiltersMenu': true
         };
         this.exportData = this.exportData.bind(this);
         this.importData = this.importData.bind(this);
         this.closeSideNav = this.closeSideNav.bind(this);
+        this.toggleFiltersMenu = this.toggleFiltersMenu.bind(this);
     }
 
     exportData(){
@@ -68,6 +69,20 @@ class SideNav extends React.Component {
         this.state.instance.close();
     }
 
+    toggleFiltersMenu(){
+        if (this.state.openedFiltersMenu){
+            document.getElementById(this.props.filtersMenuId).classList.add('hide');
+            document.getElementById(this.props.tableOverviewId).parentNode.classList.add('s12');
+        } else {
+            document.getElementById(this.props.filtersMenuId).classList.remove('hide');
+            document.getElementById(this.props.tableOverviewId).parentNode.classList.remove('s12');
+        };
+
+        this.setState({
+            openedFiltersMenu: !this.state.openedFiltersMenu
+        });
+    }
+
     componentDidMount(){
         var elem = document.getElementById(this.state.id);
         var instance = M.Sidenav.init(elem);
@@ -87,9 +102,13 @@ class SideNav extends React.Component {
                 <li><div className="divider"></div></li>
                 <li><a className='subheader'>Operazioni</a></li>
                 <li><a href={'#'+modalNewActivityId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className="material-icons">add_shopping_cart</i>Nuova attività</a></li>
+                <li>
+                    <a href="#!" className='waves-effect' onClick={this.toggleFiltersMenu}>
+                        <i className='material-icons'>{this.state.openedFiltersMenu ? 'visibility_off' : 'visibility'}</i>{this.state.openedFiltersMenu ? 'Nascondi filtri' : 'Mostra filtri'}
+                    </a>
+                </li>
                 <li><a href="#!" className='waves-effect' onClick={this.exportData}><i className='material-icons'>file_download</i>Esporta dati</a></li>
                 <li><a href="#!" className='waves-effect' onClick={this.importData}><i className='material-icons'>file_upload</i>Carica dati</a></li>
-                {/*<li><a href="#!" className='waves-effect'><i className='material-icons'>settings</i>Impostazioni</a></li>*/}
                 <li><div className="divider"></div></li>
                 <li><a className="subheader">Passa a</a></li>
                 <li><a href={'#'+modalCalculatorId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className='material-icons'>exposure</i>Calcolatrice</a></li>

@@ -6,7 +6,7 @@ export default class FiltersMenu extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            'id': 'filters',
+            'id': this.props.id,
             'values': {
                 minAmount: props.dataInfo.minAmount,
                 maxAmount: props.dataInfo.maxAmount,
@@ -115,7 +115,7 @@ export default class FiltersMenu extends React.Component {
         
 
         return(
-            <div>
+            <div id={this.state.id}>
                 <div>
                     <label>Portafoglio</label>
                     <select id={this.state.id + '__wallet'} multiple onChange={() => this.handleFilterChange('wallet')} defaultValue={[]}>
