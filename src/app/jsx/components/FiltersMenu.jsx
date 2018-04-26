@@ -7,11 +7,7 @@ export default class FiltersMenu extends React.Component {
         super(props);
         this.state = {
             'id': this.props.id,
-            'values': {
-                minAmount: props.dataInfo.minAmount,
-                maxAmount: props.dataInfo.maxAmount,
-            },
-            /*'dataInfo' : props.dataInfo*/
+            'values': {}
         };
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.initMaterializePlugins = this.initMaterializePlugins.bind(this);
@@ -47,14 +43,14 @@ export default class FiltersMenu extends React.Component {
 
             case 'minAmount':
                 var value = event.target.value;
-                var maxValue = this.state.values['maxAmount'];
+                var maxValue = this.props['maxAmount'];
                 newValues['minAmount'] = (  Number(maxValue) >= Number(value) ? value : maxValue );
                 event.target.value = (  Number(maxValue) >= Number(value) ? value : maxValue );
             break;
 
             case 'maxAmount':
                 var value = event.target.value;
-                var minValue = this.state.values['minAmount'];
+                var minValue = this.props['minAmount'];
                 newValues['maxAmount'] = (  Number(minValue) <= Number(value) ? value : minValue );
                 event.target.value = (  Number(minValue) <= Number(value) ? value : minValue );
             break;
@@ -99,20 +95,7 @@ export default class FiltersMenu extends React.Component {
             return array.map(function(value){
                 return <option key={value}>{value}</option>
             });
-        }
-
-        if (!this.state.values.hasOwnProperty('minAmount')){
-            var minAmount = this.props.dataInfo['minAmount'];
-        } else {
-            var minAmount = this.state.values['minAmount'];
         };
-
-        if (!this.state.values.hasOwnProperty('maxAmount')){
-            var maxAmount = this.props.dataInfo['maxAmount'];
-        } else {
-            var maxAmount = this.state.values['maxAmount'];
-        };
-        
 
         return(
             <div id={this.state.id}>
@@ -120,23 +103,23 @@ export default class FiltersMenu extends React.Component {
                     <label>Portafoglio</label>
                     <select id={this.state.id + '__wallet'} multiple onChange={() => this.handleFilterChange('wallet')} defaultValue={[]}>
                         <option disabled></option>
-                        {getOptionsFromArray(this.props.dataInfo['wallets'])}
+                        {getOptionsFromArray(this.props['wallets'])}
                     </select>
                 </div>
                 <div>
                     <label>Attività</label>
                     <select id={this.state.id + '__activity'} multiple onChange={() => this.handleFilterChange('activity')} defaultValue={[]}>
                         <option disabled></option>
-                        {getOptionsFromArray(this.props.dataInfo['activity'])}
+                        {getOptionsFromArray(this.props['activities'])}
                     </select>
                 </div>
                 <div>
                     <label>Importo minimo</label>
-                    <input type='number' defaultValue={minAmount} onChange={(event) => this.handleFilterChange('minAmount', event)}></input>
+                    <input type='number' placeholder={this.props['minAmount']} onChange={(event) => this.handleFilterChange('minAmount', event)}></input>
                 </div>
                 <div>
                     <label>Importo massimo</label>
-                    <input type='number' defaultValue={maxAmount} onChange={(event) => this.handleFilterChange('maxAmount', event)}></input>
+                    <input type='number' placeholder={this.props['maxAmount']} onChange={(event) => this.handleFilterChange('maxAmount', event)}></input>
                 </div>
                 <div>
                     <label>Da</label>

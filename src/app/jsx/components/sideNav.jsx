@@ -4,23 +4,23 @@ import EditActivity from './EditActivity.jsx';
 import Calculator from './Calculator.jsx';
 import ModalBox from '../wrappers/modalBox.jsx';
 const {dialog} = require('electron').remote;
-const sideNavId = 'slide-out';
 const modalCalculatorId = 'modal-calculator';
-const modalNewActivityId = 'modal-newactivity';
 
 class SideNav extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
-            'id': sideNavId,
+            'id': this.props.id,
             'instance': undefined,
-            'openedFiltersMenu': true
+            'openedFiltersMenu': true,
+            'visibleTableDataInfo': true,
         };
         this.exportData = this.exportData.bind(this);
         this.importData = this.importData.bind(this);
         this.closeSideNav = this.closeSideNav.bind(this);
         this.toggleFiltersMenu = this.toggleFiltersMenu.bind(this);
+        this.toggleTableDataInfo = this.toggleTableDataInfo.bind(this);
     }
 
     exportData(){
@@ -83,6 +83,18 @@ class SideNav extends React.Component {
         });
     }
 
+    toggleTableDataInfo(){
+        if (this.state.visibleTableDataInfo){
+            document.getElementById(this.props.tableDataInfoId).classList.add('hide');
+        } else {
+            document.getElementById(this.props.tableDataInfoId).classList.remove('hide');
+        };
+
+        this.setState({
+            visibleTableDataInfo: !this.state.visibleTableDataInfo
+        });
+    }
+
     componentDidMount(){
         var elem = document.getElementById(this.state.id);
         var instance = M.Sidenav.init(elem);
@@ -101,7 +113,12 @@ class SideNav extends React.Component {
                 <li><div className="divider" style={{'backgroundColor':'transparent'}}></div></li>
                 <li><div className="divider"></div></li>
                 <li><a className='subheader'>Operazioni</a></li>
-                <li><a href={'#'+modalNewActivityId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className="material-icons">add_shopping_cart</i>Nuova attività</a></li>
+                <li><a href={'#'+this.props.modalNewActivityId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className="material-icons">add_shopping_cart</i>Nuova attività</a></li>
+                <li>
+                    <a href="#!" className='waves-effect' onClick={this.toggleTableDataInfo}>
+                        <i className='material-icons'>{this.state.visibleTableDataInfo ? 'visibility_off' : 'visibility'}</i>{this.state.visibleTableDataInfo ? 'Nascondi info' : 'Mostra info'}
+                    </a>
+                </li>
                 <li>
                     <a href="#!" className='waves-effect' onClick={this.toggleFiltersMenu}>
                         <i className='material-icons'>{this.state.openedFiltersMenu ? 'visibility_off' : 'visibility'}</i>{this.state.openedFiltersMenu ? 'Nascondi filtri' : 'Mostra filtri'}
@@ -117,7 +134,7 @@ class SideNav extends React.Component {
                 <NewActivity wallets={this.props.wallets} activity={this.props.activity} onAdd={this.props.onAddActivity}></NewActivity>
             </ModalBox>*/}
             <EditActivity
-                id={modalNewActivityId}
+                id={this.props.modalNewActivityId}
                 wallets={this.props.wallets}
                 activity={this.props.activity}
                 onSubmit={this.props.onAddActivity}
@@ -132,10 +149,10 @@ class SideNav extends React.Component {
 
 }
 
-function SideNavButton(){
+function SideNavButton(props){
     return(
         <div className="fixed-action-btn">
-            <a className='btn-floating btn-large sidenav-trigger' data-target={sideNavId} title='Apri menu'>
+            <a className='btn-floating btn-large sidenav-trigger' data-target={props.datatarget} title='Apri menu'>
                 <i className='material-icons'>apps</i>
             </a>
         </div>

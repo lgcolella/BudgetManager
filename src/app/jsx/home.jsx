@@ -1,13 +1,16 @@
 import Storage from '../storage.js';
 import Utils from './functions/utils.js';
 import React from 'react';
-import {SideNav, SideNavButton} from './components/sideNav.jsx';
+import {SideNav, SideNavButton} from './components/SideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
 import EditActivity from './components/EditActivity.jsx';
 import { throttle } from 'rxjs/operator/throttle';
 
+const sideNavId = 'slide-out';
+const modalNewActivityId = 'new-activity-modal';
 const editActivityModalId = 'edit-activity-modal';
 const filtersMenuId = 'filters-menu';
+const tableDataInfoId = 'table-data-info';
 const tableOverviewId = 'table-overview';
 var defaultStorage = new Storage();
 
@@ -313,28 +316,53 @@ export default class Home extends React.Component {
 
         var dataInfo = (() => {
 
-            var allActivitiesNum = data.length;
             var allPositiveActivitiesNum = 0;
             var allNegativeActivitiesNum = 0;
             var allWallets = [];
+            var allActivities = [];
             var allMaxAmount = data[0].amount;
             var allMinAmount = data[0].amount;
 
             data.forEach(function(activity, index){
                 if (allWallets.indexOf(activity.wallet) === -1){ allWallets.push(activity.wallet) };
+                if (allActivities.indexOf(activity.activity) === -1){ allActivities.push(activity.activity) };
                 if (activity.amount > 0){ allPositiveActivitiesNum += 1 };
                 if (activity.amount < 0){ allNegativeActivitiesNum += 1 };
                 if (activity.amount > allMaxAmount){ allMaxAmount = activity.amount };
                 if (activity.amount < allMinAmount){ allMinAmount = activity.amount };
             });
 
-            var selectedActivitiesNum = dataToRender.length;
+            var selectedPositiveActivitiesNum = 0;
+            var selectedNegativeActivitiesNum = 0;
+            var selectedWallets = [];
+            var selectedMaxAmount = ( typeof dataToRender === 'undefined' ? dataToRender[0].amount : -Infinity);
+            var selectedMinAmount = ( typeof dataToRender === 'undefined' ? dataToRender[0].amount : +Infinity);
+
+            dataToRender.forEach(function(activity, index){
+                if (selectedWallets.indexOf(activity.wallet) === -1){ selectedWallets.push(activity.wallet) };
+                if (activity.amount > 0){ selectedPositiveActivitiesNum += 1 };
+                if (activity.amount < 0){ selectedNegativeActivitiesNum += 1 };
+                if (activity.amount > selectedMaxAmount){ selectedMaxAmount = activity.amount };
+                if (activity.amount < selectedMinAmount){ selectedMinAmount = activity.amount };
+            });
+
+            if (selectedMaxAmount === -Infinity && selectedMinAmount === +Infinity){
+                selectedMaxAmount = 0;
+                selectedMinAmount = 0;
+            };
 
             return {
-                wallets: Utils.getAllValuesOfProperty(data, 'wallet', false),
-                activity: Utils.getAllValuesOfProperty(data, 'activity', false),
-                minAmount: Utils.getMinAndMaxFromArray( Utils.getAllValuesOfProperty(data, 'amount') ).min,
-                maxAmount: Utils.getMinAndMaxFromArray( Utils.getAllValuesOfProperty(data, 'amount') ).max,
+                allPositiveActivitiesNum,
+                allNegativeActivitiesNum,
+                allWallets,
+                allActivities,
+                allMaxAmount,
+                allMinAmount,
+                selectedPositiveActivitiesNum,
+                selectedNegativeActivitiesNum,
+                selectedWallets,
+                selectedMaxAmount,
+                selectedMinAmount
             }
         })();
         let tbodyHTML = dataToRender.map((object) => {
@@ -358,11 +386,11 @@ export default class Home extends React.Component {
                     {/*<td>{object.fromDate}</td>
                     <td>{object.toDate}</td>*/}
                     <td>
-                        <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
+                        <a href='#!'><i className='material-icons delete' onClick={() => this.deleteActivity(object)}>delete</i></a>
                         <a href='#!'><i className='material-icons modal-trigger' data-target={editActivityModalId}
                             onClick={() => {this.setState({activityToEdit: object})}}>edit</i>
                         </a>
-                        <a href='#!'><i className='material-icons delete' onClick={() => this.deleteActivity(object)}>delete</i></a>
+                        <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
                     </td>
                 </tr>
             );
@@ -380,15 +408,18 @@ export default class Home extends React.Component {
         return (
             <div>
                 <SideNav
+                    id={sideNavId}
                     allData={this.state.data}
-                    wallets={dataInfo.wallets}
-                    activity={dataInfo.activity}
+                    wallets={dataInfo.allWallets}
+                    activity={dataInfo.allActivities}
+                    modalNewActivityId={modalNewActivityId}
+                    tableDataInfoId={tableDataInfoId}
                     tableOverviewId={tableOverviewId}
                     filtersMenuId={filtersMenuId}
                     onAddActivity={this.addActivity}
                     onImportData={this.importData}
                 ></SideNav>
-                <SideNavButton></SideNavButton>
+                <SideNavButton datatarget={sideNavId}></SideNavButton>
                 <div className='row'>
                     <div className='input-field col s6'>
                         <i className='material-icons prefix'>search</i>
@@ -402,17 +433,17 @@ export default class Home extends React.Component {
                 <div className='divider'></div>
                 <div className='row'>
                     <div className='col s12'>
-                        <table className='striped centered'>
+                        <table id={tableDataInfoId} className='striped centered'>
                             <tbody>
                                 <tr>
-                                    <th>Numero attività</th><td>7/10</td>
-                                    <th>Attività positive</th><td>3/10</td>
-                                    <th>Attività negative</th><td>3/10</td>
+                                    <th>Numero attività</th><td>{dataToRender.length + '/' + data.length}</td>
+                                    <th>Attività positive</th><td>{dataInfo.selectedPositiveActivitiesNum + '/' + dataInfo.allPositiveActivitiesNum}</td>
+                                    <th>Attività negative</th><td>{dataInfo.selectedNegativeActivitiesNum + '/' + dataInfo.allNegativeActivitiesNum}</td>
                                 </tr>
                                 <tr>
-                                    <th>Numero portafogli</th><td>1/5</td>
-                                    <th>Importo minimo</th><td>-45€</td>
-                                    <th>Importo massimo</th><td>310€</td>
+                                    <th>Numero portafogli</th><td>{dataInfo.selectedWallets.length + '/' + dataInfo.allWallets.length}</td>
+                                    <th>Importo minimo</th><td>{dataInfo.selectedMinAmount + '€'}</td>
+                                    <th>Importo massimo</th><td>{dataInfo.selectedMaxAmount + '€'}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -435,9 +466,9 @@ export default class Home extends React.Component {
                                 <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
                                 <th>Importo <i className='material-icons' onClick={(event) => this.sortColumns(event, 'amount')}>sort</i></th>
                                 <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
-                                {/*<th>Da</th>
-                                <th>A</th>*/}
-                                <th></th>
+                                <td>
+                                    <i className='material-icons' onClick={() => {M.Modal.getInstance(document.getElementById(modalNewActivityId)).open();}}>add</i>
+                                </td>
                             </tr>
                             </thead>
                             <tbody>
@@ -448,14 +479,17 @@ export default class Home extends React.Component {
                     <div className='col s3'>
                         <FiltersMenu
                             id={filtersMenuId}
-                            dataInfo={dataInfo}
+                            wallets={dataInfo.allWallets}
+                            activities={dataInfo.allActivities}
+                            maxAmount={dataInfo.allMaxAmount}
+                            minAmount={dataInfo.allMinAmount}
                             onChange={this.addFilters}
                         ></FiltersMenu>
                     </div>
                     <EditActivity
                         id={editActivityModalId}
-                        wallets={dataInfo.wallets}
-                        activity={dataInfo.activity}
+                        wallets={dataInfo.allWallets}
+                        activity={dataInfo.allActivities}
                         activityToEdit={this.state.activityToEdit}
                         onSubmit={this.editActivity}
                     ></EditActivity>
