@@ -12,15 +12,22 @@ table th {
     cursor: pointer;
     transition: color .25s ease; }
 
-table td i {
-  color: #343434;
-  margin: 0px 5px; }
-  table td i:hover {
-    color: #26a69a;
-    cursor: pointer;
-    transition: color .25s ease; }
-  table td i.delete:hover {
-    color: #F44336; }
+table td {
+  padding: 5px; }
+  table td i {
+    color: #343434;
+    margin: 0px 5px; }
+    table td i:hover {
+      color: #26a69a;
+      cursor: pointer;
+      transition: color .25s ease; }
+    table td i.delete:hover {
+      color: #F44336; }
+
+table th i.material-icons, table td i.material-icons {
+  display: block;
+  text-align: center;
+  float: right; }
 
 .btn {
   margin: 2px; }
@@ -45,3 +52,9 @@ table td i {
     width: 100%;
     box-shadow: none;
     padding: 0px; }
+
+#table-data-info th, #table-data-info td {
+  padding: 0px; }
+
+#table-data-info th {
+  text-align: center; }

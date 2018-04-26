@@ -22,6 +22,7 @@ table {
     }
 
     td {
+        padding: 5px;
         i {
             color: $black;
             margin: 0px 5px;
@@ -33,6 +34,14 @@ table {
             &.delete:hover {
                 color: $red;
             }
+        }
+    }
+
+    th, td {
+        i.material-icons {
+            display: block;
+            text-align: center;
+            float: right;
         }
     }
 
@@ -77,4 +86,13 @@ table {
 
     }
 
+}
+
+#table-data-info {
+    th, td {
+        padding: 0px;
+    }
+    th {
+        text-align: center;
+    }
 }

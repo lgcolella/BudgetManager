@@ -15,12 +15,14 @@ class SideNav extends React.Component {
         this.state = {
             'id': sideNavId,
             'instance': undefined,
-            'openedFiltersMenu': true
+            'openedFiltersMenu': true,
+            'visibleTableDataInfo': true,
         };
         this.exportData = this.exportData.bind(this);
         this.importData = this.importData.bind(this);
         this.closeSideNav = this.closeSideNav.bind(this);
         this.toggleFiltersMenu = this.toggleFiltersMenu.bind(this);
+        this.toggleTableDataInfo = this.toggleTableDataInfo.bind(this);
     }
 
     exportData(){
@@ -83,6 +85,18 @@ class SideNav extends React.Component {
         });
     }
 
+    toggleTableDataInfo(){
+        if (this.state.visibleTableDataInfo){
+            document.getElementById(this.props.tableDataInfoId).classList.add('hide');
+        } else {
+            document.getElementById(this.props.tableDataInfoId).classList.remove('hide');
+        };
+
+        this.setState({
+            visibleTableDataInfo: !this.state.visibleTableDataInfo
+        });
+    }
+
     componentDidMount(){
         var elem = document.getElementById(this.state.id);
         var instance = M.Sidenav.init(elem);
@@ -102,6 +116,11 @@ class SideNav extends React.Component {
                 <li><div className="divider"></div></li>
                 <li><a className='subheader'>Operazioni</a></li>
                 <li><a href={'#'+modalNewActivityId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className="material-icons">add_shopping_cart</i>Nuova attività</a></li>
+                <li>
+                    <a href="#!" className='waves-effect' onClick={this.toggleTableDataInfo}>
+                        <i className='material-icons'>{this.state.visibleTableDataInfo ? 'visibility_off' : 'visibility'}</i>{this.state.visibleTableDataInfo ? 'Nascondi info' : 'Mostra info'}
+                    </a>
+                </li>
                 <li>
                     <a href="#!" className='waves-effect' onClick={this.toggleFiltersMenu}>
                         <i className='material-icons'>{this.state.openedFiltersMenu ? 'visibility_off' : 'visibility'}</i>{this.state.openedFiltersMenu ? 'Nascondi filtri' : 'Mostra filtri'}
