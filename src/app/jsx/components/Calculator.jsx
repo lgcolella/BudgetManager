@@ -8,7 +8,7 @@ export default class Calculator extends React.Component {
             prevNum: 0,
             currentNum: 0,
             currentOp: '+',
-            MAX_NUM_LENGTH: 11
+            MAX_NUM_LENGTH: 10
         };
         this.handleNumberClick = this.handleNumberClick.bind(this);
         this.handleOperationClick = this.handleOperationClick.bind(this);
@@ -122,33 +122,33 @@ export default class Calculator extends React.Component {
                         <div className='col s5'><input type='text' value={rightNumber} className='center-align' readOnly></input></div>
                     </div>
                     <div className='row'>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='c' onClick={(event) => this.handleOperationClick(event)}>C</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='ac' onClick={(event) => this.handleOperationClick(event)}>AC</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='%' onClick={(event) => this.handleOperationClick(event)}>%</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='/' onClick={(event) => this.handleOperationClick(event)}>/</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='c' onClick={(event) => this.handleOperationClick(event)}>C</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='ac' onClick={(event) => this.handleOperationClick(event)}>AC</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='%' onClick={(event) => this.handleOperationClick(event)}>%</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='/' onClick={(event) => this.handleOperationClick(event)}>/</button></div>
                     </div>
                     <div className='row'>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='7' onClick={(event) => this.handleNumberClick(event)}>7</button></div>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='8' onClick={(event) => this.handleNumberClick(event)}>8</button></div>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='9' onClick={(event) => this.handleNumberClick(event)}>9</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='*' onClick={(event) => this.handleOperationClick(event)}>*</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='*' onClick={(event) => this.handleOperationClick(event)}>*</button></div>
                     </div>
                     <div className='row'>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='4' onClick={(event) => this.handleNumberClick(event)}>4</button></div>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='5' onClick={(event) => this.handleNumberClick(event)}>5</button></div>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='6' onClick={(event) => this.handleNumberClick(event)}>6</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='-' onClick={(event) => this.handleOperationClick(event)}>-</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='-' onClick={(event) => this.handleOperationClick(event)}>-</button></div>
                     </div>
                     <div className='row'>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='1' onClick={(event) => this.handleNumberClick(event)}>1</button></div>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='2' onClick={(event) => this.handleNumberClick(event)}>2</button></div>
                         <div className='col s3'><button className='btn btn-large waves-effect' value='3' onClick={(event) => this.handleNumberClick(event)}>3</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='+' onClick={(event) => this.handleOperationClick(event)}>+</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='+' onClick={(event) => this.handleOperationClick(event)}>+</button></div>
                     </div>
                     <div className='row'>
                         <div className='col s6'><button className='btn btn-large waves-effect' value='0' onClick={(event) => this.handleNumberClick(event)}>0</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='.' onClick={(event) => this.handleOperationClick(event)}>.</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect red lighten-2' value='=' onClick={(event) => this.handleOperationClick(event)}>=</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='.' onClick={(event) => this.handleOperationClick(event)}>.</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='=' onClick={(event) => this.handleOperationClick(event)}>=</button></div>
                     </div>
                 </div>
             </div>

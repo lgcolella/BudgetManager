@@ -233,9 +233,9 @@ export default class EditActivity extends React.Component {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <a href="#!" className="modal-action waves-effect waves-red btn-flat" onClick={this.clearInputs}>Resetta</a>
-                        <a href="#!" className="modal-action modal-close waves-effect waves-red btn-flat">Chiudi</a>
-                        <a href="#!" className="modal-action waves-effect waves-green btn-flat" onClick={this.addActivity}>OK</a>
+                        <a href="#!" className="modal-action modal-close waves-effect waves-red btn btn-flat">Chiudi</a>
+                        <a href="#!" className="modal-action waves-effect waves-red btn btn-flat" onClick={this.clearInputs}>Resetta</a>
+                        <a href="#!" className="modal-action waves-effect waves-green btn btn-flat" onClick={this.addActivity}>OK</a>
                     </div>
                 </div>
             </ModalBox>

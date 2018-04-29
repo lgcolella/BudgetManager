@@ -16,6 +16,7 @@ const url = require('url');
       protocol: 'file:',
       slashes: true
     }))*/
+    win.maximize();
     if (process.env.NODE_ENV === 'production'){
       win.loadURL(`file://${__dirname}/app/index.html`);
     } else {

@@ -6,7 +6,7 @@ import FiltersMenu from './components/FiltersMenu.jsx';
 import EditActivity from './components/EditActivity.jsx';
 import { throttle } from 'rxjs/operator/throttle';
 
-const sideNavId = 'slide-out';
+const sideNavId = 'sidenav';
 const modalNewActivityId = 'new-activity-modal';
 const editActivityModalId = 'edit-activity-modal';
 const filtersMenuId = 'filters-menu';
@@ -335,21 +335,37 @@ export default class Home extends React.Component {
             var selectedPositiveActivitiesNum = 0;
             var selectedNegativeActivitiesNum = 0;
             var selectedWallets = [];
-            var selectedMaxAmount = ( typeof dataToRender === 'undefined' ? dataToRender[0].amount : -Infinity);
-            var selectedMinAmount = ( typeof dataToRender === 'undefined' ? dataToRender[0].amount : +Infinity);
+            var selectedPositiveMaxAmount = 0;
+            var selectedPositiveMinAmount = 0;
+            var selectedNegativeMaxAmount = 0;
+            var selectedNegativeMinAmount = 0;
+            var selectedActivitiesSum = 0;
 
+            var tmpSelectedPositiveAmounts = [];
+            var tmpSelectedNegativeAmounts = [];
             dataToRender.forEach(function(activity, index){
                 if (selectedWallets.indexOf(activity.wallet) === -1){ selectedWallets.push(activity.wallet) };
                 if (activity.amount > 0){ selectedPositiveActivitiesNum += 1 };
                 if (activity.amount < 0){ selectedNegativeActivitiesNum += 1 };
-                if (activity.amount > selectedMaxAmount){ selectedMaxAmount = activity.amount };
-                if (activity.amount < selectedMinAmount){ selectedMinAmount = activity.amount };
+                if (activity.amount > 0){
+                    tmpSelectedPositiveAmounts.push(activity.amount);
+                } else {
+                    tmpSelectedNegativeAmounts.push(activity.amount);
+                };
+                if (activity.selected !== false){ selectedActivitiesSum += activity.amount; };
             });
 
-            if (selectedMaxAmount === -Infinity && selectedMinAmount === +Infinity){
-                selectedMaxAmount = 0;
-                selectedMinAmount = 0;
+            if (tmpSelectedPositiveAmounts.length > 0){
+                selectedPositiveMaxAmount = Math.max(...tmpSelectedPositiveAmounts);
+                selectedPositiveMinAmount = Math.min(...tmpSelectedPositiveAmounts);
             };
+            
+            if (tmpSelectedNegativeAmounts.length > 0){
+                selectedNegativeMaxAmount = Math.min(...tmpSelectedNegativeAmounts);
+                selectedNegativeMinAmount = Math.max(...tmpSelectedNegativeAmounts);
+            };
+            
+            selectedActivitiesSum = selectedActivitiesSum.toFixed(2);
 
             return {
                 allPositiveActivitiesNum,
@@ -361,8 +377,11 @@ export default class Home extends React.Component {
                 selectedPositiveActivitiesNum,
                 selectedNegativeActivitiesNum,
                 selectedWallets,
-                selectedMaxAmount,
-                selectedMinAmount
+                selectedPositiveMaxAmount,
+                selectedPositiveMinAmount,
+                selectedNegativeMaxAmount,
+                selectedNegativeMinAmount,
+                selectedActivitiesSum
             }
         })();
         let tbodyHTML = dataToRender.map((object) => {
@@ -372,25 +391,27 @@ export default class Home extends React.Component {
 
             return (
                 <tr key={object.id}>
+                    <td>{type}</td>
                     <td>
                         <label>
                             <input type="checkbox" value={object.id} checked={selected} onChange={(event) => this.checkActivity(event)}></input>
                             <span></span>
                         </label>
                     </td>
-                    <td>{type}</td>
                     <td>{object.wallet}</td>
                     <td>{object.activity}</td>
-                    <td>{object.amount.toString() + '€'}</td>
-                    <td>{object.date}</td>
+                    <td><i>{object.amount.toString() + '€'}</i></td>
+                    <td><i>{object.date}</i></td>
                     {/*<td>{object.fromDate}</td>
                     <td>{object.toDate}</td>*/}
                     <td>
-                        <a href='#!'><i className='material-icons delete' onClick={() => this.deleteActivity(object)}>delete</i></a>
-                        <a href='#!'><i className='material-icons modal-trigger' data-target={editActivityModalId}
-                            onClick={() => {this.setState({activityToEdit: object})}}>edit</i>
-                        </a>
-                        <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
+                        <div>
+                            <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
+                            <a href='#!'><i className='material-icons modal-trigger' data-target={editActivityModalId}
+                                onClick={() => {this.setState({activityToEdit: object})}}>edit</i>
+                            </a>
+                            <a href='#!'><i className='material-icons hover-red' onClick={() => this.deleteActivity(object)}>delete</i></a>
+                        </div>
                     </td>
                 </tr>
             );
@@ -427,56 +448,33 @@ export default class Home extends React.Component {
                         <label htmlFor={this.state.id + '__search-input'}>Cerca</label>
                     </div>
                     <div className='col s6'>
-                        <h4 className='right'>Saldo: {getBalance()}€</h4>
                     </div>
                 </div>
-                <div className='divider'></div>
                 <div className='row'>
                     <div className='col s12'>
                         <table id={tableDataInfoId} className='striped centered'>
                             <tbody>
                                 <tr>
+                                    <th>Saldo</th><td>{dataInfo.selectedActivitiesSum + '€'}</td>
+                                    <th>Numero portafogli</th><td>{dataInfo.selectedWallets.length + '/' + dataInfo.allWallets.length}</td>
                                     <th>Numero attività</th><td>{dataToRender.length + '/' + data.length}</td>
-                                    <th>Attività positive</th><td>{dataInfo.selectedPositiveActivitiesNum + '/' + dataInfo.allPositiveActivitiesNum}</td>
-                                    <th>Attività negative</th><td>{dataInfo.selectedNegativeActivitiesNum + '/' + dataInfo.allNegativeActivitiesNum}</td>
                                 </tr>
                                 <tr>
-                                    <th>Numero portafogli</th><td>{dataInfo.selectedWallets.length + '/' + dataInfo.allWallets.length}</td>
-                                    <th>Importo minimo</th><td>{dataInfo.selectedMinAmount + '€'}</td>
-                                    <th>Importo massimo</th><td>{dataInfo.selectedMaxAmount + '€'}</td>
+                                    <th>Attività positive</th><td>{dataInfo.selectedPositiveActivitiesNum + '/' + dataInfo.allPositiveActivitiesNum}</td>
+                                    <th>Entrata massima</th><td>{dataInfo.selectedPositiveMaxAmount + '€'}</td>
+                                    <th>Entrata minima</th><td>{dataInfo.selectedPositiveMinAmount + '€'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Attività negative</th><td>{dataInfo.selectedNegativeActivitiesNum + '/' + dataInfo.allNegativeActivitiesNum}</td>
+                                    <th>Uscita massima</th><td>{dataInfo.selectedNegativeMaxAmount + '€'}</td>
+                                    <th>Uscita minima</th><td>{dataInfo.selectedNegativeMinAmount + '€'}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div className='divider'></div>
                 <div className='row'>
-                    <div className='col s9'>
-                        <table id={tableOverviewId} className='highlight centered'>
-                            <thead>
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" value={'all'} defaultChecked={true} onClick={(event) => this.checkActivity(event)}></input>
-                                        <span></span>
-                                    </label>
-                                </th>
-                                <th></th>
-                                <th>Portafoglio <i className='material-icons' onClick={(event) => this.sortColumns(event, 'wallet')}>sort</i></th>
-                                <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
-                                <th>Importo <i className='material-icons' onClick={(event) => this.sortColumns(event, 'amount')}>sort</i></th>
-                                <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
-                                <td>
-                                    <i className='material-icons' onClick={() => {M.Modal.getInstance(document.getElementById(modalNewActivityId)).open();}}>add</i>
-                                </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {tbodyHTML}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className='col s3'>
+                    <div id='filters-menu-wrapper' className='col s3'>
                         <FiltersMenu
                             id={filtersMenuId}
                             wallets={dataInfo.allWallets}
@@ -485,6 +483,35 @@ export default class Home extends React.Component {
                             minAmount={dataInfo.allMinAmount}
                             onChange={this.addFilters}
                         ></FiltersMenu>
+                    </div>
+                    <div className='col s9'>
+                        <table id={tableOverviewId} className='highlight centered'>
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    <div>
+                                        <label>
+                                            <input type="checkbox" value={'all'} defaultChecked={true} onClick={(event) => this.checkActivity(event)}></input>
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                </th>
+                                <th> Portafoglio <i className='material-icons' onClick={(event) => this.sortColumns(event, 'wallet')}>sort</i></th>
+                                <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
+                                <th>Importo <i className='material-icons' onClick={(event) => this.sortColumns(event, 'amount')}>sort</i></th>
+                                <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
+                                <td>
+                                    <div>
+                                        <i className='material-icons' onClick={() => {M.Modal.getInstance(document.getElementById(modalNewActivityId)).open();}}>add_shopping_cart</i>
+                                    </div>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {tbodyHTML}
+                            </tbody>
+                        </table>
                     </div>
                     <EditActivity
                         id={editActivityModalId}
