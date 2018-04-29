@@ -120,6 +120,11 @@ class SideNav extends React.Component {
                     </a>
                 </li>
                 <li>
+                    <a href="#!" className='waves-effect' onClick={this.toggleTableDataInfo}>
+                        <i className='material-icons'>{this.state.visibleTableDataInfo ? 'visibility_off' : 'visibility'}</i>{this.state.visibleTableDataInfo ? 'Nascondi info' : 'Mostra info'}
+                    </a>
+                </li>
+                <li>
                     <a href="#!" className='waves-effect' onClick={this.toggleFiltersMenu}>
                         <i className='material-icons'>{this.state.openedFiltersMenu ? 'visibility_off' : 'visibility'}</i>{this.state.openedFiltersMenu ? 'Nascondi filtri' : 'Mostra filtri'}
                     </a>
