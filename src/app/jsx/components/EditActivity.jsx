@@ -1,5 +1,8 @@
 import React from 'react';
-import ModalBox from '../wrappers/modalBox.jsx';
+import ModalBox from '../elements/modalBox.jsx';
+import DatePicker from '../elements/DatePicker.jsx';
+import FormSelect from '../elements/FormSelect.jsx';
+import Autocomplete from '../elements/Autocomplete.jsx';
 
 export default class EditActivity extends React.Component {
 
@@ -33,7 +36,7 @@ export default class EditActivity extends React.Component {
 
         var walletCond = typeof activity.wallet === 'string' && activity.wallet.length > 1;
         var activityCond = typeof activity.activity === 'string' && activity.activity.length > 1;
-        var amountCond = typeof activity.amount === 'number' && activity.amount !== NaN && activity.amount !== 0;
+        var amountCond = typeof activity.amount === 'number' && !isNaN(activity.amount)  && activity.amount !== 0;
         var dateCond = typeof activity.date === 'string' && activity.date.slice(0,3) !== 'NaN' && activity.date.length >= 8;
 
         if (walletCond && activityCond && amountCond && dateCond){
@@ -47,7 +50,7 @@ export default class EditActivity extends React.Component {
                 submitError: true,
                 errorText: "Errore nell'inserimento dei dati. Accertati che siano stati compilati correttamente tutti i campi."
             });
-        };
+        }
     }
 
     clearInputs(){
@@ -67,29 +70,27 @@ export default class EditActivity extends React.Component {
         });
     }
 
-    destroyMaterializePlugin(){
-        var elem = document.getElementById(this.state.id + '__wallet');
-        if (elem != null && typeof M.FormSelect.getInstance(elem) !== 'undefined'){
-            M.FormSelect.getInstance(elem).destroy();
-        };
-    }
-
     prefillInputs(){
         var activityToEdit = this.props.activityToEdit;
         if ( typeof activityToEdit !== 'undefined' ){
             if ( typeof activityToEdit.wallet !== 'undefined' ){
-                var elem = document.getElementById(this.state.id + '__wallet').childNodes[0];
-                while (elem !== null){
-                    elem.defaultSelected = elem.value === activityToEdit.wallet;
-                    elem = elem.nextSibling;
+                var elem = document.getElementById(this.state.id + '__wallet');
+                if (elem.tagName === 'SELECT'){
+                    elem = elem.childNodes[0];
+                    while (elem !== null){
+                        elem.defaultSelected = elem.value === activityToEdit.wallet;
+                        elem = elem.nextSibling;
+                    }
+                } else {
+                    elem.value === activityToEdit.wallet;
                 }
-            };
+            }
             if ( typeof activityToEdit.activity !== 'undefined' ){
                 document.getElementById(this.state.id + '__activity').value = activityToEdit.activity;
-            };
+            }
             if ( typeof activityToEdit.amount !== 'undefined' ){
                 document.getElementById(this.state.id + '__amount').value = activityToEdit.amount;
-            };
+            }
             if ( typeof activityToEdit.date !== 'undefined'){
                 document.getElementById(this.state.id + '__date').value = activityToEdit.date;
             }
@@ -99,84 +100,43 @@ export default class EditActivity extends React.Component {
         }
     }
 
-    componentDidMount(){
-
-        var elem = document.getElementById(this.state.id + '__activity');
-        var data = (() => {
-            var result = {};
-            this.props.activity.forEach((value) => {result[value] = null;});
-            return result;
-        })();
-        M.Autocomplete.init(elem, {
-            data
-        });
-
-        var elem = document.getElementById(this.state.id + '__date');
-        M.Datepicker.init(elem, {
-            format: 'yyyy-mm-dd',
-            showClearBtn: true,
-            i18n: {
-                'cancel': 'Cancella',
-                'clear': 'Pulisci'
-            },
-        });
-    }
-
-    componentDidUpdate(prevProps){
-
+    componentDidUpdate(){
         if (typeof this.props.activityToEdit !== 'undefined'){
             this.prefillInputs();
-        };
-
-        var elem = document.getElementById(this.state.id + '__activity');
-        var data = (() => {
-            var result = {};
-            this.props.activity.forEach((value) => {result[value] = null;});
-            return result;
-        })();
-        M.Autocomplete.getInstance(elem).updateData(data);
-
-        var elem = document.getElementById(this.state.id + '__wallet');
-        if (elem.tagName === 'SELECT'){
-            if ( typeof M.FormSelect.getInstance(elem) !== 'undefined' ){
-                M.FormSelect.getInstance(elem).destroy();
-            }
-            M.FormSelect.init(elem);
-        };
-        
-        if (typeof this.props.activityToEdit !== 'undefined'){
             M.updateTextFields();
-        };
+        }
     }
 
     render(){
 
         /*Choose right wallet input*/
+        var walletInput;
+        var buttonText;
         if (this.state.createNewWallet){
-            this.destroyMaterializePlugin();
-            var walletInput = ( <input type='text' id={this.state.id + '__wallet'}></input> );
-            var buttonText = 'SCEGLI';
+            walletInput = ( <input type='text' id={this.state.id + '__wallet'}></input> );
+            buttonText = 'SCEGLI';
         } else {
-            var walletInput = (() => {
+            walletInput = (() => {
                 return (
-                    <select id={this.state.id + '__wallet'}>
-                        {this.props.wallets.map((value) => {
-                            return <option key={value}>{value}</option>;
-                        })}
-                    </select>
+                    <FormSelect
+                    id={this.state.id + '__wallet'}
+                    options={this.props.wallets}
+                    multiple={false}
+                    ></FormSelect>
                 );
             })();
-            var buttonText = 'NUOVO';
-        };
+            buttonText = 'NUOVO';
+        }
         /*!Choose right wallet input*/
         
 
         /*Error box*/
+        var errorBoxStyle;
         if (this.state.submitError === true){
-            var errorBoxStyle = {display: 'block'};
+            errorBoxStyle = {display: 'block'};
             var errorText = this.state.errorText;
         } else {
-            var errorBoxStyle = {display: 'none'};
+            errorBoxStyle = {display: 'none'};
         }
         /*!Error box*/
         return(
@@ -188,7 +148,7 @@ export default class EditActivity extends React.Component {
                                 <div className='input-field col s10'>
                                     <i className="material-icons prefix">list</i>
                                     {walletInput}
-                                    <label onClick={() => {document.getElementById(this.state.id + '__wallet').focus();}}>Portafoglio</label>
+                                    <label>Portafoglio</label>
                                 </div>
                                 <div className='col s2'>
                                     <a className='btn waves-effect' onClick={this.handleWalletSelect}>
@@ -201,8 +161,11 @@ export default class EditActivity extends React.Component {
                         <div className='row'>
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">textsms</i>
-                                <input type='text' id={this.state.id + '__activity'}></input>
-                                <label onClick={() => {document.getElementById(this.state.id + '__activity').focus();}}>Attività</label>
+                                <Autocomplete
+                                id={this.state.id + '__activity'}
+                                list={this.props.activity}
+                                ></Autocomplete>
+                                <label>Attività</label>
                             </div>
                         </div>
                         <div className='row'>
@@ -215,7 +178,7 @@ export default class EditActivity extends React.Component {
                         <div className='row'>
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">date_range</i>
-                                <input type='text' id={this.state.id + '__date'} className='datepicker'></input>
+                                <DatePicker id={this.state.id + '__date'}></DatePicker>
                                 <label onClick={() => {document.getElementById(this.state.id + '__date').click();}}>Data</label>
                             </div>
                         </div>
@@ -242,4 +205,4 @@ export default class EditActivity extends React.Component {
         );
     }
 
-};
+}

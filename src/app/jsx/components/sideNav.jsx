@@ -2,11 +2,12 @@ import fs from 'fs';
 import React from 'react';
 import EditActivity from './EditActivity.jsx';
 import Calculator from './Calculator.jsx';
-import ModalBox from '../wrappers/modalBox.jsx';
+import ModalBox from '../elements/modalBox.jsx';
+
 const {dialog} = require('electron').remote;
 const modalCalculatorId = 'modal-calculator';
 
-class SideNav extends React.Component {
+export default class SideNav extends React.Component {
 
     constructor(props){
         super(props);
@@ -120,15 +121,11 @@ class SideNav extends React.Component {
                     </a>
                 </li>
                 <li>
-                    <a href="#!" className='waves-effect' onClick={this.toggleTableDataInfo}>
-                        <i className='material-icons'>{this.state.visibleTableDataInfo ? 'visibility_off' : 'visibility'}</i>{this.state.visibleTableDataInfo ? 'Nascondi info' : 'Mostra info'}
-                    </a>
-                </li>
-                <li>
                     <a href="#!" className='waves-effect' onClick={this.toggleFiltersMenu}>
                         <i className='material-icons'>{this.state.openedFiltersMenu ? 'visibility_off' : 'visibility'}</i>{this.state.openedFiltersMenu ? 'Nascondi filtri' : 'Mostra filtri'}
                     </a>
                 </li>
+                <li><a href="#!" className='waves-effect' onClick={this.props.onClearFilters}><i className='material-icons'>clear</i>Resetta filtri</a></li>
                 <li><a href="#!" className='waves-effect' onClick={this.exportData}><i className='material-icons'>file_download</i>Esporta dati</a></li>
                 <li><a href="#!" className='waves-effect' onClick={this.importData}><i className='material-icons'>file_upload</i>Carica dati</a></li>
                 <li><div className="divider"></div></li>
@@ -153,18 +150,3 @@ class SideNav extends React.Component {
     }
 
 }
-
-function SideNavButton(props){
-    return(
-        <div className="fixed-action-btn">
-            <a className='btn-floating btn-large sidenav-trigger' data-target={props.datatarget} title='Apri menu'>
-                <i className='material-icons'>apps</i>
-            </a>
-        </div>
-    );
-}
-
-module.exports = {
-    SideNav,
-    SideNavButton
-};

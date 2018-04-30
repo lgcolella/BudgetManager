@@ -4,11 +4,15 @@
         "ecmaFeatures": {
             "jsx": true,
             "modules": true
-        }
+        },
+        "sourceType": "module"
     },
     "extends": "eslint:recommended",
     "env": {
         "node": true,
         "browser": true
+    },
+    "globals": {
+        "M": true
     }
 }

@@ -2,7 +2,10 @@ import { isArray } from "util";
 
 module.exports = {
 
-    generateId: function(listOfId){
+    generateId(data){
+        var listOfId = data.map((activity) => {
+            return activity.id;
+        });
         var id = 1;
         if ( isArray(listOfId) ){
             while ( listOfId.indexOf(id) !== -1 ){
@@ -13,59 +16,75 @@ module.exports = {
         return id;
     },
 
-    getAllValuesOfProperty: function(objectsList, property, distinct){
-        var result = [];
-        objectsList.forEach(function(object, index){
-            var value = object[property];
-            if ( distinct === true || result.indexOf(value) === -1 ){
-                result.push(value);
+    getDataInfo(data, dataToRender){
+
+        var allPositiveActivitiesNum = 0;
+        var allNegativeActivitiesNum = 0;
+        var allWallets = [];
+        var allActivities = [];
+        var allMaxAmount = data[0].amount;
+        var allMinAmount = data[0].amount;
+
+        data.forEach(function(activity, index){
+            if (allWallets.indexOf(activity.wallet) === -1){ allWallets.push(activity.wallet) };
+            if (allActivities.indexOf(activity.activity) === -1){ allActivities.push(activity.activity) };
+            if (activity.amount > 0){ allPositiveActivitiesNum += 1 };
+            if (activity.amount < 0){ allNegativeActivitiesNum += 1 };
+            if (activity.amount > allMaxAmount){ allMaxAmount = activity.amount };
+            if (activity.amount < allMinAmount){ allMinAmount = activity.amount };
+        });
+
+        var selectedPositiveActivitiesNum = 0;
+        var selectedNegativeActivitiesNum = 0;
+        var selectedWallets = [];
+        var selectedPositiveMaxAmount = 0;
+        var selectedPositiveMinAmount = 0;
+        var selectedNegativeMaxAmount = 0;
+        var selectedNegativeMinAmount = 0;
+        var selectedActivitiesSum = 0;
+
+        var tmpSelectedPositiveAmounts = [];
+        var tmpSelectedNegativeAmounts = [];
+        dataToRender.forEach(function(activity, index){
+            if (selectedWallets.indexOf(activity.wallet) === -1){ selectedWallets.push(activity.wallet) };
+            if (activity.amount > 0){ selectedPositiveActivitiesNum += 1 };
+            if (activity.amount < 0){ selectedNegativeActivitiesNum += 1 };
+            if (activity.amount > 0){
+                tmpSelectedPositiveAmounts.push(activity.amount);
+            } else {
+                tmpSelectedNegativeAmounts.push(activity.amount);
             };
+            if (activity.selected !== false){ selectedActivitiesSum += activity.amount; };
         });
-        return result;
-    },
 
-    getSumfromArray: function(array){
-        var sum = 0;
-        array.forEach(function(value){
-            sum += Number(value);
-        });
-        return sum;
-    },
-
-    getMinAndMaxFromArray: function(array){
-        var min = 0;
-        var max = 0;
-        array.forEach(function(value){
-            value = Number(value);
-            min = Math.min(min, value);
-            max = Math.max(max, value);
-        });
-        return {
-            min,
-            max
+        if (tmpSelectedPositiveAmounts.length > 0){
+            selectedPositiveMaxAmount = Math.max(...tmpSelectedPositiveAmounts);
+            selectedPositiveMinAmount = Math.min(...tmpSelectedPositiveAmounts);
         };
-    },
+        
+        if (tmpSelectedNegativeAmounts.length > 0){
+            selectedNegativeMaxAmount = Math.min(...tmpSelectedNegativeAmounts);
+            selectedNegativeMinAmount = Math.max(...tmpSelectedNegativeAmounts);
+        };
+        
+        selectedActivitiesSum = selectedActivitiesSum.toFixed(2);
 
-    /*getIndexOfObjInArray: function(searchedObj, array){
-
-        for (let object in array){
-            var result = true;
-            for (let property  in searchedObj){
-                var cond = searchedObj.hasOwnProperty(property) && searchedObj[property] === array[object][property];
-                if (cond===true){
-                    var index = Number(object);
-                } else {
-                    result = false;
-                }
-            }
-
-            if (result === true){
-                return index;
-            };
-        }
-
-        return -1;
-
-    }*/
+        return {
+            allPositiveActivitiesNum,
+            allNegativeActivitiesNum,
+            allWallets,
+            allActivities,
+            allMaxAmount,
+            allMinAmount,
+            selectedPositiveActivitiesNum,
+            selectedNegativeActivitiesNum,
+            selectedWallets,
+            selectedPositiveMaxAmount,
+            selectedPositiveMinAmount,
+            selectedNegativeMaxAmount,
+            selectedNegativeMinAmount,
+            selectedActivitiesSum
+        };
+    }
 
 }

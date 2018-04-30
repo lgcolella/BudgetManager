@@ -1,5 +1,6 @@
 import React from 'react';
-
+import DatePicker from '../elements/DatePicker.jsx';
+import FormSelect from '../elements/FormSelect.jsx';
 
 export default class FiltersMenu extends React.Component {
 
@@ -10,21 +11,6 @@ export default class FiltersMenu extends React.Component {
             'values': {}
         };
         this.handleFilterChange = this.handleFilterChange.bind(this);
-        this.initMaterializePlugins = this.initMaterializePlugins.bind(this);
-    }
-
-    initMaterializePlugins(){
-        var elem = document.getElementById(this.state.id + '__activity');
-        if (typeof M.FormSelect.getInstance(elem) !== 'undefined'){
-            M.FormSelect.getInstance(elem).destroy();
-        };
-        M.FormSelect.init(elem);
-
-        var elem = document.getElementById(this.state.id + '__wallet');
-        if (typeof M.FormSelect.getInstance(elem) !== 'undefined'){
-            M.FormSelect.getInstance(elem).destroy();
-        };
-        M.FormSelect.init(elem);
     }
 
     handleFilterChange(filter, event){
@@ -56,81 +42,85 @@ export default class FiltersMenu extends React.Component {
             break;
 
             case 'Date':
-                newValues['fromDate'] = document.getElementById('from-date-picker').value;
-                newValues['toDate'] = document.getElementById('to-date-picker').value;
+                newValues['fromDate'] = M.Datepicker.getInstance(document.getElementById(this.state.id + '__from-date')).toString();
+                newValues['toDate'] = M.Datepicker.getInstance(document.getElementById(this.state.id + '__to-date')).toString();
             break;
 
-        };
-
+        }
+        
         this.setState({
             'values': newValues
         });
         this.props.onChange(newValues);
     }
 
-    componentDidMount(){
-
-        this.initMaterializePlugins();
-        var elem = document.querySelectorAll('.datepicker');
-        M.Datepicker.init(elem, {
-            format: 'yyyy-mm-dd',
-            showClearBtn: true,
-            onClose: () => { this.handleFilterChange('Date'); },
-            i18n: {
-                'cancel': 'Cancella',
-                'clear': 'Pulisci'
-            },
-        });
-    }
-
-    componentDidUpdate(){
-
-        this.initMaterializePlugins();
-
-    }
-
-
+    
     render(){
-        function getOptionsFromArray(array){
-            return array.map(function(value){
-                return <option key={value}>{value}</option>
-            });
-        };
+
+        var defaultWallets;
+        var defaultActivities;
+        var defaultMinAmount;
+        var defaultMaxAmount;
+        var defaultFromDate;
+        var defaultToDate;
+
+        if (typeof this.props.activeFilters !== 'undefined'){
+            defaultWallets = ( typeof this.props.activeFilters.wallet !== 'undefined' ? this.props.activeFilters.wallet : [] );
+            defaultActivities = ( typeof this.props.activeFilters.activity !== 'undefined' ? this.props.activeFilters.activity : [] );
+            defaultMinAmount = ( typeof this.props.activeFilters.minAmount !== 'undefined' ? this.props.activeFilters.minAmount : this.props.minAmount );
+            defaultMaxAmount = ( typeof this.props.activeFilters.maxAmount !== 'undefined' ? this.props.activeFilters.maxAmount : this.props.maxAmount );
+            defaultFromDate = ( typeof this.props.activeFilters.fromDate !== 'undefined' ? this.props.activeFilters.fromDate : '' );
+            defaultToDate = ( typeof this.props.activeFilters.toDate !== 'undefined' ? this.props.activeFilters.toDate : '' );
+        } else {
+            defaultWallets = [];
+            defaultActivities = [];
+            defaultMinAmount = this.props.minAmount;
+            defaultMaxAmount = this.props.maxAmount;
+            defaultFromDate = '';
+            defaultToDate = '';
+        }
+        
 
         return(
             <div id={this.state.id}>
                 <div>
                     <label>Portafoglio</label>
-                    <select id={this.state.id + '__wallet'} multiple onChange={() => this.handleFilterChange('wallet')} defaultValue={[]}>
-                        <option disabled></option>
-                        {getOptionsFromArray(this.props['wallets'])}
-                    </select>
+                    <FormSelect
+                    id={this.state.id + '__wallet'}
+                    options={this.props['wallets']}
+                    defaultOptions={defaultWallets}
+                    multiple={true}
+                    onChange={() => this.handleFilterChange('wallet')}
+                    ></FormSelect>
                 </div>
                 <div>
                     <label>Attività</label>
-                    <select id={this.state.id + '__activity'} multiple onChange={() => this.handleFilterChange('activity')} defaultValue={[]}>
-                        <option disabled></option>
-                        {getOptionsFromArray(this.props['activities'])}
-                    </select>
+                    <FormSelect
+                    id={this.state.id + '__activity'}
+                    options={this.props['activities']}
+                    defaultOptions={defaultActivities}
+                    multiple={true}
+                    onChange={() => this.handleFilterChange('activity')}
+                    ></FormSelect>
                 </div>
                 <div>
                     <label>Importo minimo</label>
-                    <input type='number' placeholder={this.props['minAmount']} onChange={(event) => this.handleFilterChange('minAmount', event)}></input>
+                    <input type='number' id={this.state.id + '__min-amount'} value={defaultMinAmount} onChange={(event) => this.handleFilterChange('minAmount', event)}></input>
                 </div>
                 <div>
                     <label>Importo massimo</label>
-                    <input type='number' placeholder={this.props['maxAmount']} onChange={(event) => this.handleFilterChange('maxAmount', event)}></input>
+                    <input type='number' id={this.state.id + '__max-amount'} value={defaultMaxAmount} onChange={(event) => this.handleFilterChange('maxAmount', event)}></input>
                 </div>
                 <div>
                     <label>Da</label>
-                    <input id='from-date-picker' type="text" className="datepicker"></input>
+                    <DatePicker id={this.state.id + '__from-date'} placeholder={defaultFromDate} onChange={() => this.handleFilterChange('Date')}></DatePicker>
                 </div>
                 <div>
                     <label>A</label>
-                    <input id='to-date-picker' type="text" className="datepicker"></input>
+                    <DatePicker id={this.state.id + '__to-date'} placeholder={defaultToDate} onChange={() => this.handleFilterChange('Date')}></DatePicker>
                 </div>
             </div>
         );
     }
 
-};
+}
