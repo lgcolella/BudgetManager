@@ -40,7 +40,7 @@ export default class SideNav extends React.Component {
                             type: 'info',
                             message: 'Backup effettuato con successo.'
                         });
-                    };
+                    }
                 })
             }
         });
@@ -61,7 +61,7 @@ export default class SideNav extends React.Component {
                     } catch(e) {
                         dialog.showErrorBox('Errore','Errore nella lettura del file.');
                     }
-                };
+                }
             });
         });
     }
@@ -77,7 +77,7 @@ export default class SideNav extends React.Component {
         } else {
             document.getElementById(this.props.filtersMenuId).classList.remove('hide');
             document.getElementById(this.props.tableOverviewId).parentNode.classList.remove('s12');
-        };
+        }
 
         this.setState({
             openedFiltersMenu: !this.state.openedFiltersMenu
@@ -89,7 +89,7 @@ export default class SideNav extends React.Component {
             document.getElementById(this.props.tableDataInfoId).classList.add('hide');
         } else {
             document.getElementById(this.props.tableDataInfoId).classList.remove('hide');
-        };
+        }
 
         this.setState({
             visibleTableDataInfo: !this.state.visibleTableDataInfo

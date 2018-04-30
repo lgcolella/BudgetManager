@@ -196,10 +196,10 @@ export default class Home extends React.Component {
                         result = ( date <= toDate ? true : false);
                     } else if ( !check(fromDate, 'Date') && !check(toDate, 'Date') ){
                         result = true;
-                    };
+                    }
                 } else {
                     result = true;
-                };
+                }
 
                 return result;
             })();
