@@ -1,6 +1,6 @@
 
 #table-overview {
-    tr:hover {
+    tbody>tr:hover {
         background-color: $background-color;
     }
     th>div, td>div {
@@ -89,5 +89,27 @@
     }
     .user-view {
         text-align: center;
+    }
+}
+
+#pagination-wrapper {
+    background-color: $background-element-color;
+    border: 1px solid $border-element-color;
+    margin: 0px;
+    padding: 0.75rem 0.75rem 0 0.75rem;
+    .col {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    #pagination-choice {
+        display: flex;
+        justify-content: center;
+        * {
+            display: block;
+            margin: auto;
+            width: 50%;
+            float: left;
+            text-align: center;
+        }
     }
 }

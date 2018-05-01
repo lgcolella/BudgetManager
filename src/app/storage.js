@@ -6,12 +6,21 @@ function Storage(name){
         this.storagePath = appPath + '/storage.json';
     } else {
         this.storagePath = appPath + '/' + name + '.json';
-    };
+    }
 }
 
 Storage.prototype.getData = function(){
-    var string = fs.readFileSync(this.storagePath);
-    return JSON.parse(string);
+    if (fs.existsSync(this.storagePath)){
+        var string = fs.readFileSync(this.storagePath);
+        return JSON.parse(string);
+    } else {
+        var obj = {
+            data: [],
+            filters: {}
+        };
+        fs.appendFileSync(this.storagePath, JSON.stringify(obj));
+        return obj;
+    }
 }
 
 Storage.prototype.setData = function(data){

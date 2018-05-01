@@ -47,6 +47,7 @@
 .modal.open {
     top: 2% !important;
     overflow: visible;
+    outline-width: 0px;
     .modal-content, .modal-footer {
         background-color: $background-element-color;
     }
@@ -71,6 +72,19 @@
         justify-content: flex-end;
         button {
             margin: 4px 0px 4px 4px;
+        }
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    li {
+        a {
+            color: $text-color;
+        }
+        &.active {
+            background-color: $background-color;
         }
     }
 }

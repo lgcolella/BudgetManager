@@ -4,6 +4,8 @@ import React from 'react';
 import SideNav from './components/SideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
 import EditActivity from './components/EditActivity.jsx';
+import Pagination from './elements/Pagination.jsx';
+import FormSelect from './elements/FormSelect.jsx';
 import { throttle } from 'rxjs/operator/throttle';
 
 const sideNavId = 'sidenav';
@@ -24,7 +26,8 @@ export default class Home extends React.Component {
             'data': data,
             'dataToRender': data,
             'activityToEdit': undefined,
-            'filters': defaultStorage.getData().filters
+            'filters': defaultStorage.getData().filters,
+            'elementsInPaginationGroup': 5
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -35,6 +38,7 @@ export default class Home extends React.Component {
         this.filterData = this.filterData.bind(this);
         this.sortColumns = this.sortColumns.bind(this);
         this.checkActivity = this.checkActivity.bind(this);
+        this.changeDisplayedElements = this.changeDisplayedElements.bind(this);
     }
 
     importData(data){
@@ -304,13 +308,13 @@ export default class Home extends React.Component {
         var inputValue = event.target.value;
 
         if (inputValue === 'all'){
-            var data = data.map((activity) => {
+            data = data.map((activity) => {
                 activity['selected'] = event.target.checked;
                 return activity;
             });
         } else {
             var id = Number(inputValue);
-            var data = data.map((activity) => {
+            data = data.map((activity) => {
                 if (activity.id === id){
                     activity['selected'] = event.target.checked;
                 }
@@ -321,6 +325,35 @@ export default class Home extends React.Component {
         this.setState({
             data
         });
+    }
+
+    changeDisplayedElements(groupNum){
+        var elementsInGroup = this.state.elementsInPaginationGroup;
+        var rows = document.querySelectorAll('#'+tableOverviewId+'>tbody>tr');
+        rows.forEach((row, index) => {
+            if (groupNum - 1 <= index/elementsInGroup && index/elementsInGroup < groupNum){
+                row.classList.remove('hide');
+            } else {
+                row.classList.add('hide');
+            }
+        });
+
+    }
+
+    changePaginationGroup(event){
+        var value = event.target.value;
+        if (value > 0){
+            this.setState({
+                elementsInPaginationGroup: value
+            }, () => {
+                var activeButton = document.querySelector('#table-overview-pagination li.active');
+                if (activeButton !== null){
+                    activeButton.classList.remove('active');
+                }
+                document.querySelectorAll('#table-overview-pagination li')[1].classList.add('active');
+                this.changeDisplayedElements(1);
+            });
+        }
     }
 
     componentDidMount(){
@@ -397,7 +430,7 @@ export default class Home extends React.Component {
                         <input
                         type='text'
                         id={this.state.id + '__search-input'}
-                        placeholder={( typeof this.state.filters !== 'undefined' && typeof this.state.filters.searchedValue !== 'undefined' ? this.state.filters.searchedValue : '')}
+                        placeholder={( typeof this.state.filters !== 'undefined' && typeof this.state.filters.searchedValue !== 'undefined' ? this.state.filters.searchedValue : undefined)}
                         onKeyUp={(event) => this.addFilters('searchedValue', event)}></input>
                         <label htmlFor={this.state.id + '__search-input'}>Cerca</label>
                     </div>
@@ -440,34 +473,52 @@ export default class Home extends React.Component {
                         ></FiltersMenu>
                     </div>
                     <div className='col s9'>
-                        <table id={tableOverviewId} className='highlight centered'>
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>
-                                    <div>
-                                        <label>
-                                            <input type="checkbox" value={'all'} defaultChecked={true} onClick={(event) => this.checkActivity(event)}></input>
-                                            <span></span>
-                                        </label>
-                                    </div>
-                                </th>
-                                <th> Portafoglio <i className='material-icons' onClick={(event) => this.sortColumns(event, 'wallet')}>sort</i></th>
-                                <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
-                                <th>Importo <i className='material-icons' onClick={(event) => this.sortColumns(event, 'amount')}>sort</i></th>
-                                <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
-                                <td>
-                                    <div>
-                                        <i className='material-icons' onClick={() => {M.Modal.getInstance(document.getElementById(modalNewActivityId)).open();}}>add_shopping_cart</i>
-                                    </div>
-                                </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {tbodyHTML}
-                            </tbody>
-                        </table>
+                        <div className='row'>
+                            <div className='col s12'>
+                                <table id={tableOverviewId} className='highlight centered'>
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>
+                                            <div>
+                                                <label>
+                                                    <input type="checkbox" value={'all'} defaultChecked={true} onClick={(event) => this.checkActivity(event)}></input>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th> Portafoglio <i className='material-icons' onClick={(event) => this.sortColumns(event, 'wallet')}>sort</i></th>
+                                        <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
+                                        <th>Importo <i className='material-icons' onClick={(event) => this.sortColumns(event, 'amount')}>sort</i></th>
+                                        <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
+                                        <td>
+                                            <div>
+                                                <i className='material-icons' onClick={() => {M.Modal.getInstance(document.getElementById(modalNewActivityId)).open();}}>add_shopping_cart</i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {tbodyHTML}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id='pagination-wrapper' className='row'>
+                            <div id='pagination-choice' className='col s3'>
+                                <label>Risultati per pagina</label>
+                                <input type='number' onChange={(event) => this.changePaginationGroup(event)}></input> 
+                            </div>
+                            <div className='col s9'>
+                                <Pagination
+                                elementsInGroup={this.state.elementsInPaginationGroup}
+                                elementsNum={dataToRender.length}
+                                onChange={this.changeDisplayedElements}
+                                ></Pagination>
+                            </div>
+                        </div>
                     </div>
+                    
                     <EditActivity
                         id={editActivityModalId}
                         wallets={dataInfo.allWallets}
