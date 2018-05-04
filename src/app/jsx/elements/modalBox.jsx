@@ -11,7 +11,7 @@ export default class ModalBox extends React.Component {
 
     componentDidMount(){
         var elem = document.getElementById(this.state.id);
-        var instance = M.Modal.init(elem);
+        M.Modal.init(elem);
     }
 
     render(){

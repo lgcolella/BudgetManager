@@ -65,9 +65,9 @@ export default class Pagination extends React.Component {
     render(){
 
         var paginationButtons = (() => {
+            
+            if ( this.props.elementsNum <= 0 || Number(this.props.elementsInGroup) <= 0 ){ return ( <span></span> )}
             var quote = this.props.elementsNum / this.props.elementsInGroup;
-
-            if (quote <= 0){ return ( <span></span> )}
             var buttons = [];
             for (let i = 0; i < Math.ceil(quote); i++){
                 buttons.push(

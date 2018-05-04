@@ -328,15 +328,24 @@ export default class Home extends React.Component {
     }
 
     changeDisplayedElements(groupNum){
-        var elementsInGroup = this.state.elementsInPaginationGroup;
-        var rows = document.querySelectorAll('#'+tableOverviewId+'>tbody>tr');
-        rows.forEach((row, index) => {
-            if (groupNum - 1 <= index/elementsInGroup && index/elementsInGroup < groupNum){
+
+        if (groupNum === 'all'){
+            var hiddenRows = document.querySelectorAll('#'+tableOverviewId+'>tbody>tr.hide');
+            if (hiddenRows !== null);
+            hiddenRows.forEach((row) => {
                 row.classList.remove('hide');
-            } else {
-                row.classList.add('hide');
-            }
-        });
+            });
+        } else {
+            var elementsInGroup = this.state.elementsInPaginationGroup;
+            var rows = document.querySelectorAll('#'+tableOverviewId+'>tbody>tr');
+            rows.forEach((row, index) => {
+                if (groupNum - 1 <= index/elementsInGroup && index/elementsInGroup < groupNum){
+                    row.classList.remove('hide');
+                } else {
+                    row.classList.add('hide');
+                }
+            });
+        }
 
     }
 
@@ -353,12 +362,19 @@ export default class Home extends React.Component {
                 document.querySelectorAll('#table-overview-pagination li')[1].classList.add('active');
                 this.changeDisplayedElements(1);
             });
+        } else {
+            this.setState({
+                elementsInPaginationGroup: ''
+            }, () => {
+                this.changeDisplayedElements('all');
+            });
         }
     }
 
     componentDidMount(){
         var elem = document.querySelectorAll('.tooltipped');
         M.Tooltip.init(elem);
+        this.changeDisplayedElements(1);
     }
 
     componentDidUpdate(){
@@ -473,6 +489,19 @@ export default class Home extends React.Component {
                         ></FiltersMenu>
                     </div>
                     <div className='col s9'>
+                        <div id='pagination-wrapper' className='row'>
+                            <div id='pagination-choice' className='col s3'>
+                                <label>Risultati per pagina</label>
+                                <input type='number' value={this.state.elementsInPaginationGroup} onChange={(event) => this.changePaginationGroup(event)}></input> 
+                            </div>
+                            <div className='col s9'>
+                                <Pagination
+                                elementsInGroup={this.state.elementsInPaginationGroup}
+                                elementsNum={dataToRender.length}
+                                onChange={this.changeDisplayedElements}
+                                ></Pagination>
+                            </div>
+                        </div>
                         <div className='row'>
                             <div className='col s12'>
                                 <table id={tableOverviewId} className='highlight centered'>
@@ -502,19 +531,6 @@ export default class Home extends React.Component {
                                         {tbodyHTML}
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                        <div id='pagination-wrapper' className='row'>
-                            <div id='pagination-choice' className='col s3'>
-                                <label>Risultati per pagina</label>
-                                <input type='number' onChange={(event) => this.changePaginationGroup(event)}></input> 
-                            </div>
-                            <div className='col s9'>
-                                <Pagination
-                                elementsInGroup={this.state.elementsInPaginationGroup}
-                                elementsNum={dataToRender.length}
-                                onChange={this.changeDisplayedElements}
-                                ></Pagination>
                             </div>
                         </div>
                     </div>

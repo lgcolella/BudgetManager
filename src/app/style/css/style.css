@@ -190,17 +190,29 @@ i.material-icons.hover-red:hover, .hover-red:hover {
 #pagination-wrapper {
   background-color: #253e68;
   border: 1px solid #9e9e9e;
-  margin: 0px;
-  padding: 0.75rem 0.75rem 0 0.75rem; }
+  margin: 0px 0px 10px 0px;
+  padding: 0em .5em; }
   #pagination-wrapper .col {
     padding-left: 0px;
     padding-right: 0px; }
   #pagination-wrapper #pagination-choice {
+    margin: 0px;
+    padding: .5em 0em;
     display: flex;
     justify-content: center; }
     #pagination-wrapper #pagination-choice * {
       display: block;
       margin: auto;
+      height: auto;
       width: 50%;
       float: left;
       text-align: center; }
+    #pagination-wrapper #pagination-choice input {
+      padding: .2em 0em; }
+  #pagination-wrapper #table-overview-pagination {
+    margin: 0px;
+    padding: .5em 0em; }
+    #pagination-wrapper #table-overview-pagination li a {
+      padding: 0em .5em; }
+    #pagination-wrapper #table-overview-pagination li:first-child a, #pagination-wrapper #table-overview-pagination li:last-child a {
+      padding: 0em; }

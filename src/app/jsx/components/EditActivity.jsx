@@ -1,5 +1,5 @@
 import React from 'react';
-import ModalBox from '../elements/modalBox.jsx';
+import ModalBox from '../elements/ModalBox.jsx';
 import DatePicker from '../elements/DatePicker.jsx';
 import FormSelect from '../elements/FormSelect.jsx';
 import Autocomplete from '../elements/Autocomplete.jsx';
