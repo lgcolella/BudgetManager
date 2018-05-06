@@ -1,21 +1,4 @@
 
-#table-overview {
-    tbody>tr:hover {
-        background-color: $background-color;
-    }
-    th>div, td>div {
-        display: flex;
-        justify-content: center;
-    }
-    td:first-child>i {
-        width: 100%;
-        margin: 0px;
-    }
-    th:nth-child(2) span:before, td:nth-child(2) span:before {
-        left: 0px;
-    }
-}
-
 #table-data-info {
     tr {
         background-color: transparent;
@@ -92,40 +75,82 @@
     }
 }
 
-#pagination-wrapper {
-    background-color: $background-element-color;
+#table-overview {
+    &>.row {
+        background-color: $background-element-color;
+        margin: 0px 0px 10px 0px;
+        padding: 0px;
+
+        .col {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+
+        table {
+            tbody>tr:hover {
+                background-color: $background-color;
+            }
+            th>div, td>div {
+                display: flex;
+                justify-content: center;
+            }
+            td:first-child>i {
+                width: 100%;
+                margin: 0px;
+            }
+            th:nth-child(2) span:before, td:nth-child(2) span:before {
+                left: 0px;
+            }
+        }
+
+        &#pagination-wrapper {
+    
+            border: 1px solid $border-element-color;
+
+            #pagination-choice {
+                margin: 0px;
+                padding: .5em 0em;
+                display: flex;
+                justify-content: center;
+                * {
+                    display: block;
+                    margin: auto;
+                    height: auto;
+                    width: 50%;
+                    float: left;
+                    text-align: center;
+                }
+                input {
+                    padding: .2em 0em;
+                }
+            }
+            #table-overview-pagination {
+                margin: 0px;
+                padding: .5em 0em;
+                li a {
+                    padding: 0em .5em;
+                }
+                li:first-child a, li:last-child a {
+                    padding: 0em;
+                }
+            }
+        }
+    }
+}
+
+#chart-overview {
     border: 1px solid $border-element-color;
-    margin: 0px 0px 10px 0px;
-    padding: 0em .5em;
+    background-color: $background-element-color;
+    margin: 0px;
+    padding: .8em .5em .0em .5em;        
     .col {
-        padding-left: 0px;
-        padding-right: 0px;
+        padding: 0em;
     }
-    #pagination-choice {
-        margin: 0px;
-        padding: .5em 0em;
-        display: flex;
-        justify-content: center;
-        * {
-            display: block;
-            margin: auto;
-            height: auto;
-            width: 50%;
-            float: left;
-            text-align: center;
-        }
-        input {
-            padding: .2em 0em;
-        }
+    text {
+        fill: $text-color;
     }
-    #table-overview-pagination {
-        margin: 0px;
-        padding: .5em 0em;
-        li a {
-            padding: 0em .5em;
-        }
-        li:first-child a, li:last-child a {
-            padding: 0em;
-        }
+    .recharts-default-tooltip {
+        background-color: $background-color;
+        color: $text-color;
     }
 }

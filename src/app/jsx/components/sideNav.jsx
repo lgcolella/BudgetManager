@@ -131,6 +131,19 @@ export default class SideNav extends React.Component {
                 <li><div className="divider"></div></li>
                 <li><a className="subheader">Passa a</a></li>
                 <li><a href={'#'+modalCalculatorId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className='material-icons'>exposure</i>Calcolatrice</a></li>
+                <li>
+                    {(() => {
+                        if (this.props.showTableOrChart === 'table'){
+                            return (
+                                <a href="#!" onClick={() => {this.props.onChangeShowTableOrChart('graph')}}><i className='material-icons'>show_chart</i>Grafico</a>
+                            );
+                        } else if (this.props.showTableOrChart === 'graph'){
+                            return (
+                                <a href="#!" onClick={() => {this.props.onChangeShowTableOrChart('table')}}><i className='material-icons'>grid_on</i>Tabella</a>
+                            );
+                        }
+                    })()}
+                </li>
             </ul>
             <EditActivity
                 id={this.props.modalNewActivityId}

@@ -2,6 +2,7 @@ import Storage from '../storage.js';
 import Utils from './functions/utils.js';
 import React from 'react';
 import TableOverview from './components/TableOverview.jsx';
+import Chart from './components/Chart.jsx';
 import SideNav from './components/SideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
 import EditActivity from './components/EditActivity.jsx';
@@ -9,10 +10,11 @@ import FormSelect from './elements/FormSelect.jsx';
 
 const sideNavId = 'sidenav';
 const modalNewActivityId = 'new-activity-modal';
-const editActivityModalId = 'edit-activity-modal';
+const modalEditActivityId = 'edit-activity-modal';
 const filtersMenuId = 'filters-menu';
 const tableDataInfoId = 'table-data-info';
 const tableOverviewId = 'table-overview';
+const chartOverviewId = 'chart-overview';
 const defaultStorage = new Storage();
 
 export default class Home extends React.Component {
@@ -26,6 +28,7 @@ export default class Home extends React.Component {
             'dataToRender': data,
             'activityToEdit': undefined,
             'filters': defaultStorage.getData().filters,
+            'showTableOrChart': 'table'
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -33,8 +36,7 @@ export default class Home extends React.Component {
         this.addFilters = this.addFilters.bind(this);
         this.clearFilters = this.clearFilters.bind(this);
         this.filterData = this.filterData.bind(this);
-        this.setStateData = this.setStateData.bind(this);
-        this.setActivityToEdit = this.setActivityToEdit.bind(this);
+        this.setStateProp = this.setStateProp.bind(this);
     }
 
     importData(data){
@@ -206,27 +208,58 @@ export default class Home extends React.Component {
         return dataToRender;
     }
 
-    setStateData(data){
-        this.setState({
-            data
-        });
-        defaultStorage.setData({
-            data,
-            filters: this.state.filters
-        });
-    }
-
     setActivityToEdit(activityToEdit){
         this.setState({
             activityToEdit
         });
     }
 
+    setStateProp(prop, value){
+
+        if (prop === 'data'){
+            this.setState({
+                [prop]: value
+            });
+            defaultStorage.setData({
+                [prop]: value,
+                'filters': this.state.filters
+            });
+        } else if (['activityToEdit', 'showTableOrChart'].indexOf(prop) !== -1){
+            this.setState({
+                [prop]: value
+            });
+        } else {
+            throw "Prop not allowed.";
+        }
+    }
+
     render() {
         var data = this.state.data;
         var dataToRender = this.filterData();
         var dataInfo = Utils.getDataInfo(data, dataToRender);
-
+        var dataVisualization = (() => {
+            switch (this.state.showTableOrChart){
+                case 'table':
+                    return (
+                        <TableOverview
+                        id={tableOverviewId}
+                        data={data}
+                        dataToRender={dataToRender}
+                        modalEditActivityId={modalEditActivityId}
+                        modalNewActivityId={modalNewActivityId}
+                        onChangeData={(value) => this.setStateProp('data', value)}
+                        onChangeActivityToEdit={(value) => this.setStateProp('activityToEdit', value)}
+                        />
+                    );
+                case 'graph':
+                    return (
+                        <Chart
+                        id={chartOverviewId}
+                        dataToRender={dataToRender}
+                        />
+                    );
+            }
+        })();
 
         return (
             <div>
@@ -235,6 +268,7 @@ export default class Home extends React.Component {
                     allData={this.state.data}
                     wallets={dataInfo.allWallets}
                     activity={dataInfo.allActivities}
+                    showTableOrChart={this.state.showTableOrChart}
                     modalNewActivityId={modalNewActivityId}
                     tableDataInfoId={tableDataInfoId}
                     tableOverviewId={tableOverviewId}
@@ -242,6 +276,7 @@ export default class Home extends React.Component {
                     onAddActivity={this.addActivity}
                     onImportData={this.importData}
                     onClearFilters={this.clearFilters}
+                    onChangeShowTableOrChart={(value) => {this.setStateProp('showTableOrChart', value)}}
                 ></SideNav>
                 <div className="fixed-action-btn">
                     <a className='btn-floating btn-large sidenav-trigger' data-target={sideNavId} title='Apri menu'>
@@ -297,19 +332,11 @@ export default class Home extends React.Component {
                         ></FiltersMenu>
                     </div>
                     <div className='col s9'>
-                        <TableOverview
-                        id={tableOverviewId}
-                        data={data}
-                        dataToRender={dataToRender}
-                        modalEditActivityId={editActivityModalId}
-                        modalNewActivityId={modalNewActivityId}
-                        onChangeData={this.setStateData}
-                        onChangeActivityToEdit={this.setActivityToEdit}
-                        ></TableOverview>
+                        {dataVisualization}
                     </div>
                     
                     <EditActivity
-                        id={editActivityModalId}
+                        id={modalEditActivityId}
                         wallets={dataInfo.allWallets}
                         activity={dataInfo.allActivities}
                         activityToEdit={this.state.activityToEdit}
