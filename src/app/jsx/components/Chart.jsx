@@ -1,5 +1,6 @@
 import React from 'react';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { ChromePicker } from 'react-color';
 
 export default class Chart extends React.Component {
 
@@ -8,10 +9,16 @@ export default class Chart extends React.Component {
         this.state = {
             id: this.props.id,
             chartWidth: 0,
-            backgroundColor: window.getComputedStyle( document.body ,null).getPropertyValue('background-color')
+            backgroundColor: window.getComputedStyle( document.body ,null).getPropertyValue('background-color'),
+            colorPicker: {
+                visible: false
+            }
         }
         this.adjustWidth = this.adjustWidth.bind(this);
         this.createDataset = this.createDataset.bind(this);
+        this.openColorPicker = this.openColorPicker.bind(this);
+        this.closeColorPicker = this.closeColorPicker.bind(this);
+        this.setWalletColor = this.setWalletColor.bind(this);
     }
 
     adjustWidth(){
@@ -68,6 +75,49 @@ export default class Chart extends React.Component {
         return dataset;
     }
 
+    openColorPicker(legendItem, index, event){
+        event.stopPropagation();
+        var wallet = legendItem.dataKey;
+        var positionLeft = parseInt(event.target.getBoundingClientRect().left); + 'px';
+        var positionTop = parseInt(event.target.getBoundingClientRect().top + 30); + 'px';
+        this.setState({
+            colorPicker: {
+                visible: true,
+                selectedWallet: wallet,
+                style: {
+                    'position': 'absolute',
+                    'top': positionTop,
+                    'left': positionLeft,
+                    'zIndex': 1000
+                }
+            }
+        }, () => {
+            window.addEventListener('click', this.closeColorPicker);
+        })
+    }
+
+    closeColorPicker(event){
+        if (this.state.colorPicker.visible){
+            var colorPicker = document.querySelector('#'+ this.state.id + ' div.chrome-picker');
+            if (!colorPicker.contains(event.target)){
+                event.stopPropagation();
+                this.setState({
+                    colorPicker: { visible: false }
+                }, () => {
+                    window.removeEventListener('click', this.closeColorPicker);
+                });
+            }
+        }
+    }
+
+    setWalletColor(color){
+        var wallet = this.state.colorPicker.selectedWallet;
+        var newWalletsColors = Object.assign({}, this.props.walletsColors, {
+            [wallet]: color.hex
+        });
+        this.props.onChangeWalletsColors(newWalletsColors);
+    }
+
     componentDidMount(){
         this.adjustWidth();
         window.addEventListener('resize', this.adjustWidth);
@@ -86,14 +136,14 @@ export default class Chart extends React.Component {
                 });
                 return result;
             })();
-            
+
             return (
                 wallets.map((wallet) => {
                     return (
                         <Line
                         type='monotone'
                         dataKey={wallet}
-                        stroke={'#' + Math.random().toFixed(6).slice(2)}
+                        stroke={this.props.walletsColors[wallet] || '#fff'}
                         strokeWidth='3px'
                         connectNulls={true}
                         formatter={(value, name, props) => {return value + '€'}}
@@ -105,16 +155,33 @@ export default class Chart extends React.Component {
 
         })();
 
+        var colorPicker = (() => {
+            if (this.state.colorPicker.visible){
+                var wallet = this.state.colorPicker.selectedWallet;
+                return (
+                    <div style={this.state.colorPicker.style}>
+                        <ChromePicker
+                            color={this.props.walletsColors[wallet]}
+                            onChangeComplete={this.setWalletColor}
+                        />
+                    </div>
+                )
+            } else {
+                return null;
+            }
+        })();
+
         return(
             <div id={this.state.id}>
                 <div className='row'>
                     <div className='col s12'>
+                        {colorPicker}
                         <LineChart width={this.state.chartWidth} height={400} data={this.createDataset(dataToRender)}>
                             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                             <XAxis dataKey='date'/>
                             <YAxis />
                             <Tooltip wrapperStyle={{backgroundColor: this.state.backgroundColor}}/>
-                            <Legend verticalAlign='top' wrapperStyle={{top: '-5px'}}/>
+                            <Legend verticalAlign='top' wrapperStyle={{top: '-5px'}} onClick={this.openColorPicker}/>
                             {lines}
                         </LineChart>
                     </div>

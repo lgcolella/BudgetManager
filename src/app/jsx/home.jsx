@@ -28,7 +28,8 @@ export default class Home extends React.Component {
             'dataToRender': data,
             'activityToEdit': undefined,
             'filters': defaultStorage.getData().filters,
-            'showTableOrChart': defaultStorage.getData().showTableOrChart || 'table'
+            'showTableOrChart': defaultStorage.getData().showTableOrChart || 'table',
+            'chartWalletsColors': defaultStorage.getData().chartWalletsColors || {}
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -211,7 +212,7 @@ export default class Home extends React.Component {
 
     setStateProp(prop, value){
 
-        if (prop === 'data' || prop === 'showTableOrChart'){
+        if (prop === 'data' || prop === 'showTableOrChart' || prop === 'chartWalletsColors'){
             this.setState({
                 [prop]: value
             });
@@ -251,6 +252,8 @@ export default class Home extends React.Component {
                         <Chart
                         id={chartOverviewId}
                         dataToRender={dataToRender}
+                        walletsColors={this.state.chartWalletsColors}
+                        onChangeWalletsColors={(value) => this.setStateProp('chartWalletsColors', value)}
                         />
                     );
             }
