@@ -23,7 +23,9 @@ Storage.prototype.getData = function(){
     }
 }
 
-Storage.prototype.setData = function(data){
+Storage.prototype.setData = function(newData){
+    var prevData = JSON.parse(fs.readFileSync(this.storagePath));
+    var data = Object.assign({}, prevData, newData);
     fs.writeFileSync(this.storagePath, JSON.stringify(data) );
 }
 

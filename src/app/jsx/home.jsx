@@ -28,7 +28,7 @@ export default class Home extends React.Component {
             'dataToRender': data,
             'activityToEdit': undefined,
             'filters': defaultStorage.getData().filters,
-            'showTableOrChart': 'table'
+            'showTableOrChart': defaultStorage.getData().showTableOrChart || 'table'
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -45,8 +45,7 @@ export default class Home extends React.Component {
             dataToRender: data
         });
         defaultStorage.setData({
-            data,
-            filters: this.state.filters
+            data
         });
     }
 
@@ -61,7 +60,6 @@ export default class Home extends React.Component {
         });
         defaultStorage.setData({
             data: newData,
-            filters: this.state.filters
         });
         
     }
@@ -79,7 +77,6 @@ export default class Home extends React.Component {
         });
         defaultStorage.setData({
             data: newData,
-            filters: this.state.filters
         });
     }
 
@@ -96,7 +93,6 @@ export default class Home extends React.Component {
             filters: newFilters
         });
         defaultStorage.setData({
-            data: this.state.data,
             filters: newFilters
         });
         
@@ -107,7 +103,6 @@ export default class Home extends React.Component {
             filters: {}
         });
         defaultStorage.setData({
-            data: this.state.data,
             filters: {}
         });
         [
@@ -216,15 +211,14 @@ export default class Home extends React.Component {
 
     setStateProp(prop, value){
 
-        if (prop === 'data'){
+        if (prop === 'data' || prop === 'showTableOrChart'){
             this.setState({
                 [prop]: value
             });
             defaultStorage.setData({
                 [prop]: value,
-                'filters': this.state.filters
             });
-        } else if (['activityToEdit', 'showTableOrChart'].indexOf(prop) !== -1){
+        } else if (prop === 'activityToEdit'){
             this.setState({
                 [prop]: value
             });
@@ -234,6 +228,7 @@ export default class Home extends React.Component {
     }
 
     render() {
+
         var data = this.state.data;
         var dataToRender = this.filterData();
         var dataInfo = Utils.getDataInfo(data, dataToRender);

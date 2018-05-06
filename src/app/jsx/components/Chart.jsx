@@ -15,7 +15,7 @@ export default class Chart extends React.Component {
     }
 
     adjustWidth(){
-        var componentWidth = document.getElementById(this.state.id).clientWidth / 100 * 88;
+        var componentWidth = document.getElementById(this.state.id).clientWidth / 100 * 90;
         this.setState({
             chartWidth: componentWidth
         });

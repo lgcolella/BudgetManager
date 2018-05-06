@@ -183,18 +183,17 @@ export default class TableOverview extends React.Component {
     }
 
     changeDisplayedElements(groupNum){
-
-        if (groupNum === 'all'){
+        var elementsInPaginationGroup = Number(this.state.elementsInPaginationGroup);
+        if (groupNum === 'all' || isNaN(elementsInPaginationGroup) || elementsInPaginationGroup === 0){
             var hiddenRows = document.querySelectorAll('#'+this.state.tableId+'>tbody>tr.hide');
             if (hiddenRows !== null);
             hiddenRows.forEach((row) => {
                 row.classList.remove('hide');
             });
         } else {
-            var elementsInGroup = this.state.elementsInPaginationGroup;
             var rows = document.querySelectorAll('#'+this.state.tableId+'>tbody>tr');
             rows.forEach((row, index) => {
-                if (groupNum - 1 <= index/elementsInGroup && index/elementsInGroup < groupNum){
+                if (groupNum - 1 <= index/elementsInPaginationGroup && index/elementsInPaginationGroup < groupNum){
                     row.classList.remove('hide');
                 } else {
                     row.classList.add('hide');
