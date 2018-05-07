@@ -8,10 +8,13 @@ export default class Calculator extends React.Component {
             prevNum: 0,
             currentNum: 0,
             currentOp: '+',
-            MAX_NUM_LENGTH: 10
+            madeOperations: [],
+            MAX_NUM_LENGTH: 10,
+            MAX_MADE_OPERATIONS: 18
         };
         this.handleNumberClick = this.handleNumberClick.bind(this);
         this.handleOperationClick = this.handleOperationClick.bind(this);
+        this.clearMadeOperations = this.clearMadeOperations.bind(this);
     }
 
     handleNumberClick(event){
@@ -27,6 +30,7 @@ export default class Calculator extends React.Component {
         var currentNum = Number(this.state.currentNum);
         var prevOp = this.state.currentOp;
         var currentOp = event.target.value;
+        var madeOperations = this.state.madeOperations;
 
         function mathEval(number1, number2, operation){
 
@@ -84,14 +88,28 @@ export default class Calculator extends React.Component {
             break;
 
             case '=':
+                var operation = prevNum + ' ' + prevOp + ' ' + currentNum;
                 prevNum = mathEval(prevNum, currentNum, prevOp);
+                operation = operation + ' = ' + prevNum;
+                madeOperations = [operation].concat(madeOperations);
                 currentNum = 0;
                 currentOp = prevOp;
             break;
 
             default:
                 if ( !isNaN(currentNum) && currentNum !== 0 ){
+                    var operation = prevNum + ' ' + prevOp + ' ' + currentNum;
                     prevNum = mathEval(prevNum, currentNum, prevOp);
+                    if (madeOperations.length > 0){
+                        var prevOperation = (() => {
+                            var lastOperation = madeOperations.shift();
+                            return lastOperation.slice(0, lastOperation.indexOf(' = '));
+                        })();
+                        operation = prevOperation + prevOp + currentNum + ' = ' + prevNum;
+                    } else {
+                        operation = operation + ' = ' + prevNum;
+                    }
+                    madeOperations = [operation].concat(madeOperations);
                     currentNum = 0;
                 }
                 currentOp = currentOp;
@@ -101,9 +119,16 @@ export default class Calculator extends React.Component {
         this.setState({
             prevNum,
             currentNum,
-            currentOp
+            currentOp,
+            madeOperations
         });
 
+    }
+
+    clearMadeOperations(){
+        this.setState({
+            madeOperations: []
+        });
     }
     
     render(){
@@ -113,9 +138,9 @@ export default class Calculator extends React.Component {
         var rightNumber = ( Number(this.state.prevNum) === 0 ?  this.state.prevNum.toString().slice(0, maxLength) : this.state.currentNum.toString().slice(0, maxLength));
 
         return(
-            <div>
+            <div className='row'>
                 <h4>Calcolatrice</h4>
-                <div>
+                <div className='col s8'>
                     <div className='row'>
                         <div className='col s5'><input type='text' value={leftNumber} className='center-align' readOnly></input></div>
                         <div className='col s2'><p className='center-align'>{this.state.currentOp}</p></div>
@@ -149,6 +174,20 @@ export default class Calculator extends React.Component {
                         <div className='col s6'><button className='btn btn-large waves-effect' value='0' onClick={(event) => this.handleNumberClick(event)}>0</button></div>
                         <div className='col s3'><button className='btn btn-large waves-effect operation' value='.' onClick={(event) => this.handleOperationClick(event)}>.</button></div>
                         <div className='col s3'><button className='btn btn-large waves-effect operation' value='=' onClick={(event) => this.handleOperationClick(event)}>=</button></div>
+                    </div>
+                </div>
+                <div className='col s4'>
+                    <div className='row'>
+                        <div className='col s12'>
+                            <div className='operations-list'>
+                                <button className='btn waves-effect' onClick={this.clearMadeOperations}>Pulisci</button>
+                                {
+                                    this.state.madeOperations.map((value, index) => {
+                                        return (this.state.MAX_MADE_OPERATIONS > index ? <p key={value + index}>{value}</p> : null);
+                                    })
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

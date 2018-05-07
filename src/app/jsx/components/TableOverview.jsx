@@ -8,7 +8,7 @@ export default class TableOverview extends React.Component {
         this.state = {
             id: this.props.id,
             tableId: this.props.id + '__table',
-            elementsInPaginationGroup: 5
+            elementsInPaginationGroup: 8
         }
         this.getTHead = this.getTHead.bind(this);
         this.getTbody = this.getTbody.bind(this);
