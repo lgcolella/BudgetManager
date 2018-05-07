@@ -53,7 +53,6 @@
       background-color: #9FE7F9; }
 
 .modal.open {
-  top: 2% !important;
   overflow: visible;
   outline-width: 0px; }
   .modal.open .modal-content, .modal.open .modal-footer {
@@ -140,7 +139,8 @@ i.material-icons.hover-red:hover, .hover-red:hover {
     text-align: center; }
 
 #modal-calculator {
-  width: 70%;
+  width: 80%;
+  max-width: 700px;
   max-height: 80%; }
   #modal-calculator button.btn-large, #modal-calculator input[type="text"], #modal-calculator p {
     font-size: 1.8em; }
@@ -152,6 +152,12 @@ i.material-icons.hover-red:hover, .hover-red:hover {
     padding: 0px; }
     #modal-calculator button.btn.operation {
       border-color: #263238; }
+  #modal-calculator .operations-list {
+    border-left: 2px solid #ffffff;
+    padding-left: 5px;
+    text-align: right; }
+    #modal-calculator .operations-list p {
+      font-size: 1em; }
 
 #homepage__search-input {
   margin-bottom: 0px; }

@@ -123,6 +123,10 @@ export default class Chart extends React.Component {
         window.addEventListener('resize', this.adjustWidth);
     }
 
+    componentWillUnmount(){
+        window.removeEventListener('resize', this.adjustWidth);
+    }
+
     render(){
 
         var dataToRender = this.props.dataToRender;

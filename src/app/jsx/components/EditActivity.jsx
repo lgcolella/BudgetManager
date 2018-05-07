@@ -140,7 +140,7 @@ export default class EditActivity extends React.Component {
         }
         /*!Error box*/
         return(
-            <ModalBox id={this.state.id}>
+            <ModalBox id={this.state.id} endingTop={'5%'}>
                 <div>
                     <form>
                         <div>

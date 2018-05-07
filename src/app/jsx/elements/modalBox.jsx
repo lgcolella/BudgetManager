@@ -5,13 +5,16 @@ export default class ModalBox extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            'id': props.id
+            'id': props.id,
+            'endingTop': props.endingTop || '8%'
         }
     }
 
     componentDidMount(){
         var elem = document.getElementById(this.state.id);
-        M.Modal.init(elem);
+        M.Modal.init(elem, {
+            endingTop: '3%'
+        });
     }
 
     render(){

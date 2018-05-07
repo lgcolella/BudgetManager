@@ -22,7 +22,8 @@
 
 #modal-calculator {
 
-    width: 70%;
+    width: 80%;
+    max-width: 700px;
     max-height: 80%;
 
     button.btn-large, input[type="text"], p {
@@ -44,6 +45,15 @@
             }
         }
 
+    }
+
+    .operations-list {
+        border-left: 2px solid $text-color;
+        padding-left: 5px;
+        text-align: right;
+        p {
+            font-size: 1em;
+        }
     }
 
 }
