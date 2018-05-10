@@ -1,11 +1,13 @@
+const {dialog} = require('electron').remote;
 import fs from 'fs';
 import React from 'react';
+import Xlsx from 'xlsx';
 import EditActivity from './EditActivity.jsx';
 import Calculator from './Calculator.jsx';
 import ModalBox from '../elements/ModalBox.jsx';
 
-const {dialog} = require('electron').remote;
 const modalCalculatorId = 'modal-calculator';
+const modalExportId = 'modal-export';
 
 export default class SideNav extends React.Component {
 
@@ -73,11 +75,13 @@ export default class SideNav extends React.Component {
     toggleFiltersMenu(){
         if (this.state.openedFiltersMenu){
             document.getElementById(this.props.filtersMenuId).classList.add('hide');
-            document.getElementById(this.props.tableOverviewId).parentNode.classList.add('s12');
+            document.getElementById(this.props.dataVisualizationId).classList.add('s12');
         } else {
             document.getElementById(this.props.filtersMenuId).classList.remove('hide');
-            document.getElementById(this.props.tableOverviewId).parentNode.classList.remove('s12');
+            document.getElementById(this.props.dataVisualizationId).classList.remove('s12');
         }
+
+        window.dispatchEvent(new Event('resize'));
 
         this.setState({
             openedFiltersMenu: !this.state.openedFiltersMenu
@@ -126,8 +130,11 @@ export default class SideNav extends React.Component {
                     </a>
                 </li>
                 <li><a href="#!" className='waves-effect' onClick={this.props.onClearFilters}><i className='material-icons'>clear</i>Resetta filtri</a></li>
+                <li><div className="divider"></div></li>
+                <li><a className="subheader">Import/ Export</a></li>
                 <li><a href="#!" className='waves-effect' onClick={this.exportData}><i className='material-icons'>file_download</i>Esporta dati</a></li>
                 <li><a href="#!" className='waves-effect' onClick={this.importData}><i className='material-icons'>file_upload</i>Carica dati</a></li>
+                <li><a href={'#' + modalExportId} className='waves-effect modal-trigger'><i className='material-icons'>file_download</i>Salva dati su file</a></li>
                 <li><div className="divider"></div></li>
                 <li><a className="subheader">Passa a</a></li>
                 <li><a href={'#'+modalCalculatorId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className='material-icons'>exposure</i>Calcolatrice</a></li>
@@ -154,8 +161,61 @@ export default class SideNav extends React.Component {
             <ModalBox id={modalCalculatorId}>
                 <Calculator></Calculator>
             </ModalBox>
+            <ExportBox
+                data={this.props.allData}
+            ></ExportBox>
 
             </div>
+        );
+    }
+
+}
+
+class ExportBox extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            id: modalExportId
+        }
+        this.exportDataToFile = this.exportDataToFile.bind(this);
+    }
+
+    exportDataToFile(fileExtension){
+        
+        dialog.showSaveDialog({
+            title: 'Salva dati in ' + ( fileExtension === 'xlsx' ? 'Excel' : fileExtension),
+            defaultPath: 'data.' + fileExtension,
+        }, (path) => {
+
+            var data = this.props.data.map((obj) => {
+                return [
+                    obj.wallet, obj.activity, obj.amount, obj.date, obj.comment
+                ];
+            });
+            var sheetHeaders = ['Portafoglio', 'Attività', 'Importo', 'Data', 'Commento'];
+            data = [sheetHeaders].concat(data);
+            var sheet = Xlsx.utils.aoa_to_sheet(data);
+            var workbook = Xlsx.utils.book_new();
+            Xlsx.utils.book_append_sheet(workbook, sheet, 'Budget Manager');
+            Xlsx.writeFile(workbook, path, { type: fileExtension });
+        });
+
+    }
+
+    render(){
+        return(
+            <ModalBox id={this.state.id}>
+                <div className='row'>
+                <h4 className='center-align'>Esporta dati in</h4>
+                    <div className='col s12'>
+                        <div className='col s3'><button className='btn btn-large waves-effect' onClick={() => {this.exportDataToFile('xlsx')}}>Excel</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect' onClick={() => {this.exportDataToFile('ods')}}>ODS</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect' onClick={() => {this.exportDataToFile('csv')}}>CSV</button></div>
+                        <div className='col s3'><button className='btn btn-large waves-effect' onClick={() => {this.exportDataToFile('html')}}>HTML</button></div>
+                    </div>
+                </div>
+            </ModalBox>
         );
     }
 

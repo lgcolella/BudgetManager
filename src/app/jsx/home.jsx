@@ -15,6 +15,7 @@ const filtersMenuId = 'filters-menu';
 const tableDataInfoId = 'table-data-info';
 const tableOverviewId = 'table-overview';
 const chartOverviewId = 'chart-overview';
+const dataVisualizationId = 'data-visualization-wrapper';
 const defaultStorage = new Storage();
 
 export default class Home extends React.Component {
@@ -269,7 +270,7 @@ export default class Home extends React.Component {
                     showTableOrChart={this.state.showTableOrChart}
                     modalNewActivityId={modalNewActivityId}
                     tableDataInfoId={tableDataInfoId}
-                    tableOverviewId={tableOverviewId}
+                    dataVisualizationId={dataVisualizationId}
                     filtersMenuId={filtersMenuId}
                     onAddActivity={this.addActivity}
                     onImportData={this.importData}
@@ -329,7 +330,7 @@ export default class Home extends React.Component {
                             onChange={this.addFilters}
                         ></FiltersMenu>
                     </div>
-                    <div className='col s9'>
+                    <div id={dataVisualizationId} className='col s9'>
                         {dataVisualization}
                     </div>
                     

@@ -88,11 +88,7 @@ export default class Calculator extends React.Component {
             break;
 
             case '=':
-<<<<<<< HEAD
                 var operation = prevNum + ' ' + prevOp + ' ' + currentNum;
-=======
-                var operation = prevNum + prevOp + currentNum;
->>>>>>> 7674bc40623fb557f731018c5586e83c09839fb7
                 prevNum = mathEval(prevNum, currentNum, prevOp);
                 operation = operation + ' = ' + prevNum;
                 madeOperations = [operation].concat(madeOperations);
@@ -102,7 +98,6 @@ export default class Calculator extends React.Component {
 
             default:
                 if ( !isNaN(currentNum) && currentNum !== 0 ){
-<<<<<<< HEAD
                     var operation = prevNum + ' ' + prevOp + ' ' + currentNum;
                     prevNum = mathEval(prevNum, currentNum, prevOp);
                     if (madeOperations.length > 0){
@@ -114,15 +109,9 @@ export default class Calculator extends React.Component {
                     } else {
                         operation = operation + ' = ' + prevNum;
                     }
-=======
-                    var operation = prevNum + prevOp + currentNum;
-                    prevNum = mathEval(prevNum, currentNum, prevOp);
-                    operation = operation + ' = ' + prevNum;
->>>>>>> 7674bc40623fb557f731018c5586e83c09839fb7
                     madeOperations = [operation].concat(madeOperations);
                     currentNum = 0;
                 }
-                currentOp = currentOp;
             break;
         }
 

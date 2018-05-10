@@ -182,8 +182,15 @@ export default class Chart extends React.Component {
                         {colorPicker}
                         <LineChart width={this.state.chartWidth} height={400} data={this.createDataset(dataToRender)}>
                             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                            <XAxis dataKey='date'/>
-                            <YAxis />
+                            <XAxis
+                            dataKey='date'
+                            tickFormatter={(value) => {
+                                var options = { year: 'numeric', month: 'short' };
+                                return new Date(value).toLocaleDateString('it-IT', options);
+                            }}
+                            />
+                            <YAxis tickFormatter={(value) => {return value + '€';}}
+                            />
                             <Tooltip wrapperStyle={{backgroundColor: this.state.backgroundColor}}/>
                             <Legend verticalAlign='top' wrapperStyle={{top: '-5px'}} onClick={this.openColorPicker}/>
                             {lines}
