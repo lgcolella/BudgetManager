@@ -1,16 +1,19 @@
 import Storage from '../storage.js';
 import Utils from './functions/utils.js';
 import React from 'react';
+
+import FormSelect from './elements/FormSelect.jsx';
 import TableOverview from './components/TableOverview.jsx';
 import Chart from './components/Chart.jsx';
 import SideNav from './components/SideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
 import EditActivity from './components/EditActivity.jsx';
-import FormSelect from './elements/FormSelect.jsx';
+import CalendarNote from './components/CalendarNote.jsx';
 
 const sideNavId = 'sidenav';
 const modalNewActivityId = 'new-activity-modal';
 const modalEditActivityId = 'edit-activity-modal';
+const modalCalendarNoteId = 'calendar-note-modal';
 const filtersMenuId = 'filters-menu';
 const tableDataInfoId = 'table-data-info';
 const tableOverviewId = 'table-overview';
@@ -30,7 +33,8 @@ export default class Home extends React.Component {
             'activityToEdit': undefined,
             'filters': defaultStorage.getData().filters,
             'showTableOrChart': defaultStorage.getData().showTableOrChart || 'table',
-            'chartWalletsColors': defaultStorage.getData().chartWalletsColors || {}
+            'chartWalletsColors': defaultStorage.getData().chartWalletsColors || {},
+            'notes': defaultStorage.getData().notes || {}
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -213,7 +217,8 @@ export default class Home extends React.Component {
 
     setStateProp(prop, value){
 
-        if (prop === 'data' || prop === 'showTableOrChart' || prop === 'chartWalletsColors'){
+        var storedProp = ['data', 'showTableOrChart', 'chartWalletsColors', 'notes'];
+        if (storedProp.indexOf(prop) !== -1){
             this.setState({
                 [prop]: value
             });
@@ -272,6 +277,9 @@ export default class Home extends React.Component {
                     tableDataInfoId={tableDataInfoId}
                     dataVisualizationId={dataVisualizationId}
                     filtersMenuId={filtersMenuId}
+                    openCalendarNote={() => {
+                        M.Datepicker.getInstance(document.getElementById(modalCalendarNoteId)).open();
+                    }}
                     onAddActivity={this.addActivity}
                     onImportData={this.importData}
                     onClearFilters={this.clearFilters}
@@ -341,6 +349,12 @@ export default class Home extends React.Component {
                         activityToEdit={this.state.activityToEdit}
                         onSubmit={this.editActivity}
                     ></EditActivity>
+
+                    <CalendarNote
+                    id={modalCalendarNoteId}
+                    notes={this.state.notes}
+                    onChange={(newNote) => this.setStateProp('notes', newNote)}
+                    ></CalendarNote>
                 </div>
             </div>
         );

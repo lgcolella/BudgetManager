@@ -175,7 +175,8 @@ i.material-icons.hover-red:hover, .hover-red:hover {
 #sidenav {
   background-color: #253e68; }
   #sidenav li a {
-    color: #ffffff; }
+    color: #ffffff;
+    height: 42px; }
   #sidenav .user-view {
     text-align: center; }
 

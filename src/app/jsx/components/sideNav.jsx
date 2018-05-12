@@ -2,9 +2,9 @@ const {dialog} = require('electron').remote;
 import fs from 'fs';
 import React from 'react';
 import Xlsx from 'xlsx';
+import ModalBox from '../elements/ModalBox.jsx';
 import EditActivity from './EditActivity.jsx';
 import Calculator from './Calculator.jsx';
-import ModalBox from '../elements/ModalBox.jsx';
 
 const modalCalculatorId = 'modal-calculator';
 const modalExportId = 'modal-export';
@@ -131,26 +131,32 @@ export default class SideNav extends React.Component {
                 </li>
                 <li><a href="#!" className='waves-effect' onClick={this.props.onClearFilters}><i className='material-icons'>clear</i>Resetta filtri</a></li>
                 <li><div className="divider"></div></li>
-                <li><a className="subheader">Import/ Export</a></li>
-                <li><a href="#!" className='waves-effect' onClick={this.exportData}><i className='material-icons'>file_download</i>Esporta dati</a></li>
-                <li><a href="#!" className='waves-effect' onClick={this.importData}><i className='material-icons'>file_upload</i>Carica dati</a></li>
-                <li><a href={'#' + modalExportId} className='waves-effect modal-trigger'><i className='material-icons'>file_download</i>Salva dati su file</a></li>
-                <li><div className="divider"></div></li>
                 <li><a className="subheader">Passa a</a></li>
-                <li><a href={'#'+modalCalculatorId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className='material-icons'>exposure</i>Calcolatrice</a></li>
                 <li>
                     {(() => {
                         if (this.props.showTableOrChart === 'table'){
                             return (
-                                <a href="#!" onClick={() => {this.props.onChangeShowTableOrChart('graph')}}><i className='material-icons'>show_chart</i>Grafico</a>
+                                <a href="#!" className='waves-effect' onClick={() => {this.props.onChangeShowTableOrChart('graph')}}><i className='material-icons'>show_chart</i>Grafico</a>
                             );
                         } else if (this.props.showTableOrChart === 'graph'){
                             return (
-                                <a href="#!" onClick={() => {this.props.onChangeShowTableOrChart('table')}}><i className='material-icons'>grid_on</i>Tabella</a>
+                                <a href="#!" className='waves-effect' onClick={() => {this.props.onChangeShowTableOrChart('table')}}><i className='material-icons'>grid_on</i>Tabella</a>
                             );
                         }
                     })()}
                 </li>
+                <li><a href='#!' className='waves-effect' 
+                    onClick={() => {
+                        this.props.openCalendarNote();
+                        this.closeSideNav();
+                    }}><i className='material-icons'>date_range</i>Calendario</a>
+                </li>
+                <li><a href={'#'+modalCalculatorId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className='material-icons'>exposure</i>Calcolatrice</a></li>
+                <li><div className="divider"></div></li>
+                <li><a className="subheader">Import/ Export</a></li>
+                <li><a href="#!" className='waves-effect' onClick={this.exportData}><i className='material-icons'>file_download</i>Backup dati</a></li>
+                <li><a href="#!" className='waves-effect' onClick={this.importData}><i className='material-icons'>file_upload</i>Ripristina backup</a></li>
+                <li><a href={'#' + modalExportId} className='waves-effect modal-trigger'><i className='material-icons'>insert_drive_file</i>Esporta dati</a></li>
             </ul>
             <EditActivity
                 id={this.props.modalNewActivityId}
@@ -158,13 +164,15 @@ export default class SideNav extends React.Component {
                 activity={this.props.activity}
                 onSubmit={this.props.onAddActivity}
             ></EditActivity>
-            <ModalBox id={modalCalculatorId}>
-                <Calculator></Calculator>
-            </ModalBox>
+
             <ExportBox
                 data={this.props.allData}
             ></ExportBox>
 
+            <ModalBox id={modalCalculatorId}>
+                <Calculator></Calculator>
+            </ModalBox>
+            
             </div>
         );
     }
