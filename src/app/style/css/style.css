@@ -28,9 +28,9 @@
     background-color: #26a69a;
     color: #ffffff;
     border-color: #26a69a; }
-  .btn.modal-close, .btn.datepicker-clear, .btn.btn-flat.modal-close, .btn.btn-flat.datepicker-clear, .btn-flat.modal-close, .btn-flat.datepicker-clear, .modal-footer .btn.btn-flat.modal-close, .modal-footer .btn.btn-flat.datepicker-clear {
+  .btn.modal-close, .btn.datepicker-clear, .btn.btn-red, .btn.btn-flat.modal-close, .btn.btn-flat.datepicker-clear, .btn.btn-flat.btn-red, .btn-flat.modal-close, .btn-flat.datepicker-clear, .btn-flat.btn-red, .modal-footer .btn.btn-flat.modal-close, .modal-footer .btn.btn-flat.datepicker-clear, .modal-footer .btn.btn-flat.btn-red {
     border-color: #F44336; }
-    .btn.modal-close:hover, .btn.datepicker-clear:hover, .btn.btn-flat.modal-close:hover, .btn.btn-flat.datepicker-clear:hover, .btn-flat.modal-close:hover, .btn-flat.datepicker-clear:hover, .modal-footer .btn.btn-flat.modal-close:hover, .modal-footer .btn.btn-flat.datepicker-clear:hover {
+    .btn.modal-close:hover, .btn.datepicker-clear:hover, .btn.btn-red:hover, .btn.btn-flat.modal-close:hover, .btn.btn-flat.datepicker-clear:hover, .btn.btn-flat.btn-red:hover, .btn-flat.modal-close:hover, .btn-flat.datepicker-clear:hover, .btn-flat.btn-red:hover, .modal-footer .btn.btn-flat.modal-close:hover, .modal-footer .btn.btn-flat.datepicker-clear:hover, .modal-footer .btn.btn-flat.btn-red:hover {
       background-color: #F44336;
       color: #ffffff;
       border-color: #F44336; }
@@ -142,22 +142,36 @@ i.material-icons.hover-red:hover, .hover-red:hover {
   width: 80%;
   max-width: 700px;
   max-height: 80%; }
-  #modal-calculator button.btn-large, #modal-calculator input[type="text"], #modal-calculator p {
-    font-size: 1.8em; }
-  #modal-calculator p {
-    margin: 0px; }
-  #modal-calculator button.btn {
+  #modal-calculator button.btn-large, #modal-calculator button.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    height: auto;
     width: 100%;
+    margin: 0px;
+    padding: 0px;
     box-shadow: none;
-    padding: 0px; }
-    #modal-calculator button.btn.operation {
-      border-color: #263238; }
+    border-width: 2px; }
+    #modal-calculator button.btn-large:hover, #modal-calculator button.btn:hover {
+      border-width: 2px; }
+    #modal-calculator button.btn-large.operation, #modal-calculator button.btn.operation {
+      border-color: #263238;
+      border-width: 2px; }
+  #modal-calculator .operations-live p {
+    font-size: 1.9em;
+    margin: 0px;
+    border-bottom: 2px solid #ffffff; }
   #modal-calculator .operations-list {
     border-left: 2px solid #ffffff;
     padding-left: 5px;
     text-align: right; }
     #modal-calculator .operations-list p {
-      font-size: 1em; }
+      font-size: 1em;
+      margin: 0px; }
+    #modal-calculator .operations-list button.btn-red {
+      font-size: 1.5em;
+      text-transform: none; }
 
 #homepage__search-input {
   margin-bottom: 0px; }

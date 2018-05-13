@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class Autocomplete extends React.Component {
 
@@ -35,4 +36,9 @@ export default class Autocomplete extends React.Component {
         return ( <input id={this.props.id} type='text'></input> );
     }
 
+}
+
+Autocomplete.propTypes = {
+    id: PropTypes.string.isRequired,
+    list: PropTypes.array.isRequired
 }

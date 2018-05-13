@@ -4,5 +4,5 @@ import Home from './jsx/home.jsx';
 
 ReactDOM.render(
     <Home></Home>,
-    document.getElementById('root'),
+    document.getElementById('root')
 );

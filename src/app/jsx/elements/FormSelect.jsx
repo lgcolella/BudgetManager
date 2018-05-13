@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class FormSelect extends React.Component {
 
@@ -41,4 +42,11 @@ export default class FormSelect extends React.Component {
         );
     }
 
+}
+
+FormSelect.propTypes = {
+    id: PropTypes.string.isRequired,
+    options: PropTypes.array.isRequired,
+    multiple: PropTypes.bool,
+    defaultOptions: PropTypes.array,
 }

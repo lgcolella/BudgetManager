@@ -11,7 +11,7 @@ module.exports = {
             while ( listOfId.indexOf(id) !== -1 ){
                 id += 1;
             }
-        };
+        }
 
         return id;
     },
@@ -22,6 +22,7 @@ module.exports = {
         var allNegativeActivitiesNum = 0;
         var allWallets = [];
         var allActivities = [];
+        var allActivitiesNum = data.length;
         var allMaxAmount = -Infinity;
         var allMinAmount = Infinity;
 
@@ -39,6 +40,7 @@ module.exports = {
         var selectedPositiveActivitiesNum = 0;
         var selectedNegativeActivitiesNum = 0;
         var selectedWallets = [];
+        var selectedActivitiesNum = dataToRender.length;
         var selectedPositiveMaxAmount = 0;
         var selectedPositiveMinAmount = 0;
         var selectedNegativeMaxAmount = 0;
@@ -76,11 +78,13 @@ module.exports = {
             allNegativeActivitiesNum,
             allWallets,
             allActivities,
+            allActivitiesNum,
             allMaxAmount,
             allMinAmount,
             selectedPositiveActivitiesNum,
             selectedNegativeActivitiesNum,
             selectedWallets,
+            selectedActivitiesNum,
             selectedPositiveMaxAmount,
             selectedPositiveMinAmount,
             selectedNegativeMaxAmount,

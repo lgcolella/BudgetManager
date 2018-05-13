@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import ModalBox from '../elements/ModalBox.jsx';
 
 export default class Calculator extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
+            id: this.props.id,
             prevNum: 0,
             currentNum: 0,
             currentOp: '+',
@@ -38,25 +41,20 @@ export default class Calculator extends React.Component {
 
                 case '+':
                     return number1 + number2;
-                break;
     
                 case '-':
                     return number1 - number2;
-                break;
     
                 case '*':
                     return number1 * number2;
-                break;
     
                 case '/':
                     return number1 / number2;
-                break;
     
                 case '%':
                     return number1 / 100 * number2;
-                break;
     
-            };
+            }
 
             
         }
@@ -98,18 +96,18 @@ export default class Calculator extends React.Component {
 
             default:
                 if ( !isNaN(currentNum) && currentNum !== 0 ){
-                    var operation = prevNum + ' ' + prevOp + ' ' + currentNum;
+                    var operationString = prevNum + ' ' + prevOp + ' ' + currentNum;
                     prevNum = mathEval(prevNum, currentNum, prevOp);
                     if (madeOperations.length > 0){
                         var prevOperation = (() => {
                             var lastOperation = madeOperations.shift();
                             return lastOperation.slice(0, lastOperation.indexOf(' = '));
                         })();
-                        operation = prevOperation + prevOp + currentNum + ' = ' + prevNum;
+                        operationString = prevOperation + prevOp + currentNum + ' = ' + prevNum;
                     } else {
-                        operation = operation + ' = ' + prevNum;
+                        operationString = operationString + ' = ' + prevNum;
                     }
-                    madeOperations = [operation].concat(madeOperations);
+                    madeOperations = [operationString].concat(madeOperations);                    
                     currentNum = 0;
                 }
             break;
@@ -132,65 +130,71 @@ export default class Calculator extends React.Component {
     
     render(){
 
-        var maxLength = this.state.MAX_NUM_LENGTH;
-        var leftNumber = ( Number(this.state.prevNum) === 0 ?  this.state.currentNum.toString().slice(0, maxLength) : this.state.prevNum.toString().slice(0, maxLength));
-        var rightNumber = ( Number(this.state.prevNum) === 0 ?  this.state.prevNum.toString().slice(0, maxLength) : this.state.currentNum.toString().slice(0, maxLength));
+        var { id, MAX_NUM_LENGTH, MAX_MADE_OPERATIONS, prevNum, currentNum, currentOp } = this.state;
+        var leftNumber = ( Number(prevNum) === 0 ?  currentNum.toString().slice(0, MAX_NUM_LENGTH) : prevNum.toString().slice(0, MAX_NUM_LENGTH));
+        var rightNumber = ( Number(prevNum) === 0 ?  prevNum.toString().slice(0, MAX_NUM_LENGTH) : currentNum.toString().slice(0, MAX_NUM_LENGTH));
 
         return(
-            <div className='row'>
-                <h4>Calcolatrice</h4>
-                <div className='col s8'>
-                    <div className='row'>
-                        <div className='col s5'><input type='text' value={leftNumber} className='center-align' readOnly></input></div>
-                        <div className='col s2'><p className='center-align'>{this.state.currentOp}</p></div>
-                        <div className='col s5'><input type='text' value={rightNumber} className='center-align' readOnly></input></div>
+            <ModalBox id={id}>
+                <div className='row'>
+                    <h4>Calcolatrice</h4>
+                    <div className='col s8'>
+                        <div className='row'>
+                            <div className='col s12 center-align'>
+                                <div className='operations-live'><p>{leftNumber + ' ' + currentOp + ' ' + rightNumber}</p></div>
+                            </div>
+                        </div>
+                        <div className='row'>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='c' onClick={(event) => this.handleOperationClick(event)}>C</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='ac' onClick={(event) => this.handleOperationClick(event)}>AC</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='%' onClick={(event) => this.handleOperationClick(event)}>%</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='/' onClick={(event) => this.handleOperationClick(event)}>/</button></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='7' onClick={(event) => this.handleNumberClick(event)}>7</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='8' onClick={(event) => this.handleNumberClick(event)}>8</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='9' onClick={(event) => this.handleNumberClick(event)}>9</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='*' onClick={(event) => this.handleOperationClick(event)}>*</button></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='4' onClick={(event) => this.handleNumberClick(event)}>4</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='5' onClick={(event) => this.handleNumberClick(event)}>5</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='6' onClick={(event) => this.handleNumberClick(event)}>6</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='-' onClick={(event) => this.handleOperationClick(event)}>-</button></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='1' onClick={(event) => this.handleNumberClick(event)}>1</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='2' onClick={(event) => this.handleNumberClick(event)}>2</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect' value='3' onClick={(event) => this.handleNumberClick(event)}>3</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='+' onClick={(event) => this.handleOperationClick(event)}>+</button></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col s6'><button className='btn btn-large waves-effect' value='0' onClick={(event) => this.handleNumberClick(event)}>0</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='.' onClick={(event) => this.handleOperationClick(event)}>.</button></div>
+                            <div className='col s3'><button className='btn btn-large waves-effect operation' value='=' onClick={(event) => this.handleOperationClick(event)}>=</button></div>
+                        </div>
                     </div>
-                    <div className='row'>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='c' onClick={(event) => this.handleOperationClick(event)}>C</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='ac' onClick={(event) => this.handleOperationClick(event)}>AC</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='%' onClick={(event) => this.handleOperationClick(event)}>%</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='/' onClick={(event) => this.handleOperationClick(event)}>/</button></div>
-                    </div>
-                    <div className='row'>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='7' onClick={(event) => this.handleNumberClick(event)}>7</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='8' onClick={(event) => this.handleNumberClick(event)}>8</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='9' onClick={(event) => this.handleNumberClick(event)}>9</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='*' onClick={(event) => this.handleOperationClick(event)}>*</button></div>
-                    </div>
-                    <div className='row'>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='4' onClick={(event) => this.handleNumberClick(event)}>4</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='5' onClick={(event) => this.handleNumberClick(event)}>5</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='6' onClick={(event) => this.handleNumberClick(event)}>6</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='-' onClick={(event) => this.handleOperationClick(event)}>-</button></div>
-                    </div>
-                    <div className='row'>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='1' onClick={(event) => this.handleNumberClick(event)}>1</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='2' onClick={(event) => this.handleNumberClick(event)}>2</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' value='3' onClick={(event) => this.handleNumberClick(event)}>3</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='+' onClick={(event) => this.handleOperationClick(event)}>+</button></div>
-                    </div>
-                    <div className='row'>
-                        <div className='col s6'><button className='btn btn-large waves-effect' value='0' onClick={(event) => this.handleNumberClick(event)}>0</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='.' onClick={(event) => this.handleOperationClick(event)}>.</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect operation' value='=' onClick={(event) => this.handleOperationClick(event)}>=</button></div>
-                    </div>
-                </div>
-                <div className='col s4'>
-                    <div className='row'>
-                        <div className='col s12'>
-                            <div className='operations-list'>
-                                <button className='btn waves-effect' onClick={this.clearMadeOperations}>Pulisci</button>
-                                {
-                                    this.state.madeOperations.map((value, index) => {
-                                        return (this.state.MAX_MADE_OPERATIONS > index ? <p key={value + index}>{value}</p> : null);
-                                    })
-                                }
+                    <div className='col s4'>
+                        <div className='row'>
+                            <div className='col s12'>
+                                <div className='operations-list'>
+                                    <button className='btn btn-red waves-effect' onClick={this.clearMadeOperations}>Pulisci</button>
+                                    {
+                                        this.state.madeOperations.map((value, index) => {
+                                            return (MAX_MADE_OPERATIONS > index ? <p key={value + index}>{value}</p> : null);
+                                        })
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </ModalBox>
         );
     }
 
-};
+}
+
+Calculator.propTypes = {
+    id: PropTypes.string.isRequired
+}

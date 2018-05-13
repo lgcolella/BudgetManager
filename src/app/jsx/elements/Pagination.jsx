@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class Pagination extends React.Component {
 
@@ -86,4 +87,10 @@ export default class Pagination extends React.Component {
         );
     }
 
+}
+
+Pagination.propTypes = {
+    onChange: PropTypes.func.isRequired,
+    elementsNum: PropTypes.number.isRequired,
+    elementsInGroup: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 }

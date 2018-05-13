@@ -1,29 +1,18 @@
-const {dialog} = require('electron').remote;
+const { dialog } = require('electron').remote;
 import fs from 'fs';
 import React from 'react';
-import Xlsx from 'xlsx';
-import ModalBox from '../elements/ModalBox.jsx';
-import EditActivity from './EditActivity.jsx';
-import Calculator from './Calculator.jsx';
-
-const modalCalculatorId = 'modal-calculator';
-const modalExportId = 'modal-export';
+import PropTypes from 'prop-types';
 
 export default class SideNav extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
-            'id': this.props.id,
-            'instance': undefined,
-            'openedFiltersMenu': true,
-            'visibleTableDataInfo': true,
+            'id': this.props.id
         };
         this.exportData = this.exportData.bind(this);
         this.importData = this.importData.bind(this);
-        this.closeSideNav = this.closeSideNav.bind(this);
-        this.toggleFiltersMenu = this.toggleFiltersMenu.bind(this);
-        this.toggleTableDataInfo = this.toggleTableDataInfo.bind(this);
+        this.closeSidenav = this.closeSidenav.bind(this);
     }
 
     exportData(){
@@ -68,42 +57,13 @@ export default class SideNav extends React.Component {
         });
     }
 
-    closeSideNav(){
-        this.state.instance.close();
-    }
-
-    toggleFiltersMenu(){
-        if (this.state.openedFiltersMenu){
-            document.getElementById(this.props.filtersMenuId).classList.add('hide');
-            document.getElementById(this.props.dataVisualizationId).classList.add('s12');
-        } else {
-            document.getElementById(this.props.filtersMenuId).classList.remove('hide');
-            document.getElementById(this.props.dataVisualizationId).classList.remove('s12');
-        }
-
-        window.dispatchEvent(new Event('resize'));
-
-        this.setState({
-            openedFiltersMenu: !this.state.openedFiltersMenu
-        });
-    }
-
-    toggleTableDataInfo(){
-        if (this.state.visibleTableDataInfo){
-            document.getElementById(this.props.tableDataInfoId).classList.add('hide');
-        } else {
-            document.getElementById(this.props.tableDataInfoId).classList.remove('hide');
-        }
-
-        this.setState({
-            visibleTableDataInfo: !this.state.visibleTableDataInfo
-        });
+    closeSidenav(){
+        M.Sidenav.getInstance(document.getElementById(this.state.id)).close();
     }
 
     componentDidMount(){
         var elem = document.getElementById(this.state.id);
-        var instance = M.Sidenav.init(elem);
-        this.setState({'instance': instance});
+        M.Sidenav.init(elem);
     }
 
     render(){
@@ -118,15 +78,21 @@ export default class SideNav extends React.Component {
                 <li><div className="divider" style={{'backgroundColor':'transparent'}}></div></li>
                 <li><div className="divider"></div></li>
                 <li><a className='subheader'>Operazioni</a></li>
-                <li><a href={'#'+this.props.modalNewActivityId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className="material-icons">add_shopping_cart</i>Nuova attività</a></li>
                 <li>
-                    <a href="#!" className='waves-effect' onClick={this.toggleTableDataInfo}>
-                        <i className='material-icons'>{this.state.visibleTableDataInfo ? 'visibility_off' : 'visibility'}</i>{this.state.visibleTableDataInfo ? 'Nascondi info' : 'Mostra info'}
+                    <a className='waves-effect' 
+                    onClick={() => {
+                        this.props.openNewActivity();
+                        this.closeSidenav()
+                    }}><i className="material-icons">add_shopping_cart</i>Nuova attività</a>
+                </li>
+                <li>
+                    <a href="#!" className='waves-effect' onClick={this.props.tableDataInfo.toggle}>
+                        <i className='material-icons'>{this.props.tableDataInfo.visible ? 'visibility_off' : 'visibility'}</i>{this.props.tableDataInfo.visible ? 'Nascondi info' : 'Mostra info'}
                     </a>
                 </li>
                 <li>
-                    <a href="#!" className='waves-effect' onClick={this.toggleFiltersMenu}>
-                        <i className='material-icons'>{this.state.openedFiltersMenu ? 'visibility_off' : 'visibility'}</i>{this.state.openedFiltersMenu ? 'Nascondi filtri' : 'Mostra filtri'}
+                    <a href="#!" className='waves-effect' onClick={this.props.filtersMenu.toggle}>
+                        <i className='material-icons'>{this.props.filtersMenu.visible ? 'visibility_off' : 'visibility'}</i>{this.props.filtersMenu.visible ? 'Nascondi filtri' : 'Mostra filtri'}
                     </a>
                 </li>
                 <li><a href="#!" className='waves-effect' onClick={this.props.onClearFilters}><i className='material-icons'>clear</i>Resetta filtri</a></li>
@@ -136,95 +102,67 @@ export default class SideNav extends React.Component {
                     {(() => {
                         if (this.props.showTableOrChart === 'table'){
                             return (
-                                <a href="#!" className='waves-effect' onClick={() => {this.props.onChangeShowTableOrChart('graph')}}><i className='material-icons'>show_chart</i>Grafico</a>
+                                <a href="#!" className='waves-effect' onClick={() => {this.props.onChangeShowTableOrChart('chart')}}><i className='material-icons'>show_chart</i>Grafico</a>
                             );
-                        } else if (this.props.showTableOrChart === 'graph'){
+                        } else if (this.props.showTableOrChart === 'chart'){
                             return (
                                 <a href="#!" className='waves-effect' onClick={() => {this.props.onChangeShowTableOrChart('table')}}><i className='material-icons'>grid_on</i>Tabella</a>
                             );
                         }
                     })()}
                 </li>
-                <li><a href='#!' className='waves-effect' 
+                <li>
+                    <a href='#!' className='waves-effect' 
                     onClick={() => {
                         this.props.openCalendarNote();
-                        this.closeSideNav();
-                    }}><i className='material-icons'>date_range</i>Calendario</a>
+                        this.closeSidenav();
+                    }}><i className='material-icons'>event</i>Calendario</a>
                 </li>
-                <li><a href={'#'+modalCalculatorId} className='waves-effect modal-trigger' onClick={this.closeSideNav}><i className='material-icons'>exposure</i>Calcolatrice</a></li>
+                <li>
+                    <a href='#!' className='waves-effect'
+                    onClick={() => {
+                        this.props.openCalculator();
+                        this.closeSidenav();
+                    }}
+                    ><i className='material-icons'>exposure</i>Calcolatrice</a>
+                </li>
                 <li><div className="divider"></div></li>
                 <li><a className="subheader">Import/ Export</a></li>
                 <li><a href="#!" className='waves-effect' onClick={this.exportData}><i className='material-icons'>file_download</i>Backup dati</a></li>
                 <li><a href="#!" className='waves-effect' onClick={this.importData}><i className='material-icons'>file_upload</i>Ripristina backup</a></li>
-                <li><a href={'#' + modalExportId} className='waves-effect modal-trigger'><i className='material-icons'>insert_drive_file</i>Esporta dati</a></li>
+                <li>
+                    <a className='waves-effect'
+                    onClick={() => {
+                        this.props.openExportBox();
+                        this.closeSidenav();
+                    }}><i className='material-icons'>insert_drive_file</i>Esporta dati</a>
+                </li>
             </ul>
-            <EditActivity
-                id={this.props.modalNewActivityId}
-                wallets={this.props.wallets}
-                activity={this.props.activity}
-                onSubmit={this.props.onAddActivity}
-            ></EditActivity>
 
-            <ExportBox
-                data={this.props.allData}
-            ></ExportBox>
-
-            <ModalBox id={modalCalculatorId}>
-                <Calculator></Calculator>
-            </ModalBox>
             
-            </div>
+        </div>
         );
     }
 
 }
 
-class ExportBox extends React.Component {
-
-    constructor(props){
-        super(props);
-        this.state = {
-            id: modalExportId
-        }
-        this.exportDataToFile = this.exportDataToFile.bind(this);
-    }
-
-    exportDataToFile(fileExtension){
-        
-        dialog.showSaveDialog({
-            title: 'Salva dati in ' + ( fileExtension === 'xlsx' ? 'Excel' : fileExtension),
-            defaultPath: 'data.' + fileExtension,
-        }, (path) => {
-
-            var data = this.props.data.map((obj) => {
-                return [
-                    obj.wallet, obj.activity, obj.amount, obj.date, obj.comment
-                ];
-            });
-            var sheetHeaders = ['Portafoglio', 'Attività', 'Importo', 'Data', 'Commento'];
-            data = [sheetHeaders].concat(data);
-            var sheet = Xlsx.utils.aoa_to_sheet(data);
-            var workbook = Xlsx.utils.book_new();
-            Xlsx.utils.book_append_sheet(workbook, sheet, 'Budget Manager');
-            Xlsx.writeFile(workbook, path, { type: fileExtension });
-        });
-
-    }
-
-    render(){
-        return(
-            <ModalBox id={this.state.id}>
-                <div className='row'>
-                <h4 className='center-align'>Esporta dati in</h4>
-                    <div className='col s12'>
-                        <div className='col s3'><button className='btn btn-large waves-effect' onClick={() => {this.exportDataToFile('xlsx')}}>Excel</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' onClick={() => {this.exportDataToFile('ods')}}>ODS</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' onClick={() => {this.exportDataToFile('csv')}}>CSV</button></div>
-                        <div className='col s3'><button className='btn btn-large waves-effect' onClick={() => {this.exportDataToFile('html')}}>HTML</button></div>
-                    </div>
-                </div>
-            </ModalBox>
-        );
-    }
-
+SideNav.propTypes = {
+    id: PropTypes.string.isRequired,
+    allData: PropTypes.array.isRequired,
+    showTableOrChart: PropTypes.oneOf(['table','chart']),
+    tableDataInfo: PropTypes.shape({
+        visible: PropTypes.bool.isRequired,
+        toggle: PropTypes.func.isRequired
+    }).isRequired,
+    filtersMenu: PropTypes.shape({
+        visible: PropTypes.bool.isRequired,
+        toggle: PropTypes.func.isRequired
+    }).isRequired,
+    onImportData: PropTypes.func.isRequired,
+    openNewActivity: PropTypes.func.isRequired,
+    onClearFilters: PropTypes.func.isRequired,
+    onChangeShowTableOrChart: PropTypes.func.isRequired,
+    openCalendarNote: PropTypes.func.isRequired,
+    openCalculator: PropTypes.func.isRequired,
+    openExportBox: PropTypes.func.isRequired
 }
