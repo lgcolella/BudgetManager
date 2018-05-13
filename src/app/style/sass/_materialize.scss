@@ -11,7 +11,7 @@
         color: $text-color;
         border-color: $icons-color;
     }
-    &.modal-close, &.datepicker-clear {
+    &.modal-close, &.datepicker-clear, &.btn-red {
         border-color: $icons-close-color;
         &:hover {
             background-color: $icons-close-color;

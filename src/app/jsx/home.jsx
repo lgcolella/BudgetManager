@@ -2,18 +2,22 @@ import Storage from '../storage.js';
 import Utils from './functions/utils.js';
 import React from 'react';
 
-import FormSelect from './elements/FormSelect.jsx';
+import TableInfo from './components/TableInfo.jsx';
 import TableOverview from './components/TableOverview.jsx';
 import Chart from './components/Chart.jsx';
 import SideNav from './components/SideNav.jsx';
 import FiltersMenu from './components/FiltersMenu.jsx';
 import EditActivity from './components/EditActivity.jsx';
 import CalendarNote from './components/CalendarNote.jsx';
+import Calculator from './components/Calculator.jsx';
+import ExportBox from './components/ExportBox.jsx';
 
 const sideNavId = 'sidenav';
 const modalNewActivityId = 'new-activity-modal';
 const modalEditActivityId = 'edit-activity-modal';
 const modalCalendarNoteId = 'calendar-note-modal';
+const modalCalculatorId = 'modal-calculator';
+const modalExportBoxId = 'modal-export';
 const filtersMenuId = 'filters-menu';
 const tableDataInfoId = 'table-data-info';
 const tableOverviewId = 'table-overview';
@@ -33,6 +37,8 @@ export default class Home extends React.Component {
             'activityToEdit': undefined,
             'filters': defaultStorage.getData().filters,
             'showTableOrChart': defaultStorage.getData().showTableOrChart || 'table',
+            'showFiltersMenu': true,
+            'showTableDataInfo': true,
             'chartWalletsColors': defaultStorage.getData().chartWalletsColors || {},
             'notes': defaultStorage.getData().notes || {}
         };
@@ -234,6 +240,13 @@ export default class Home extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState){
+        //To trigger adjustWidth event of Chart Component
+        if (prevState.showFiltersMenu !== this.state.showFiltersMenu && this.state.showTableOrChart === 'chart'){
+            window.dispatchEvent(new Event('resize'));
+        }
+    }
+
     render() {
 
         var data = this.state.data;
@@ -248,12 +261,12 @@ export default class Home extends React.Component {
                         data={data}
                         dataToRender={dataToRender}
                         modalEditActivityId={modalEditActivityId}
-                        modalNewActivityId={modalNewActivityId}
+                        openNewActivity={() => {M.Modal.getInstance(document.getElementById(modalNewActivityId)).open();}}
                         onChangeData={(value) => this.setStateProp('data', value)}
                         onChangeActivityToEdit={(value) => this.setStateProp('activityToEdit', value)}
                         />
                     );
-                case 'graph':
+                case 'chart':
                     return (
                         <Chart
                         id={chartOverviewId}
@@ -266,30 +279,48 @@ export default class Home extends React.Component {
         })();
 
         return (
+
             <div>
                 <SideNav
                     id={sideNavId}
-                    allData={this.state.data}
-                    wallets={dataInfo.allWallets}
-                    activity={dataInfo.allActivities}
                     showTableOrChart={this.state.showTableOrChart}
-                    modalNewActivityId={modalNewActivityId}
-                    tableDataInfoId={tableDataInfoId}
-                    dataVisualizationId={dataVisualizationId}
-                    filtersMenuId={filtersMenuId}
+                    tableDataInfo={{
+                        visible: this.state.showTableDataInfo,
+                        toggle: () => {
+                            this.setState({ showTableDataInfo: !this.state.showTableDataInfo })
+                        }
+                    }}
+                    filtersMenu={{
+                        visible: this.state.showFiltersMenu,
+                        toggle: () => {
+                            this.setState({ showFiltersMenu: !this.state.showFiltersMenu })
+                        }
+                    }}
+                    openNewActivity={() => {
+                        M.Modal.getInstance(document.getElementById(modalNewActivityId)).open();
+                    }}
                     openCalendarNote={() => {
                         M.Datepicker.getInstance(document.getElementById(modalCalendarNoteId)).open();
                     }}
-                    onAddActivity={this.addActivity}
+                    openCalculator={() => {
+                        M.Modal.getInstance(document.getElementById(modalCalculatorId)).open();
+                    }}
+                    openExportBox={() => {
+                        M.Modal.getInstance(document.getElementById(modalExportBoxId)).open();
+                    }}
+                    onChangeShowTableOrChart={(value) => {
+                        this.setStateProp('showTableOrChart', value)
+                    }}
                     onImportData={this.importData}
                     onClearFilters={this.clearFilters}
-                    onChangeShowTableOrChart={(value) => {this.setStateProp('showTableOrChart', value)}}
                 ></SideNav>
+
                 <div className="fixed-action-btn">
                     <a className='btn-floating btn-large sidenav-trigger' data-target={sideNavId} title='Apri menu'>
                         <i className='material-icons'>apps</i>
                     </a>
                 </div>
+
                 <div className='row'>
                     <div className='input-field col s6'>
                         <i className='material-icons prefix'>search</i>
@@ -303,31 +334,20 @@ export default class Home extends React.Component {
                     <div className='col s6'>
                     </div>
                 </div>
+
                 <div className='row'>
-                    <div className='col s12'>
-                        <table id={tableDataInfoId} className='striped centered'>
-                            <tbody>
-                                <tr>
-                                    <th>Saldo</th><td>{dataInfo.selectedActivitiesSum + '€'}</td>
-                                    <th>Numero portafogli</th><td>{dataInfo.selectedWallets.length + '/' + dataInfo.allWallets.length}</td>
-                                    <th>Numero attività</th><td>{dataToRender.length + '/' + data.length}</td>
-                                </tr>
-                                <tr>
-                                    <th>Attività positive</th><td>{dataInfo.selectedPositiveActivitiesNum + '/' + dataInfo.allPositiveActivitiesNum}</td>
-                                    <th>Entrata massima</th><td>{dataInfo.selectedPositiveMaxAmount + '€'}</td>
-                                    <th>Entrata minima</th><td>{dataInfo.selectedPositiveMinAmount + '€'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Attività negative</th><td>{dataInfo.selectedNegativeActivitiesNum + '/' + dataInfo.allNegativeActivitiesNum}</td>
-                                    <th>Uscita massima</th><td>{dataInfo.selectedNegativeMaxAmount + '€'}</td>
-                                    <th>Uscita minima</th><td>{dataInfo.selectedNegativeMinAmount + '€'}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div className={this.state.showTableDataInfo ? 'col s12' : 'hide'}>
+                        <TableInfo
+                        id={tableDataInfoId}
+                        dataInfo={dataInfo}
+                        ></TableInfo>
                     </div>
                 </div>
+
                 <div className='row'>
-                    <div id='filters-menu-wrapper' className='col s3'>
+                    <div
+                    id='filters-menu-wrapper'
+                    className={(this.state.showFiltersMenu ? 'col s3' : 'hide')}>
                         <FiltersMenu
                             id={filtersMenuId}
                             activeFilters={this.state.filters}
@@ -338,9 +358,14 @@ export default class Home extends React.Component {
                             onChange={this.addFilters}
                         ></FiltersMenu>
                     </div>
-                    <div id={dataVisualizationId} className='col s9'>
+
+                    <div
+                    id={dataVisualizationId}
+                    className={this.state.showFiltersMenu ? 'col s9' : 'col s12'}>
                         {dataVisualization}
                     </div>
+
+                    <Calculator id={modalCalculatorId}></Calculator>
                     
                     <EditActivity
                         id={modalEditActivityId}
@@ -350,11 +375,24 @@ export default class Home extends React.Component {
                         onSubmit={this.editActivity}
                     ></EditActivity>
 
+                    <EditActivity
+                        id={modalNewActivityId}
+                        wallets={dataInfo.allWallets}
+                        activity={dataInfo.allActivities}
+                        onSubmit={this.addActivity}
+                    ></EditActivity>
+
                     <CalendarNote
                     id={modalCalendarNoteId}
                     notes={this.state.notes}
                     onChange={(newNote) => this.setStateProp('notes', newNote)}
                     ></CalendarNote>
+
+                    <ExportBox
+                        id={modalExportBoxId}
+                        data={this.state.data}
+                    ></ExportBox>
+                    
                 </div>
             </div>
         );

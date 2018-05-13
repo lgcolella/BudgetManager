@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import i18nOptions from '../functions/i18nDatepickerOption.js';
 
 export default class CalendarNote extends React.Component {
@@ -49,8 +50,8 @@ export default class CalendarNote extends React.Component {
     }
 
     setEditableNote(){
-        var selectedDate = M.Datepicker.getInstance(document.getElementById(this.state.id)).toString();
-        var selectedDate = new Date(selectedDate);
+        var selectedDateString = M.Datepicker.getInstance(document.getElementById(this.state.id)).toString();
+        var selectedDate = new Date(selectedDateString);
         if (!isNaN(selectedDate.getTime())){
             this.setState({
                 editableNote: !this.state.editableNote,
@@ -60,8 +61,8 @@ export default class CalendarNote extends React.Component {
     }
 
     editNote(event){
-        var selectedDate = M.Datepicker.getInstance(document.getElementById(this.state.id)).toString();
-        var selectedDate = new Date(selectedDate);
+        var selectedDateString = M.Datepicker.getInstance(document.getElementById(this.state.id)).toString();
+        var selectedDate = new Date(selectedDateString);
 
         if(!isNaN(selectedDate.getTime())){
             var newNote = { [selectedDate.toDateString()] : event.target.value };
@@ -74,8 +75,8 @@ export default class CalendarNote extends React.Component {
     }
 
     deleteNote(){
-        var selectedDate = M.Datepicker.getInstance(document.getElementById(this.state.id)).toString();
-        var selectedDate = new Date(selectedDate);
+        var selectedDateString = M.Datepicker.getInstance(document.getElementById(this.state.id)).toString();
+        var selectedDate = new Date(selectedDateString);
 
         if(!isNaN(selectedDate.getTime())){
             var newNote = { [selectedDate.toDateString()] : '' };
@@ -130,4 +131,18 @@ export default class CalendarNote extends React.Component {
         );
     }
 
+}
+
+CalendarNote.propTypes = {
+    id: PropTypes.string.isRequired,
+    notes: PropTypes.objectOf((propValue, key, componentName, location, propFullName) => {
+        for (let date in propValue){
+            if (isNaN(new Date(date).getTime()) || typeof propValue[date] !== 'string'){
+                return new Error(
+                    'Invalid prop `' + propFullName +  '` supplied to `' + componentName + '`. Validation failed.'
+                );
+            }
+        }
+    }),
+    onChange: PropTypes.func.isRequired
 }

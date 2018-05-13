@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChromePicker } from 'react-color';
 
@@ -150,7 +151,7 @@ export default class Chart extends React.Component {
                         stroke={this.props.walletsColors[wallet] || '#fff'}
                         strokeWidth='3px'
                         connectNulls={true}
-                        formatter={(value, name, props) => {return value + '€'}}
+                        formatter={(value) => {return value + '€'}}
                         key={wallet}
                         />
                     );
@@ -201,4 +202,13 @@ export default class Chart extends React.Component {
         );
     }
 
+}
+
+Chart.propTypes = {
+    id: PropTypes.string.isRequired,
+    dataToRender: PropTypes.array.isRequired,
+    onChangeWalletsColors: PropTypes.func.isRequired,
+    walletsColors: PropTypes.shape({
+        wallet: PropTypes.string
+    })
 }

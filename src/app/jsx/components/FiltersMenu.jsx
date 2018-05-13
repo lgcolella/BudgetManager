@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import DatePicker from '../elements/DatePicker.jsx';
 import FormSelect from '../elements/FormSelect.jsx';
 
@@ -19,26 +20,28 @@ export default class FiltersMenu extends React.Component {
         switch (filter){
             case 'wallet':
                 var elem = document.getElementById(this.state.id + '__wallet');
-                newValues['wallet'] = M.FormSelect.getInstance(elem).getSelectedValues();
+                newValues.wallet = M.FormSelect.getInstance(elem).getSelectedValues();
             break;
 
             case 'activity':
+                // eslint-disable-next-line no-redeclare
                 var elem = document.getElementById(this.state.id + '__activity');
                 newValues['activity'] = M.FormSelect.getInstance(elem).getSelectedValues();
             break;
 
             case 'minAmount':
                 var value = event.target.value;
-                var maxValue = this.props['maxAmount'];
-                newValues['minAmount'] = (  Number(maxValue) >= Number(value) ? value : maxValue );
-                event.target.value = (  Number(maxValue) >= Number(value) ? value : maxValue );
+                var maxValue = this.props.maxAmount;
+                newValues.minAmount = (  maxValue >= Number(value) ? value : maxValue );
+                event.target.value = (  maxValue >= Number(value) ? value : maxValue );
             break;
 
             case 'maxAmount':
+                // eslint-disable-next-line no-redeclare
                 var value = event.target.value;
-                var minValue = this.props['minAmount'];
-                newValues['maxAmount'] = (  Number(minValue) <= Number(value) ? value : minValue );
-                event.target.value = (  Number(minValue) <= Number(value) ? value : minValue );
+                var minValue = this.props.minAmount;
+                newValues.maxAmount = (  minValue <= Number(value) ? value : minValue );
+                event.target.value = (  minValue <= Number(value) ? value : minValue );
             break;
 
             case 'Date':
@@ -79,7 +82,6 @@ export default class FiltersMenu extends React.Component {
             defaultFromDate = '';
             defaultToDate = '';
         }
-        
 
         return(
             <div id={this.state.id}>
@@ -87,7 +89,7 @@ export default class FiltersMenu extends React.Component {
                     <label>Portafoglio</label>
                     <FormSelect
                     id={this.state.id + '__wallet'}
-                    options={this.props['wallets']}
+                    options={this.props.wallets}
                     defaultOptions={defaultWallets}
                     multiple={true}
                     onChange={() => this.handleFilterChange('wallet')}
@@ -97,7 +99,7 @@ export default class FiltersMenu extends React.Component {
                     <label>Attività</label>
                     <FormSelect
                     id={this.state.id + '__activity'}
-                    options={this.props['activities']}
+                    options={this.props.activities}
                     defaultOptions={defaultActivities}
                     multiple={true}
                     onChange={() => this.handleFilterChange('activity')}
@@ -123,4 +125,21 @@ export default class FiltersMenu extends React.Component {
         );
     }
 
+}
+
+FiltersMenu.propTypes = {
+    id: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    wallets: PropTypes.array,
+    activities: PropTypes.array,
+    maxAmount: PropTypes.number,
+    minAmount: PropTypes.number,
+    activeFilters: PropTypes.shape({
+        wallet: PropTypes.array,
+        activity: PropTypes.array,
+        maxAmount: PropTypes.number,
+        minAmount: PropTypes.number,
+        fromDate: PropTypes.string,
+        toDate: PropTypes.string
+    })
 }

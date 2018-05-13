@@ -26,25 +26,30 @@
     max-width: 700px;
     max-height: 80%;
 
-    button.btn-large, input[type="text"], p {
+    button.btn-large, button.btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-size: 1.8em;
-    }
-
-    p {
+        height: auto;
+        width: 100%;
         margin: 0px;
+        padding: 0px;
+        box-shadow: none;
+        border-width: 2px;
+        &:hover {
+            border-width: 2px;
+        }
+        &.operation {
+            border-color: $background-color;
+            border-width: 2px;
+        }
     }
 
-    button {
-
-        &.btn {
-            width: 100%;
-            box-shadow: none;
-            padding: 0px;
-            &.operation {
-                border-color: $background-color;
-            }
-        }
-
+    .operations-live p {
+        font-size: 1.9em;
+        margin: 0px;
+        border-bottom: 2px solid $text-color;
     }
 
     .operations-list {
@@ -53,6 +58,11 @@
         text-align: right;
         p {
             font-size: 1em;
+            margin: 0px;
+        }
+        button.btn-red {
+            font-size: 1.5em;
+            text-transform: none;
         }
     }
 

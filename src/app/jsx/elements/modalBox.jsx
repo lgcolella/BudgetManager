@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class ModalBox extends React.Component {
 
@@ -27,4 +28,10 @@ export default class ModalBox extends React.Component {
         );
     }
 
+}
+
+ModalBox.propTypes = {
+    id: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+    endingTop: PropTypes.string
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ModalBox from '../elements/ModalBox.jsx';
 import DatePicker from '../elements/DatePicker.jsx';
 import FormSelect from '../elements/FormSelect.jsx';
@@ -22,8 +23,8 @@ export default class EditActivity extends React.Component {
 
     addActivity(){
 
-        var date = new Date(document.getElementById(this.state.id + '__date').value);
-        var date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        var rawDate = new Date(document.getElementById(this.state.id + '__date').value);
+        var date = rawDate.getFullYear() + '-' + ('0' + (rawDate.getMonth() + 1)).slice(-2) + '-' + ('0' + rawDate.getDate()).slice(-2);
         var id = ( typeof this.props.activityToEdit !== 'undefined' ? this.props.activityToEdit.id : undefined);
         var activity = {
             id,
@@ -205,4 +206,19 @@ export default class EditActivity extends React.Component {
         );
     }
 
+}
+
+EditActivity.propTypes = {
+    id: PropTypes.string.isRequired,
+    wallets: PropTypes.array.isRequired,
+    activity: PropTypes.array.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    activityToEdit: PropTypes.shape({
+        id: PropTypes.number,
+        wallet: PropTypes.string.isRequired,
+        activity: PropTypes.string.isRequired,
+        amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        date:  PropTypes.string.isRequired,
+        comment: PropTypes.string
+    })
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import i18nOptions from '../functions/i18nDatepickerOption.js';
 
 export default class DatePicker extends React.Component {
@@ -30,4 +31,10 @@ export default class DatePicker extends React.Component {
         );
     }
 
+}
+
+DatePicker.propTypes = {
+    id: PropTypes.string.isRequired,
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string
 }

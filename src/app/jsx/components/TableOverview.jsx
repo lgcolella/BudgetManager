@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Pagination from '../elements/Pagination.jsx';
 
 export default class TableOverview extends React.Component {
@@ -37,7 +38,7 @@ export default class TableOverview extends React.Component {
                 <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
                 <td>
                     <div>
-                        <i className='material-icons' onClick={() => {M.Modal.getInstance(document.getElementById(this.props.modalNewActivityId)).open();}}>add_shopping_cart</i>
+                        <i className='material-icons' onClick={this.props.openNewActivity}>add_shopping_cart</i>
                     </div>
                 </td>
             </tr>
@@ -66,7 +67,7 @@ export default class TableOverview extends React.Component {
                     <td>
                         <div>
                             <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
-                            <a href='#!'><i className='material-icons modal-trigger' data-target={this.props.modalEditActivityId}
+                            <a href='#!'><i className='material-icons modal-trigger'
                                 onClick={() => {this.props.onChangeActivityToEdit(object)}}>edit</i>
                             </a>
                             <a href='#!'><i className='material-icons hover-red' onClick={() => this.deleteActivity(object)}>delete</i></a>
@@ -273,4 +274,13 @@ export default class TableOverview extends React.Component {
 
     }
 
+}
+
+TableOverview.propTypes = {
+    id: PropTypes.string.isRequired,
+    data: PropTypes.array.isRequired,
+    dataToRender: PropTypes.array.isRequired,
+    openNewActivity: PropTypes.func.isRequired,
+    onChangeData: PropTypes.func.isRequired,
+    onChangeActivityToEdit: PropTypes.func.isRequired,
 }
