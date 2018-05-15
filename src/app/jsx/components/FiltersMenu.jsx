@@ -11,10 +11,10 @@ export default class FiltersMenu extends React.Component {
             'id': this.props.id,
             'values': {}
         };
-        this.handleFilterChange = this.handleFilterChange.bind(this);
+        //this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
-    handleFilterChange(filter, event){
+    /*handleFilterChange(filter, event){
 
         var newValues = this.state.values;
         switch (filter){
@@ -55,9 +55,8 @@ export default class FiltersMenu extends React.Component {
             'values': newValues
         });
         this.props.onChange(newValues);
-    }
+    }*/
 
-    
     render(){
 
         var defaultWallets;
@@ -83,6 +82,8 @@ export default class FiltersMenu extends React.Component {
             defaultToDate = '';
         }
 
+        var { activeFilters } = this.props;
+
         return(
             <div id={this.state.id}>
                 <div>
@@ -92,7 +93,7 @@ export default class FiltersMenu extends React.Component {
                     options={this.props.wallets}
                     defaultOptions={defaultWallets}
                     multiple={true}
-                    onChange={() => this.handleFilterChange('wallet')}
+                    onChange={(value) => { this.props.onAddFilter('wallet', value) }}
                     ></FormSelect>
                 </div>
                 <div>
@@ -102,24 +103,24 @@ export default class FiltersMenu extends React.Component {
                     options={this.props.activities}
                     defaultOptions={defaultActivities}
                     multiple={true}
-                    onChange={() => this.handleFilterChange('activity')}
+                    onChange={(value) => { this.props.onAddFilter('activity', value) }}
                     ></FormSelect>
                 </div>
                 <div>
                     <label>Importo minimo</label>
-                    <input type='number' id={this.state.id + '__min-amount'} value={defaultMinAmount} onChange={(event) => this.handleFilterChange('minAmount', event)}></input>
+                    <input type='number' value={activeFilters.minAmount} onChange={(event) => this.props.onAddFilter('minAmount', event.target.value)}></input>
                 </div>
                 <div>
                     <label>Importo massimo</label>
-                    <input type='number' id={this.state.id + '__max-amount'} value={defaultMaxAmount} onChange={(event) => this.handleFilterChange('maxAmount', event)}></input>
+                    <input type='number' value={activeFilters.maxAmount} onChange={(event) => this.props.onAddFilter('maxAmount', event.target.value)}></input>
                 </div>
                 <div>
                     <label>Da</label>
-                    <DatePicker id={this.state.id + '__from-date'} placeholder={defaultFromDate} onChange={() => this.handleFilterChange('Date')}></DatePicker>
+                    <DatePicker value={activeFilters.fromDate} onChange={(value) => this.props.onAddFilter('fromDate', value)}></DatePicker>
                 </div>
                 <div>
                     <label>A</label>
-                    <DatePicker id={this.state.id + '__to-date'} placeholder={defaultToDate} onChange={() => this.handleFilterChange('Date')}></DatePicker>
+                    <DatePicker value={activeFilters.toDate} onChange={(value) => this.props.onAddFilter('toDate', value)}></DatePicker>
                 </div>
             </div>
         );

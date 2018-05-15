@@ -20,7 +20,7 @@ export default class SideNav extends React.Component {
         var data = JSON.stringify(this.props.allData);
         dialog.showSaveDialog({
             title: 'Scegli dove salvare i tuoi dati.',
-            defaultPath: 'storage.data',
+            defaultPath: 'storage.json',
         }, function(path){
             if (typeof path !== 'undefined'){
                 fs.writeFile(path, data, function(err){

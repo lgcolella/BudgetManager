@@ -46,6 +46,7 @@ export default class Home extends React.Component {
         this.addActivity = this.addActivity.bind(this);
         this.editActivity = this.editActivity.bind(this);
         this.addFilters = this.addFilters.bind(this);
+        this.addFilter = this.addFilter.bind(this);
         this.clearFilters = this.clearFilters.bind(this);
         this.filterData = this.filterData.bind(this);
         this.setStateProp = this.setStateProp.bind(this);
@@ -108,6 +109,16 @@ export default class Home extends React.Component {
             filters: newFilters
         });
         
+    }
+
+    addFilter(filterName, filterValue){
+        var newFilters = Object.assign({}, this.state.filters, { [filterName]: filterValue });
+        this.setState({
+            filters: newFilters
+        });
+        defaultStorage.setData({
+            filters: newFilters
+        });
     }
 
     clearFilters(){
@@ -283,6 +294,7 @@ export default class Home extends React.Component {
             <div>
                 <SideNav
                     id={sideNavId}
+                    allData={this.state.data}
                     showTableOrChart={this.state.showTableOrChart}
                     tableDataInfo={{
                         visible: this.state.showTableDataInfo,
@@ -356,6 +368,7 @@ export default class Home extends React.Component {
                             maxAmount={dataInfo.allMaxAmount}
                             minAmount={dataInfo.allMinAmount}
                             onChange={this.addFilters}
+                            onAddFilter={this.addFilter}
                         ></FiltersMenu>
                     </div>
 
