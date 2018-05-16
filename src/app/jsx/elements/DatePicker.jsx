@@ -37,7 +37,7 @@ export default class DatePicker extends React.Component {
 
     render(){
         return(
-            <input type='text' id={this.state.id} value={this.props.value}></input>
+            <input type='text' id={this.state.id} value={this.props.value} onChange={() => {}}></input>
         );
     }
 

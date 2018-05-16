@@ -130,7 +130,7 @@ export default class FiltersMenu extends React.Component {
 
 FiltersMenu.propTypes = {
     id: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onAddFilter: PropTypes.func.isRequired,
     wallets: PropTypes.array,
     activities: PropTypes.array,
     maxAmount: PropTypes.number,

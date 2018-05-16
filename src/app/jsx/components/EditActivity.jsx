@@ -11,14 +11,32 @@ export default class EditActivity extends React.Component {
         super(props);
         this.state = {
             id: props.id,
+            activityToEdit: {
+                id: undefined,
+                wallet: '',
+                activity: '',
+                amount: undefined,
+                date: '',
+                comment: ''
+            },
             createNewWallet: false,
             submitError: false,
             errorText: ''
         };
+        this.setActivityToEditProp = this.setActivityToEditProp.bind(this);
         this.addActivity = this.addActivity.bind(this);
         this.handleWalletSelect = this.handleWalletSelect.bind(this);
         this.prefillInputs = this.prefillInputs.bind(this);
         this.clearInputs = this.clearInputs.bind(this);
+    }
+
+    setActivityToEditProp(propName, propValue){
+
+        var activityToEdit = Object.assign({}, this.state.activityToEdit, { [propName] : propValue });
+        console.log(activityToEdit);
+        this.setState({
+            activityToEdit
+        })
     }
 
     addActivity(){
@@ -114,7 +132,13 @@ export default class EditActivity extends React.Component {
         var walletInput;
         var buttonText;
         if (this.state.createNewWallet){
-            walletInput = ( <input type='text' id={this.state.id + '__wallet'}></input> );
+            walletInput = (
+                <input
+                type='text'
+                id={this.state.id + '__wallet'}
+                value={this.state.activityToEdit.wallet}
+                onChange={(event) => this.setActivityToEditProp('wallet', event.target.value)}></input>
+            );
             buttonText = 'SCEGLI';
         } else {
             walletInput = (() => {
@@ -123,6 +147,8 @@ export default class EditActivity extends React.Component {
                     id={this.state.id + '__wallet'}
                     options={this.props.wallets}
                     multiple={false}
+                    value={this.state.activityToEdit.wallet}
+                    onChange={(arrayValue) => this.setActivityToEditProp('wallet', arrayValue.toString())}
                     ></FormSelect>
                 );
             })();
@@ -140,6 +166,7 @@ export default class EditActivity extends React.Component {
             errorBoxStyle = {display: 'none'};
         }
         /*!Error box*/
+
         return(
             <ModalBox id={this.state.id} endingTop={'5%'}>
                 <div>

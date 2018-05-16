@@ -45,7 +45,6 @@ export default class Home extends React.Component {
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
         this.editActivity = this.editActivity.bind(this);
-        this.addFilters = this.addFilters.bind(this);
         this.addFilter = this.addFilter.bind(this);
         this.clearFilters = this.clearFilters.bind(this);
         this.filterData = this.filterData.bind(this);
@@ -93,7 +92,7 @@ export default class Home extends React.Component {
         });
     }
 
-    addFilters(filters, event){
+    /*addFilters(filters, event){
         var oldFilters = (typeof this.state.filters === 'undefined' ? {} : this.state.filters);
         var newFilters;
         if (filters === 'searchedValue'){
@@ -109,7 +108,7 @@ export default class Home extends React.Component {
             filters: newFilters
         });
         
-    }
+    }*/
 
     addFilter(filterName, filterValue){
         var newFilters = Object.assign({}, this.state.filters, { [filterName]: filterValue });
@@ -128,17 +127,7 @@ export default class Home extends React.Component {
         defaultStorage.setData({
             filters: {}
         });
-        [
-            this.state.id + '__search-input',
-            filtersMenuId + '__wallet',
-            filtersMenuId + '__activity',
-            filtersMenuId + '__min-amount',
-            filtersMenuId + '__max-amount',
-            filtersMenuId + '__from-date',
-            filtersMenuId + '__to-date',
-        ].forEach((id) => {
-            document.getElementById(id).value = '';
-        });
+        document.getElementById(this.state.id + '__search-input').value = '';
     }
 
     filterData(){
@@ -367,7 +356,6 @@ export default class Home extends React.Component {
                             activities={dataInfo.allActivities}
                             maxAmount={dataInfo.allMaxAmount}
                             minAmount={dataInfo.allMinAmount}
-                            onChange={this.addFilters}
                             onAddFilter={this.addFilter}
                         ></FiltersMenu>
                     </div>

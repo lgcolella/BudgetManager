@@ -56,5 +56,5 @@ FormSelect.propTypes = {
     options: PropTypes.array.isRequired,
     multiple: PropTypes.bool,
     defaultOptions: PropTypes.array,
-    onChange: PropTypes.func
+    onChange: PropTypes.func.isRequired
 }
