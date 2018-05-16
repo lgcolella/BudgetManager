@@ -6,26 +6,28 @@ export default class FormSelect extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            id: this.props.id
+            //id: this.props.id
+            id: 'form-select__' + Math.random().toString()
         };
         this.onChange = this.onChange.bind(this);
     }
 
     onChange(){
-        var elem = document.getElementById(this.props.id);
+        var elem = document.getElementById(this.state.id);
         var valuesArray = M.FormSelect.getInstance(elem).getSelectedValues();
-        this.props.onChange(valuesArray);
+        var result = (this.props.multiple ? valuesArray : elem.value);
+        this.props.onChange(result);
     }
 
     componentWillUnmount(){
-        var elem = document.getElementById(this.props.id);
+        var elem = document.getElementById(this.state.id);
         if (typeof M.FormSelect.getInstance(elem) !== 'undefined'){
             M.FormSelect.getInstance(elem).destroy();
         }
     }
 
     componentDidUpdate(){
-        var elem = document.getElementById(this.props.id);
+        var elem = document.getElementById(this.state.id);
         if (typeof M.FormSelect.getInstance(elem) !== 'undefined'){
             M.FormSelect.getInstance(elem).destroy();
         }
@@ -34,14 +36,13 @@ export default class FormSelect extends React.Component {
     }
 
     componentDidMount(){
-        var elem = document.getElementById(this.props.id);
+        var elem = document.getElementById(this.state.id);
         M.FormSelect.init(elem);
     }
 
     render(){
-        var defaultValue = (this.props.multiple ? (typeof this.props.defaultOptions !== 'undefined' ? this.props.defaultOptions : [] ) : '');
         return (
-            <select id={this.props.id} multiple={this.props.multiple} onChange={this.onChange} defaultValue={defaultValue}>
+            <select id={this.state.id} multiple={this.props.multiple} onChange={this.onChange} value={this.props.value}>
                 {this.props.options.map((value) => {
                     return ( <option key={value}>{value}</option> );
                 })}
@@ -52,7 +53,7 @@ export default class FormSelect extends React.Component {
 }
 
 FormSelect.propTypes = {
-    id: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     multiple: PropTypes.bool,
     defaultOptions: PropTypes.array,

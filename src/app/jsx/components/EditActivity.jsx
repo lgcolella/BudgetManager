@@ -15,7 +15,7 @@ export default class EditActivity extends React.Component {
                 id: undefined,
                 wallet: '',
                 activity: '',
-                amount: undefined,
+                amount: '',
                 date: '',
                 comment: ''
             },
@@ -33,37 +33,36 @@ export default class EditActivity extends React.Component {
     setActivityToEditProp(propName, propValue){
 
         var activityToEdit = Object.assign({}, this.state.activityToEdit, { [propName] : propValue });
-        console.log(activityToEdit);
         this.setState({
             activityToEdit
         })
     }
 
     addActivity(){
-
-        var rawDate = new Date(document.getElementById(this.state.id + '__date').value);
-        var date = rawDate.getFullYear() + '-' + ('0' + (rawDate.getMonth() + 1)).slice(-2) + '-' + ('0' + rawDate.getDate()).slice(-2);
-        var id = ( typeof this.props.activityToEdit !== 'undefined' ? this.props.activityToEdit.id : undefined);
-        var activity = {
+        var { id, wallet, activity, amount, date, comment } = this.state.activityToEdit;
+        var rawDate = new Date(date);
+        var formattedDate = rawDate.getFullYear() + '-' + ('0' + (rawDate.getMonth() + 1)).slice(-2) + '-' + ('0' + rawDate.getDate()).slice(-2);
+        var activityToAdd = {
             id,
-            wallet: document.getElementById(this.state.id + '__wallet').value,
-            activity: document.getElementById(this.state.id + '__activity').value,
-            amount: Number(document.getElementById(this.state.id + '__amount').value),
-            date,
-            comment: document.getElementById(this.state.id + '__comment').value,
+            wallet,
+            activity,
+            amount: Number(amount),
+            date: formattedDate,
+            comment
         }
 
-        var walletCond = typeof activity.wallet === 'string' && activity.wallet.length > 1;
-        var activityCond = typeof activity.activity === 'string' && activity.activity.length > 1;
-        var amountCond = typeof activity.amount === 'number' && !isNaN(activity.amount)  && activity.amount !== 0;
-        var dateCond = typeof activity.date === 'string' && activity.date.slice(0,3) !== 'NaN' && activity.date.length >= 8;
+        var walletCond = typeof activityToAdd.wallet === 'string' && activityToAdd.wallet.length > 1;
+        var activityCond = typeof activityToAdd.activity === 'string' && activityToAdd.activity.length > 1;
+        var amountCond = typeof activityToAdd.amount === 'number' && !isNaN(activityToAdd.amount)  && activityToAdd.amount !== 0;
+        var dateCond = typeof activityToAdd.date === 'string' && activityToAdd.date.slice(0,3) !== 'NaN' && activityToAdd.date.length >= 8;
 
         if (walletCond && activityCond && amountCond && dateCond){
-            this.props.onSubmit(activity);
+            this.props.onSubmit(activityToAdd);
             this.setState({
                 submitError: false
             });
             M.Modal.getInstance(document.getElementById(this.state.id)).close();
+            this.clearInputs();
         } else {
             this.setState({
                 submitError: true,
@@ -73,12 +72,20 @@ export default class EditActivity extends React.Component {
     }
 
     clearInputs(){
-        document.getElementById(this.state.id + '__activity').value = "";
+        /*document.getElementById(this.state.id + '__activity').value = "";
         document.getElementById(this.state.id + '__amount').value = "";
         document.getElementById(this.state.id + '__date').value = "";
         document.getElementById(this.state.id + '__comment').value = "";
-        M.textareaAutoResize(document.getElementById(this.state.id + '__comment'));
+        M.textareaAutoResize(document.getElementById(this.state.id + '__comment'));*/
         this.setState({
+            activityToEdit: {
+                id: undefined,
+                wallet: '',
+                activity: '',
+                amount: '',
+                date: '',
+                comment: ''
+            },
             submitError: false
         });
     }
@@ -144,7 +151,6 @@ export default class EditActivity extends React.Component {
             walletInput = (() => {
                 return (
                     <FormSelect
-                    id={this.state.id + '__wallet'}
                     options={this.props.wallets}
                     multiple={false}
                     value={this.state.activityToEdit.wallet}
@@ -166,7 +172,6 @@ export default class EditActivity extends React.Component {
             errorBoxStyle = {display: 'none'};
         }
         /*!Error box*/
-
         return(
             <ModalBox id={this.state.id} endingTop={'5%'}>
                 <div>
@@ -190,7 +195,8 @@ export default class EditActivity extends React.Component {
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">textsms</i>
                                 <Autocomplete
-                                id={this.state.id + '__activity'}
+                                value={this.state.activityToEdit.activity}
+                                onChange={(event) => this.setActivityToEditProp('activity', event.target.value)}
                                 list={this.props.activity}
                                 ></Autocomplete>
                                 <label>Attività</label>
@@ -199,22 +205,25 @@ export default class EditActivity extends React.Component {
                         <div className='row'>
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">attach_money</i>
-                                <input type='number' id={this.state.id + '__amount'}></input>
-                                <label onClick={() => {document.getElementById(this.state.id + '__amount').focus();}}>Importo</label>
+                                <input type='number' value={this.state.activityToEdit.amount} onChange={(event) => this.setActivityToEditProp('amount', event.target.value)}></input>
+                                <label>Importo</label>
                             </div>
                         </div>
                         <div className='row'>
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">date_range</i>
-                                <DatePicker id={this.state.id + '__date'}></DatePicker>
-                                <label onClick={() => {document.getElementById(this.state.id + '__date').click();}}>Data</label>
+                                <DatePicker
+                                value={this.state.activityToEdit.date}
+                                onChange={(value) => {this.setActivityToEditProp('date', value)}}
+                                ></DatePicker>
+                                <label>Data</label>
                             </div>
                         </div>
                         <div className='row'>
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">comment</i>
-                                <textarea id={this.state.id + '__comment'} className='materialize-textarea'></textarea>
-                                <label htmlFor={this.state.id + '__comment'}>Commento</label>
+                                <textarea value={this.state.activityToEdit.comment} onChange={(event) => {this.setActivityToEditProp('comment', event.value)}} className='materialize-textarea'></textarea>
+                                <label>Commento</label>
                             </div>
                         </div>
                     </form>
