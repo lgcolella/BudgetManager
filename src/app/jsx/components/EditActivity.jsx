@@ -26,7 +26,6 @@ export default class EditActivity extends React.Component {
         this.setActivityToEditProp = this.setActivityToEditProp.bind(this);
         this.addActivity = this.addActivity.bind(this);
         this.handleWalletSelect = this.handleWalletSelect.bind(this);
-        this.prefillInputs = this.prefillInputs.bind(this);
         this.clearInputs = this.clearInputs.bind(this);
     }
 
@@ -72,11 +71,7 @@ export default class EditActivity extends React.Component {
     }
 
     clearInputs(){
-        /*document.getElementById(this.state.id + '__activity').value = "";
-        document.getElementById(this.state.id + '__amount').value = "";
-        document.getElementById(this.state.id + '__date').value = "";
-        document.getElementById(this.state.id + '__comment').value = "";
-        M.textareaAutoResize(document.getElementById(this.state.id + '__comment'));*/
+        
         this.setState({
             activityToEdit: {
                 id: undefined,
@@ -96,39 +91,16 @@ export default class EditActivity extends React.Component {
         });
     }
 
-    prefillInputs(){
-        var activityToEdit = this.props.activityToEdit;
-        if ( typeof activityToEdit !== 'undefined' ){
-            if ( typeof activityToEdit.wallet !== 'undefined' ){
-                var elem = document.getElementById(this.state.id + '__wallet');
-                if (elem.tagName === 'SELECT'){
-                    elem = elem.childNodes[0];
-                    while (elem !== null){
-                        elem.defaultSelected = elem.value === activityToEdit.wallet;
-                        elem = elem.nextSibling;
-                    }
-                } else {
-                    elem.value === activityToEdit.wallet;
-                }
-            }
-            if ( typeof activityToEdit.activity !== 'undefined' ){
-                document.getElementById(this.state.id + '__activity').value = activityToEdit.activity;
-            }
-            if ( typeof activityToEdit.amount !== 'undefined' ){
-                document.getElementById(this.state.id + '__amount').value = activityToEdit.amount;
-            }
-            if ( typeof activityToEdit.date !== 'undefined'){
-                document.getElementById(this.state.id + '__date').value = activityToEdit.date;
-            }
-            if ( typeof activityToEdit.comment !== 'undefined'){
-                document.getElementById(this.state.id + '__comment').value = activityToEdit.comment;
-            }
-        }
-    }
-
     componentDidUpdate(){
+
+        var { activityToEdit } = this.props;
+        if(typeof activityToEdit !== 'undefined' && this.state.activityToEdit !== activityToEdit){
+            this.setState({
+                activityToEdit
+            })
+        }
+
         if (typeof this.props.activityToEdit !== 'undefined'){
-            this.prefillInputs();
             M.updateTextFields();
         }
     }
@@ -162,7 +134,6 @@ export default class EditActivity extends React.Component {
         }
         /*!Choose right wallet input*/
         
-
         /*Error box*/
         var errorBoxStyle;
         if (this.state.submitError === true){

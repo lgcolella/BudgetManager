@@ -40,7 +40,7 @@ export default class Home extends React.Component {
             'showFiltersMenu': true,
             'showTableDataInfo': true,
             'chartWalletsColors': defaultStorage.getData().chartWalletsColors || {},
-            'notes': defaultStorage.getData().notes || {}
+            'notes': defaultStorage.getData().notes || {},
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -221,23 +221,28 @@ export default class Home extends React.Component {
         });
     }
 
-    setStateProp(prop, value){
+    setStateProp(prop, value, callback){
 
         var storedProp = ['data', 'showTableOrChart', 'chartWalletsColors', 'notes'];
-        if (storedProp.indexOf(prop) !== -1){
+        var stateProp = storedProp.concat(['activityToEdit']);
+
+        if(stateProp.indexOf(prop) !== -1){
             this.setState({
                 [prop]: value
-            });
-            defaultStorage.setData({
-                [prop]: value,
-            });
-        } else if (prop === 'activityToEdit'){
-            this.setState({
-                [prop]: value
+            }, () => {
+                typeof callback === 'function' && callback();
             });
         } else {
             throw "Prop not allowed.";
         }
+
+        if (storedProp.indexOf(prop) !== -1){
+            
+            defaultStorage.setData({
+                [prop]: value,
+            });
+        }
+
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -260,10 +265,13 @@ export default class Home extends React.Component {
                         id={tableOverviewId}
                         data={data}
                         dataToRender={dataToRender}
-                        modalEditActivityId={modalEditActivityId}
                         openNewActivity={() => {M.Modal.getInstance(document.getElementById(modalNewActivityId)).open();}}
                         onChangeData={(value) => this.setStateProp('data', value)}
-                        onChangeActivityToEdit={(value) => this.setStateProp('activityToEdit', value)}
+                        openEditActivity={(activityToEdit) => {
+                            this.setStateProp('activityToEdit', activityToEdit, () => {
+                                M.Modal.getInstance(document.getElementById(modalEditActivityId)).open();
+                            });
+                        }}
                         />
                     );
                 case 'chart':

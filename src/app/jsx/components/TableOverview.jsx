@@ -67,8 +67,10 @@ export default class TableOverview extends React.Component {
                     <td>
                         <div>
                             <a href='#!'><i className='material-icons tooltipped' data-position="top" data-tooltip={object.comment}>comment</i></a>
-                            <a href='#!'><i className='material-icons modal-trigger'
-                                onClick={() => {this.props.onChangeActivityToEdit(object)}}>edit</i>
+                            <a href='#!'><i className='material-icons'
+                                onClick={() => {
+                                    this.props.openEditActivity(object);
+                                }}>edit</i>
                             </a>
                             <a href='#!'><i className='material-icons hover-red' onClick={() => this.deleteActivity(object)}>delete</i></a>
                         </div>
@@ -280,7 +282,7 @@ TableOverview.propTypes = {
     id: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired,
     dataToRender: PropTypes.array.isRequired,
+    openEditActivity: PropTypes.func.isRequired,
     openNewActivity: PropTypes.func.isRequired,
-    onChangeData: PropTypes.func.isRequired,
-    onChangeActivityToEdit: PropTypes.func.isRequired,
+    onChangeData: PropTypes.func.isRequired
 }
