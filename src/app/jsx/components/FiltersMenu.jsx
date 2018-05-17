@@ -83,15 +83,13 @@ export default class FiltersMenu extends React.Component {
         }
 
         var { activeFilters } = this.props;
-
         return(
             <div id={this.state.id}>
                 <div>
                     <label>Portafoglio</label>
                     <FormSelect
-                    id={this.state.id + '__wallet'}
                     options={this.props.wallets}
-                    defaultOptions={defaultWallets}
+                    value={activeFilters.wallet}
                     multiple={true}
                     onChange={(value) => { this.props.onAddFilter('wallet', value) }}
                     ></FormSelect>
@@ -99,9 +97,8 @@ export default class FiltersMenu extends React.Component {
                 <div>
                     <label>Attività</label>
                     <FormSelect
-                    id={this.state.id + '__activity'}
                     options={this.props.activities}
-                    defaultOptions={defaultActivities}
+                    value={activeFilters.activity}
                     multiple={true}
                     onChange={(value) => { this.props.onAddFilter('activity', value) }}
                     ></FormSelect>

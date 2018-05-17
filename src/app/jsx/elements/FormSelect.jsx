@@ -27,6 +27,7 @@ export default class FormSelect extends React.Component {
     }
 
     componentDidUpdate(){
+        
         var elem = document.getElementById(this.state.id);
         if (typeof M.FormSelect.getInstance(elem) !== 'undefined'){
             M.FormSelect.getInstance(elem).destroy();
@@ -41,10 +42,12 @@ export default class FormSelect extends React.Component {
     }
 
     render(){
+        var { value, options, multiple } = this.props;
+        var rightValue = ( typeof value === 'undefined' ? ( multiple ? [] : '' ) : value );
         return (
-            <select id={this.state.id} multiple={this.props.multiple} onChange={this.onChange} value={this.props.value}>
-                {this.props.options.map((value) => {
-                    return ( <option key={value}>{value}</option> );
+            <select id={this.state.id} multiple={multiple} onChange={this.onChange} value={rightValue}>
+                {options.map((optionValue) => {
+                    return ( <option key={optionValue}>{optionValue}</option> );
                 })}
             </select>
         );
@@ -53,9 +56,8 @@ export default class FormSelect extends React.Component {
 }
 
 FormSelect.propTypes = {
-    value: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     options: PropTypes.array.isRequired,
-    multiple: PropTypes.bool,
-    defaultOptions: PropTypes.array,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    multiple: PropTypes.bool
 }
