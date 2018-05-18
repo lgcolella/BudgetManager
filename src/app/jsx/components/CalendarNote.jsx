@@ -6,21 +6,31 @@ export default class CalendarNote extends React.Component {
 
     constructor(props){
         super(props);
+        var id = 'calendar-note_' + Math.random().toString().slice(2);
         this.state = {
-            id: this.props.id,
-            wrapperId: this.props.id + '__wrapper',
-            noteBoxId: this.props.id + '__notebox',
-            editButtonId: this.props.id + '__edit-button',
-            deleteButtonId: this.props.id + '__delete-button',
+            id,
+            wrapperId: id + '__wrapper',
+            noteBoxId: id + '__notebox',
+            editButtonId: id + '__edit-button',
+            deleteButtonId: id + '__delete-button',
             editButtonText: 'Crea',
             selectedNote: '',
             editableNote: false,
             deletableNote: false
         }
+        this.toggle = this.toggle.bind(this);
         this.selectDay = this.selectDay.bind(this);
         this.setEditableNote = this.setEditableNote.bind(this);
         this.editNote = this.editNote.bind(this);
         this.deleteNote = this.deleteNote.bind(this);
+    }
+
+    toggle(){
+        if (this.props.open){
+            M.Datepicker.getInstance(document.getElementById(this.state.id)).open();
+        } else {
+            M.Datepicker.getInstance(document.getElementById(this.state.id)).close();
+        }
     }
 
     selectDay(selectedDate){
@@ -95,7 +105,8 @@ export default class CalendarNote extends React.Component {
         M.Datepicker.init(document.getElementById(this.state.id), {
             i18n: i18nOptions,
             format: 'yyyy-mm-dd',
-            onSelect: this.selectDay
+            onSelect: this.selectDay,
+            onClose: this.props.onClose
         });
 
         var buttonsConfirmations = document.querySelector('#' + this.state.wrapperId + ' .confirmation-btns');
@@ -105,6 +116,12 @@ export default class CalendarNote extends React.Component {
 
         var dateDisplay = document.querySelector('#' + this.state.wrapperId + ' .modal-content.datepicker-container .datepicker-date-display');
         dateDisplay.appendChild(document.getElementById(this.state.noteBoxId));
+
+        this.toggle();
+    }
+
+    componentDidUpdate(){
+        this.toggle();
     }
 
     render(){
@@ -134,7 +151,7 @@ export default class CalendarNote extends React.Component {
 }
 
 CalendarNote.propTypes = {
-    id: PropTypes.string.isRequired,
+    open: PropTypes.bool.isRequired,
     notes: PropTypes.objectOf((propValue, key, componentName, location, propFullName) => {
         for (let date in propValue){
             if (isNaN(new Date(date).getTime()) || typeof propValue[date] !== 'string'){
@@ -144,5 +161,6 @@ CalendarNote.propTypes = {
             }
         }
     }),
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired
 }

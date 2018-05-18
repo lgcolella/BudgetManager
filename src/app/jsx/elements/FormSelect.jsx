@@ -7,7 +7,7 @@ export default class FormSelect extends React.Component {
         super(props);
         this.state = {
             //id: this.props.id
-            id: 'form-select__' + Math.random().toString()
+            id: 'form-select-react-component__' + Math.random().toString()
         };
         this.onChange = this.onChange.bind(this);
     }

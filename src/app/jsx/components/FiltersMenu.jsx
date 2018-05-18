@@ -9,7 +9,9 @@ export default class FiltersMenu extends React.Component {
         super(props);
         this.state = {
             'id': this.props.id,
-            'values': {}
+            'values': {},
+            'openFromDate': false,
+            'openToDate': false
         };
         //this.handleFilterChange = this.handleFilterChange.bind(this);
     }
@@ -59,7 +61,7 @@ export default class FiltersMenu extends React.Component {
 
     render(){
 
-        var defaultWallets;
+        /*var defaultWallets;
         var defaultActivities;
         var defaultMinAmount;
         var defaultMaxAmount;
@@ -80,9 +82,10 @@ export default class FiltersMenu extends React.Component {
             defaultMaxAmount = this.props.maxAmount;
             defaultFromDate = '';
             defaultToDate = '';
-        }
+        }*/
 
         var { activeFilters } = this.props;
+
         return(
             <div id={this.state.id}>
                 <div>
@@ -113,11 +116,21 @@ export default class FiltersMenu extends React.Component {
                 </div>
                 <div>
                     <label>Da</label>
-                    <DatePicker value={activeFilters.fromDate} onChange={(value) => this.props.onAddFilter('fromDate', value)}></DatePicker>
+                    <DatePicker
+                    open={this.state.openFromDate}
+                    value={activeFilters.fromDate}
+                    onChange={(value) => this.props.onAddFilter('fromDate', value)}
+                    onClose={() => { this.setState({openFromDate: false}) }}
+                    ></DatePicker>
                 </div>
                 <div>
                     <label>A</label>
-                    <DatePicker value={activeFilters.toDate} onChange={(value) => this.props.onAddFilter('toDate', value)}></DatePicker>
+                    <DatePicker
+                    open={this.state.openToDate}
+                    value={activeFilters.toDate}
+                    onChange={(value) => this.props.onAddFilter('toDate', value)}
+                    onClose={() => { this.setState({openToDate: false}) }}
+                    ></DatePicker>
                 </div>
             </div>
         );

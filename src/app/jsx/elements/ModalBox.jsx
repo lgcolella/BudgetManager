@@ -6,16 +6,31 @@ export default class ModalBox extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            'id': props.id,
+            'id': 'modal-react-component__' + Math.random().toString().slice(2),
             'endingTop': props.endingTop || '8%'
+        }
+        this.toggle = this.toggle.bind(this);
+    }
+
+    toggle(){
+        if(this.props.open){
+            M.Modal.getInstance(document.getElementById(this.state.id)).open();
+        } else {
+            M.Modal.getInstance(document.getElementById(this.state.id)).close();
         }
     }
 
     componentDidMount(){
         var elem = document.getElementById(this.state.id);
         M.Modal.init(elem, {
+            onCloseEnd: this.props.onClose,
             endingTop: '3%'
         });
+        this.toggle();
+    }
+
+    componentDidUpdate(){
+        this.toggle();
     }
 
     render(){
@@ -31,7 +46,8 @@ export default class ModalBox extends React.Component {
 }
 
 ModalBox.propTypes = {
-    id: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool,
     children: PropTypes.node.isRequired,
     endingTop: PropTypes.string
 }

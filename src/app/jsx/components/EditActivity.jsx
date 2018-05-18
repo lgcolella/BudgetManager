@@ -10,7 +10,6 @@ export default class EditActivity extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            id: props.id,
             activityToEdit: {
                 id: undefined,
                 wallet: '',
@@ -21,7 +20,8 @@ export default class EditActivity extends React.Component {
             },
             createNewWallet: false,
             submitError: false,
-            errorText: ''
+            errorText: '',
+            openDatepicker: false,
         };
         this.setActivityToEditProp = this.setActivityToEditProp.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -60,8 +60,8 @@ export default class EditActivity extends React.Component {
             this.setState({
                 submitError: false
             });
-            M.Modal.getInstance(document.getElementById(this.state.id)).close();
             this.clearInputs();
+            this.props.onClose();
         } else {
             this.setState({
                 submitError: true,
@@ -91,18 +91,19 @@ export default class EditActivity extends React.Component {
         });
     }
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps){
 
         var { activityToEdit } = this.props;
-        if(typeof activityToEdit !== 'undefined' && this.state.activityToEdit !== activityToEdit){
-            this.setState({
-                activityToEdit
-            })
+        if(typeof activityToEdit !== 'undefined'){
+            M.updateTextFields();
+            if (prevProps !== this.props && this.state.activityToEdit !== activityToEdit){
+                this.setState({
+                    activityToEdit
+                })
+            }
+            
         }
 
-        if (typeof this.props.activityToEdit !== 'undefined'){
-            M.updateTextFields();
-        }
     }
 
     render(){
@@ -114,7 +115,6 @@ export default class EditActivity extends React.Component {
             walletInput = (
                 <input
                 type='text'
-                id={this.state.id + '__wallet'}
                 value={this.state.activityToEdit.wallet}
                 onChange={(event) => this.setActivityToEditProp('wallet', event.target.value)}></input>
             );
@@ -144,7 +144,7 @@ export default class EditActivity extends React.Component {
         }
         /*!Error box*/
         return(
-            <ModalBox id={this.state.id} endingTop={'5%'}>
+            <ModalBox open={this.props.open} onClose={this.props.onClose} endingTop={'5%'}>
                 <div>
                     <form>
                         <div>
@@ -184,8 +184,10 @@ export default class EditActivity extends React.Component {
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">date_range</i>
                                 <DatePicker
+                                open={this.state.openDatepicker}
                                 value={this.state.activityToEdit.date}
                                 onChange={(value) => {this.setActivityToEditProp('date', value)}}
+                                onClose={() => { this.setState({openDatepicker: false}) }}
                                 ></DatePicker>
                                 <label>Data</label>
                             </div>
@@ -193,7 +195,9 @@ export default class EditActivity extends React.Component {
                         <div className='row'>
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">comment</i>
-                                <textarea value={this.state.activityToEdit.comment} onChange={(event) => {this.setActivityToEditProp('comment', event.value)}} className='materialize-textarea'></textarea>
+                                <textarea
+                                value={this.state.activityToEdit.comment || ''}
+                                onChange={(event) => {this.setActivityToEditProp('comment', event.target.value)}} className='materialize-textarea'></textarea>
                                 <label>Commento</label>
                             </div>
                         </div>
@@ -216,10 +220,11 @@ export default class EditActivity extends React.Component {
 }
 
 EditActivity.propTypes = {
-    id: PropTypes.string.isRequired,
+    open: PropTypes.bool.isRequired,
     wallets: PropTypes.array.isRequired,
     activity: PropTypes.array.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
     activityToEdit: PropTypes.shape({
         id: PropTypes.number,
         wallet: PropTypes.string.isRequired,

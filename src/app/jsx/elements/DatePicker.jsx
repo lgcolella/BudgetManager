@@ -8,8 +8,17 @@ export default class DatePicker extends React.Component {
         super(props);
         this.state = {
             //id: this.props.id
-            id: 'date-picker-react-component__' + Math.random().toString()
+            id: 'date-picker-react-component__' + Math.random().toString().slice(2)
         };
+        this.toggle = this.toggle.bind(this);
+    }
+
+    toggle(){
+        if(this.props.open){
+            M.Datepicker.getInstance(document.getElementById(this.state.id)).open();
+        } else {
+            M.Datepicker.getInstance(document.getElementById(this.state.id)).close();
+        }
     }
 
     componentDidMount(){
@@ -23,6 +32,7 @@ export default class DatePicker extends React.Component {
             setDefaultDate: true,
             onClose: () => {
                 this.props.onChange(elem.value);
+                this.props.onClose();
             }
         };
         M.Datepicker.init(elem, options);
@@ -33,6 +43,7 @@ export default class DatePicker extends React.Component {
             var elem = document.getElementById(this.state.id);
             M.Datepicker.getInstance(elem).setDate( new Date(this.props.value) );
         }
+        this.toggle();
     }
 
     render(){
@@ -44,6 +55,8 @@ export default class DatePicker extends React.Component {
 }
 
 DatePicker.propTypes = {
+    open: PropTypes.bool.isRequired,
     value: PropTypes.string,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired
 }

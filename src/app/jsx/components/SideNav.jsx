@@ -61,6 +61,7 @@ export default class SideNav extends React.Component {
         M.Sidenav.getInstance(document.getElementById(this.state.id)).close();
     }
 
+
     componentDidMount(){
         var elem = document.getElementById(this.state.id);
         M.Sidenav.init(elem);
@@ -81,7 +82,7 @@ export default class SideNav extends React.Component {
                 <li>
                     <a className='waves-effect' 
                     onClick={() => {
-                        this.props.openNewActivity();
+                        this.props.openModal('new-activity');
                         this.closeSidenav()
                     }}><i className="material-icons">add_shopping_cart</i>Nuova attività</a>
                 </li>
@@ -114,14 +115,14 @@ export default class SideNav extends React.Component {
                 <li>
                     <a href='#!' className='waves-effect' 
                     onClick={() => {
-                        this.props.openCalendarNote();
+                        this.props.openModal('calendar-note');
                         this.closeSidenav();
                     }}><i className='material-icons'>event</i>Calendario</a>
                 </li>
                 <li>
                     <a href='#!' className='waves-effect'
                     onClick={() => {
-                        this.props.openCalculator();
+                        this.props.openModal('calculator');
                         this.closeSidenav();
                     }}
                     ><i className='material-icons'>exposure</i>Calcolatrice</a>
@@ -133,7 +134,7 @@ export default class SideNav extends React.Component {
                 <li>
                     <a className='waves-effect'
                     onClick={() => {
-                        this.props.openExportBox();
+                        this.props.openModal('export-box');
                         this.closeSidenav();
                     }}><i className='material-icons'>insert_drive_file</i>Esporta dati</a>
                 </li>
@@ -159,10 +160,7 @@ SideNav.propTypes = {
         toggle: PropTypes.func.isRequired
     }).isRequired,
     onImportData: PropTypes.func.isRequired,
-    openNewActivity: PropTypes.func.isRequired,
     onClearFilters: PropTypes.func.isRequired,
     onChangeShowTableOrChart: PropTypes.func.isRequired,
-    openCalendarNote: PropTypes.func.isRequired,
-    openCalculator: PropTypes.func.isRequired,
-    openExportBox: PropTypes.func.isRequired
+    openModal: PropTypes.func.isRequired
 }

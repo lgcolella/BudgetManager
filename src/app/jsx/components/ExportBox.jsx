@@ -8,9 +8,6 @@ export default class ExportBox extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            id: this.props.id
-        }
         this.exportDataToFile = this.exportDataToFile.bind(this);
     }
 
@@ -40,7 +37,7 @@ export default class ExportBox extends React.Component {
 
     render(){
         return(
-            <ModalBox id={this.state.id}>
+            <ModalBox open={this.props.open} onClose={this.props.onClose}>
                 <div className='row'>
                 <h4 className='center-align'>Esporta dati in</h4>
                     <div className='col s12'>
@@ -57,6 +54,7 @@ export default class ExportBox extends React.Component {
 }
 
 ExportBox.propTypes = {
-    id: PropTypes.string.isRequired,
-    data: PropTypes.array.isRequired
+    open: PropTypes.bool.isRequired,
+    data: PropTypes.array.isRequired,
+    onClose: PropTypes.func.isRequired
 }

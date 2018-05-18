@@ -7,7 +7,6 @@ export default class Calculator extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            id: this.props.id,
             prevNum: 0,
             currentNum: 0,
             currentOp: '+',
@@ -130,12 +129,12 @@ export default class Calculator extends React.Component {
     
     render(){
 
-        var { id, MAX_NUM_LENGTH, MAX_MADE_OPERATIONS, prevNum, currentNum, currentOp } = this.state;
+        var { MAX_NUM_LENGTH, MAX_MADE_OPERATIONS, prevNum, currentNum, currentOp } = this.state;
         var leftNumber = ( Number(prevNum) === 0 ?  currentNum.toString().slice(0, MAX_NUM_LENGTH) : prevNum.toString().slice(0, MAX_NUM_LENGTH));
         var rightNumber = ( Number(prevNum) === 0 ?  prevNum.toString().slice(0, MAX_NUM_LENGTH) : currentNum.toString().slice(0, MAX_NUM_LENGTH));
 
         return(
-            <ModalBox id={id}>
+            <ModalBox open={this.props.open} onClose={this.props.onClose}>
                 <div className='row'>
                     <h4>Calcolatrice</h4>
                     <div className='col s8'>
@@ -196,5 +195,6 @@ export default class Calculator extends React.Component {
 }
 
 Calculator.propTypes = {
-    id: PropTypes.string.isRequired
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired
 }

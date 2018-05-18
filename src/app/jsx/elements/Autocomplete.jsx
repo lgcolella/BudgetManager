@@ -7,7 +7,7 @@ export default class Autocomplete extends React.Component {
         super(props);
         this.state = {
             //'id': this.props.id
-            id: 'autocomplete-input__' + Math.random().toString()
+            id: 'autocomplete-react-component__' + Math.random().toString()
         }
         this.getAutocompleteData = this.getAutocompleteData.bind(this);
     }
