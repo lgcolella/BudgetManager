@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pagination from '../elements/Pagination.jsx';
+import Utils from '../functions/utils.js';
 
 export default class TableOverview extends React.Component {
 
@@ -38,7 +39,7 @@ export default class TableOverview extends React.Component {
                 <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
                 <td>
                     <div>
-                        <i className='material-icons' onClick={this.props.openNewActivity}>add_shopping_cart</i>
+                        <i className='material-icons' onClick={() => {Utils.modal('newActivity').open()}}>add_shopping_cart</i>
                     </div>
                 </td>
             </tr>
@@ -282,7 +283,5 @@ TableOverview.propTypes = {
     id: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired,
     dataToRender: PropTypes.array.isRequired,
-    openEditActivity: PropTypes.func.isRequired,
-    openNewActivity: PropTypes.func.isRequired,
     onChangeData: PropTypes.func.isRequired
 }

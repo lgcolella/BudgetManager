@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import i18nOptions from '../functions/i18nDatepickerOption.js';
+import Utils from '../functions/utils.js';
 
 export default class CalendarNote extends React.Component {
 
     constructor(props){
         super(props);
-        var id = 'calendar-note_' + Math.random().toString().slice(2);
+        const id = Utils.modal('calendar').id;
         this.state = {
             id,
             wrapperId: id + '__wrapper',
@@ -18,19 +19,12 @@ export default class CalendarNote extends React.Component {
             editableNote: false,
             deletableNote: false
         }
-        this.toggle = this.toggle.bind(this);
         this.selectDay = this.selectDay.bind(this);
         this.setEditableNote = this.setEditableNote.bind(this);
         this.editNote = this.editNote.bind(this);
         this.deleteNote = this.deleteNote.bind(this);
-    }
-
-    toggle(){
-        if (this.props.open){
-            M.Datepicker.getInstance(document.getElementById(this.state.id)).open();
-        } else {
-            M.Datepicker.getInstance(document.getElementById(this.state.id)).close();
-        }
+        this.modifyDatepicker = this.modifyDatepicker.bind(this);
+        this.showEventsOnCalendar = this.showEventsOnCalendar.bind(this);
     }
 
     selectDay(selectedDate){
@@ -89,14 +83,45 @@ export default class CalendarNote extends React.Component {
         var selectedDate = new Date(selectedDateString);
 
         if(!isNaN(selectedDate.getTime())){
-            var newNote = { [selectedDate.toDateString()] : '' };
             this.setState({
-                notes: Object.assign({}, this.props.notes, newNote),
                 selectedNote: event.target.value,
                 editableNote: false,
                 deletableNote: false,
                 editButtonText: 'Crea'
+            }, () => {
+                var newNotes = JSON.parse(JSON.stringify(this.props.notes));
+                delete newNotes[selectedDate.toDateString()];
+                this.props.onChange(newNotes);
             });
+        }
+    }
+
+    modifyDatepicker(){
+
+        var buttonsConfirmations = document.querySelector('#' + this.state.wrapperId + ' .confirmation-btns');
+        buttonsConfirmations.innerHTML = '';
+        buttonsConfirmations.appendChild(document.getElementById(this.state.deleteButtonId));
+        buttonsConfirmations.appendChild(document.getElementById(this.state.editButtonId));
+
+        var dateDisplay = document.querySelector('#' + this.state.wrapperId + ' .modal-content.datepicker-container .datepicker-date-display');
+        dateDisplay.appendChild(document.getElementById(this.state.noteBoxId));
+    }
+
+    showEventsOnCalendar(){
+        var eventDates = Object.keys(this.props.notes).map((date) => {
+            return new Date(date).toDateString();
+        });
+        var dayCells = M.Datepicker.getInstance(document.getElementById(this.state.id)).calendarEl.getElementsByTagName('td');
+        for (let i = 0; i < dayCells.length; i++){
+            var tdEl = dayCells[i];
+            if(!tdEl.hasChildNodes()) continue;
+            var { pikaDay, pikaMonth, pikaYear } = tdEl.children[0].dataset;
+            var dateCell = new Date(pikaYear + '-' + (Number(pikaMonth) + 1) + '-' + pikaDay).toDateString();
+            if(eventDates.indexOf(dateCell) !== -1){
+                tdEl.classList.add('with-event');
+            } else {
+                tdEl.classList.remove('with-event');
+            }
         }
     }
 
@@ -106,22 +131,14 @@ export default class CalendarNote extends React.Component {
             i18n: i18nOptions,
             format: 'yyyy-mm-dd',
             onSelect: this.selectDay,
-            onClose: this.props.onClose
+            onDraw: this.showEventsOnCalendar
         });
-
-        var buttonsConfirmations = document.querySelector('#' + this.state.wrapperId + ' .confirmation-btns');
-        buttonsConfirmations.innerHTML = '';
-        buttonsConfirmations.appendChild(document.getElementById(this.state.deleteButtonId));
-        buttonsConfirmations.appendChild(document.getElementById(this.state.editButtonId));
-
-        var dateDisplay = document.querySelector('#' + this.state.wrapperId + ' .modal-content.datepicker-container .datepicker-date-display');
-        dateDisplay.appendChild(document.getElementById(this.state.noteBoxId));
-
-        this.toggle();
+        this.modifyDatepicker();
+        this.showEventsOnCalendar();
     }
 
     componentDidUpdate(){
-        this.toggle();
+        this.showEventsOnCalendar();
     }
 
     render(){
@@ -151,7 +168,6 @@ export default class CalendarNote extends React.Component {
 }
 
 CalendarNote.propTypes = {
-    open: PropTypes.bool.isRequired,
     notes: PropTypes.objectOf((propValue, key, componentName, location, propFullName) => {
         for (let date in propValue){
             if (isNaN(new Date(date).getTime()) || typeof propValue[date] !== 'string'){
@@ -162,5 +178,4 @@ CalendarNote.propTypes = {
         }
     }),
     onChange: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired
 }

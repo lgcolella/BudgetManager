@@ -2,6 +2,7 @@ const { dialog } = require('electron').remote;
 import fs from 'fs';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Utils from '../functions/utils.js';
 
 export default class SideNav extends React.Component {
 
@@ -82,7 +83,7 @@ export default class SideNav extends React.Component {
                 <li>
                     <a className='waves-effect' 
                     onClick={() => {
-                        this.props.openModal('new-activity');
+                        Utils.modal('new-activity').open();
                         this.closeSidenav()
                     }}><i className="material-icons">add_shopping_cart</i>Nuova attività</a>
                 </li>
@@ -115,14 +116,14 @@ export default class SideNav extends React.Component {
                 <li>
                     <a href='#!' className='waves-effect' 
                     onClick={() => {
-                        this.props.openModal('calendar-note');
+                        Utils.modal('calendar').open();
                         this.closeSidenav();
                     }}><i className='material-icons'>event</i>Calendario</a>
                 </li>
                 <li>
                     <a href='#!' className='waves-effect'
                     onClick={() => {
-                        this.props.openModal('calculator');
+                        Utils.modal('calculator').open();
                         this.closeSidenav();
                     }}
                     ><i className='material-icons'>exposure</i>Calcolatrice</a>
@@ -134,7 +135,7 @@ export default class SideNav extends React.Component {
                 <li>
                     <a className='waves-effect'
                     onClick={() => {
-                        this.props.openModal('export-box');
+                        Utils.modal('export').open();
                         this.closeSidenav();
                     }}><i className='material-icons'>insert_drive_file</i>Esporta dati</a>
                 </li>
@@ -162,5 +163,4 @@ SideNav.propTypes = {
     onImportData: PropTypes.func.isRequired,
     onClearFilters: PropTypes.func.isRequired,
     onChangeShowTableOrChart: PropTypes.func.isRequired,
-    openModal: PropTypes.func.isRequired
 }

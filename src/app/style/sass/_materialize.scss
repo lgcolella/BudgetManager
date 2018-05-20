@@ -66,6 +66,9 @@
             transition: background-color 2s ease-in-out;
             border-radius: 0%;
         }
+        td.with-event {
+            text-decoration: underline;
+        }
     }
     .datepicker-footer {
         justify-content: flex-end;

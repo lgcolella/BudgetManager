@@ -1,5 +1,11 @@
 import { isArray } from "util";
 
+const modalNewActivity = 'modal-new-activity';
+const modalEditActivity = 'modal-edit-activity';
+const modalCalendarNoteId = 'modal-calendar-note';
+const modalCalculatorId = 'modal-calculator';
+const modalExportBoxId = 'modal-export';
+
 module.exports = {
 
     generateId(data){
@@ -91,6 +97,40 @@ module.exports = {
             selectedNegativeMinAmount,
             selectedActivitiesSum
         };
+    },
+
+
+    modal: (modalName) => {
+        /**
+         * This method is used for handling Materialize modals opening.
+         * I've preffered use this because I've noticed that many Materialize modals don't work really well with React architecture 
+         * cause their autofocus method.
+         */
+        let map = {
+            newActivity: modalNewActivity,
+            editActivity: modalEditActivity,
+            calendar: modalCalendarNoteId,
+            calculator: modalCalculatorId,
+            export: modalExportBoxId
+        }
+
+        if(map.hasOwnProperty(modalName)){
+            let id = map[modalName];
+            return {
+                id,
+                open: () => {
+                    let el = document.getElementById(id);
+                    if(modalName === 'calendar'){
+                        M.Datepicker.getInstance(el).open();
+                    } else {
+                        M.Modal.getInstance(el).open();
+                    }
+                }
+            }
+        } else {
+            throw modalName + ': modal not allowed';
+        }
+        
     }
 
 }

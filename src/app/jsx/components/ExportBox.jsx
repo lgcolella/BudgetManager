@@ -3,11 +3,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Xlsx from 'xlsx';
 import ModalBox from '../elements/ModalBox.jsx';
+import Utils from '../functions/utils.js';
 
 export default class ExportBox extends React.Component {
 
     constructor(props){
         super(props);
+        this.state = {
+            id: Utils.modal('export').id
+        }
         this.exportDataToFile = this.exportDataToFile.bind(this);
     }
 
@@ -37,7 +41,7 @@ export default class ExportBox extends React.Component {
 
     render(){
         return(
-            <ModalBox open={this.props.open} onClose={this.props.onClose}>
+            <ModalBox id={this.state.id}>
                 <div className='row'>
                 <h4 className='center-align'>Esporta dati in</h4>
                     <div className='col s12'>
@@ -54,7 +58,5 @@ export default class ExportBox extends React.Component {
 }
 
 ExportBox.propTypes = {
-    open: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
-    onClose: PropTypes.func.isRequired
 }

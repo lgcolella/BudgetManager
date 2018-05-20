@@ -38,12 +38,7 @@ export default class Home extends React.Component {
             'chartWalletsColors': defaultStorage.getData().chartWalletsColors || {},
             'notes': defaultStorage.getData().notes || {},
             'showFiltersMenu': true,
-            'showTableDataInfo': true,
-            'openNewActivity': false,
-            'openEditActivity': false,
-            'openCalculator': false,
-            'openCalendarNote': false,
-            'openExportBox': false
+            'showTableDataInfo': true
         };
         this.importData = this.importData.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -228,7 +223,7 @@ export default class Home extends React.Component {
 
         var storedProp = ['data', 'showTableOrChart', 'chartWalletsColors', 'notes'];
         var stateProp = storedProp.concat(
-            ['activityToEdit', 'openNewActivity', 'openEditActivity', 'openCalculator', 'openCalendarNote', 'openExportBox']
+            ['activityToEdit']
         );
 
         if(stateProp.indexOf(prop) !== -1){
@@ -270,13 +265,11 @@ export default class Home extends React.Component {
                         id={tableOverviewId}
                         data={data}
                         dataToRender={dataToRender}
-                        openNewActivity={() => {this.setStateProp('openNewActivity', true)}}
                         onChangeData={(value) => this.setStateProp('data', value)}
                         openEditActivity={(activityToEdit) => {
                             this.setState({
                                 activityToEdit,
-                                openEditActivity: true
-                            });
+                            }, () => {Utils.modal('editActivity').open()});
                         }}
                         />
                     );
@@ -310,15 +303,6 @@ export default class Home extends React.Component {
                         toggle: () => {
                             this.setState({ showFiltersMenu: !this.state.showFiltersMenu })
                         }
-                    }}
-                    openModal={(modalName) => {
-                        const map = {
-                            'new-activity':'openNewActivity',
-                            'calendar-note': 'openCalendarNote',
-                            'calulcator': 'openCalculator',
-                            'exportBox': 'openExportBox'
-                        };
-                        map.hasOwnProperty(modalName) && this.setStateProp(map[modalName], true);
                     }}
                     onChangeShowTableOrChart={(value) => {
                         this.setStateProp('showTableOrChart', value)
@@ -377,39 +361,30 @@ export default class Home extends React.Component {
                         {dataVisualization}
                     </div>
 
-                    <Calculator
-                        open={this.state.openCalculator}
-                        onClose={() => {this.setStateProp('openCalculator', false)}}
-                    ></Calculator>
+                    <Calculator></Calculator>
                     
                     <EditActivity
-                        open={this.state.openEditActivity}
+                        id={Utils.modal('editActivity').id}
                         wallets={dataInfo.allWallets}
                         activity={dataInfo.allActivities}
                         activityToEdit={this.state.activityToEdit}
                         onSubmit={this.editActivity}
-                        onClose={() => {this.setStateProp('openEditActivity', false)}}
                     ></EditActivity>
 
                     <EditActivity
-                        open={this.state.openNewActivity}
+                        id={Utils.modal('newActivity').id}
                         wallets={dataInfo.allWallets}
                         activity={dataInfo.allActivities}
                         onSubmit={this.addActivity}
-                        onClose={() => {this.setStateProp('openNewActivity', false)}}
                     ></EditActivity>
 
                     <CalendarNote
-                    open={this.state.openCalendarNote}
                     notes={this.state.notes}
-                    onClose={() => {this.setStateProp('openCalendarNote', false)}}
                     onChange={(newNote) => this.setStateProp('notes', newNote)}
                     ></CalendarNote>
 
                     <ExportBox
-                        open={this.state.openExportBox}
                         data={this.state.data}
-                        onClose={() => {this.setStateProp('openExportBox', false)}}
                     ></ExportBox>
                     
                 </div>

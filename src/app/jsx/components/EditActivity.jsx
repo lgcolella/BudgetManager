@@ -144,7 +144,7 @@ export default class EditActivity extends React.Component {
         }
         /*!Error box*/
         return(
-            <ModalBox open={this.props.open} onClose={this.props.onClose} endingTop={'5%'}>
+            <ModalBox id={this.props.id} endingTop={'5%'}>
                 <div>
                     <form>
                         <div>
@@ -220,11 +220,10 @@ export default class EditActivity extends React.Component {
 }
 
 EditActivity.propTypes = {
-    open: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired,
     wallets: PropTypes.array.isRequired,
     activity: PropTypes.array.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired,
     activityToEdit: PropTypes.shape({
         id: PropTypes.number,
         wallet: PropTypes.string.isRequired,

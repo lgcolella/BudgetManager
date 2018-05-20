@@ -69,6 +69,8 @@
   .datepicker-modal .datepicker-table td, .datepicker-modal .datepicker-table td > button {
     transition: background-color 2s ease-in-out;
     border-radius: 0%; }
+  .datepicker-modal .datepicker-table td.with-event {
+    text-decoration: underline; }
 
 .datepicker-modal .datepicker-footer {
   justify-content: flex-end; }
@@ -139,7 +141,6 @@ i.material-icons.hover-red:hover, .hover-red:hover {
     text-align: center; }
 
 #modal-calculator {
-  width: 80%;
   max-width: 700px;
   max-height: 80%; }
   #modal-calculator button.btn-large, #modal-calculator button.btn {

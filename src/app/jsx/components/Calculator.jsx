@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalBox from '../elements/ModalBox.jsx';
+import Utils from '../functions/utils.js';
+
+const modalCalculatorId = 'modal-calculator';
 
 export default class Calculator extends React.Component {
 
@@ -132,10 +135,10 @@ export default class Calculator extends React.Component {
         var { MAX_NUM_LENGTH, MAX_MADE_OPERATIONS, prevNum, currentNum, currentOp } = this.state;
         var leftNumber = ( Number(prevNum) === 0 ?  currentNum.toString().slice(0, MAX_NUM_LENGTH) : prevNum.toString().slice(0, MAX_NUM_LENGTH));
         var rightNumber = ( Number(prevNum) === 0 ?  prevNum.toString().slice(0, MAX_NUM_LENGTH) : currentNum.toString().slice(0, MAX_NUM_LENGTH));
-
+        
         return(
-            <ModalBox open={this.props.open} onClose={this.props.onClose}>
-                <div className='row'>
+            <ModalBox id={Utils.modal('calculator').id}>
+                <div id={modalCalculatorId} className='row'>
                     <h4>Calcolatrice</h4>
                     <div className='col s8'>
                         <div className='row'>
@@ -195,6 +198,4 @@ export default class Calculator extends React.Component {
 }
 
 Calculator.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
 }
