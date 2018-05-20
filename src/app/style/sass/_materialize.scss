@@ -1,45 +1,41 @@
-.btn, .btn.btn-flat, .btn-flat, .modal-footer .btn.btn-flat  {
-    margin: 4px;
-    background-color: $background-element-color;
-    color: $text-color;
-    border: 2px solid $icons-color;
-    border-radius: 0px;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-    transition: background-color .25s ease;
-    &:hover {
-        background-color: $icons-color;
-        color: $text-color;
-        border-color: $icons-color;
+.row {
+    margin-bottom: 15px;
+    .col {
+        padding: 0 0.25rem;
     }
-    &.modal-close, &.datepicker-clear, &.btn-red {
-        border-color: $icons-close-color;
+}
+
+i {
+    &.material-icons {
+        width: 100%;
+        margin: 0px;
+        display: block;
+        color: $icons-color !important;
+        text-align: center;
         &:hover {
-            background-color: $icons-close-color;
-            color: $text-color;
-            border-color: $icons-close-color; 
+            color: $icons-hover-color !important;
+            cursor: pointer;
+            transition: color .25s ease;
+        }
+        &.hover-red:hover {
+            color: $red !important;
         }
     }
 }
 
-.btn-flat {
-    transition: background-color .25s ease;
-    &:hover {
-        background-color: $green;
-        color: $black;
-    }
-    &.modal-close:hover {
-        background-color: $red;
-        color: $black;
+.btn, .btn.btn-flat, .btn-flat, .modal-footer .btn.btn-flat {
+    @include button-style($text-color, $background-element-color, $icons-color, $text-color);
+    &.modal-close, &.datepicker-clear, &.btn-red {
+        @include button-style($text-color, $background-element-color, $icons-close-color, $text-color);
     }
 }
 
 .fixed-action-btn {
     bottom: initial;
-    .btn-floating.sidenav-trigger > i.material-icons {
+    .btn-floating > i.material-icons {
         color: $text-color !important;
-        transition: background-color 0.2s ease;
         &:hover {
-            background-color: $icons-hover-color;
+            @include hover-effect($icons-hover-color);
         }
     }
 }
@@ -47,7 +43,11 @@
 .modal.open {
     overflow: visible;
     outline-width: 0px;
-    .modal-content, .modal-footer {
+    .modal-content {
+        @include border($text-color);
+        background-color: $background-element-color;
+    }
+    .modal-footer {
         background-color: $background-element-color;
     }
 }
@@ -62,12 +62,17 @@
     }
     .datepicker-table {
         margin: 10px;
-        td, td>button {
-            transition: background-color 2s ease-in-out;
-            border-radius: 0%;
-        }
-        td.with-event {
-            text-decoration: underline;
+        td {
+            border-radius: $border-radius;
+            button {
+                border-radius: $border-radius;
+                &:focus {
+                    background-color: transparent;
+                }
+            }
+            &.with-event {
+                text-decoration: underline;
+            }   
         }
     }
     .datepicker-footer {
@@ -89,4 +94,8 @@
             background-color: $background-color;
         }
     }
+}
+
+.material-tooltip {
+    @include border($text-color);
 }

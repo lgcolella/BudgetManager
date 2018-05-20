@@ -1,5 +1,6 @@
 import { isArray } from "util";
 
+const sideNavId = 'sidenav';
 const modalNewActivity = 'modal-new-activity';
 const modalEditActivity = 'modal-edit-activity';
 const modalCalendarNoteId = 'modal-calendar-note';
@@ -107,6 +108,7 @@ module.exports = {
          * cause their autofocus method.
          */
         let map = {
+            sidenav: sideNavId,
             newActivity: modalNewActivity,
             editActivity: modalEditActivity,
             calendar: modalCalendarNoteId,
@@ -116,14 +118,25 @@ module.exports = {
 
         if(map.hasOwnProperty(modalName)){
             let id = map[modalName];
+            let el = document.getElementById(id);
             return {
                 id,
                 open: () => {
-                    let el = document.getElementById(id);
                     if(modalName === 'calendar'){
                         M.Datepicker.getInstance(el).open();
+                    } else if (modalName === 'sidenav'){
+                        M.Sidenav.getInstance(el).open();
                     } else {
                         M.Modal.getInstance(el).open();
+                    }
+                },
+                close: () => {
+                    if(modalName === 'calendar'){
+                        M.Datepicker.getInstance(el).close();
+                    } else if (modalName === 'sidenav'){
+                        M.Sidenav.getInstance(el).close();
+                    } else {
+                        M.Modal.getInstance(el).close();
                     }
                 }
             }

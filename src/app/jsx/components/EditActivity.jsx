@@ -61,7 +61,6 @@ export default class EditActivity extends React.Component {
                 submitError: false
             });
             this.clearInputs();
-            this.props.onClose();
         } else {
             this.setState({
                 submitError: true,

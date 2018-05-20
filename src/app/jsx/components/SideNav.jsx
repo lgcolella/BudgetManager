@@ -74,7 +74,7 @@ export default class SideNav extends React.Component {
             <ul id={this.state.id} className="sidenav">
                 <li>
                     <div className="user-view">
-                        <h5><i className='material-icons'>account_balance_wallet</i> Budget Manager</h5>
+                        <h5>Budget Manager</h5>
                     </div>
                 </li>
                 <li><div className="divider" style={{'backgroundColor':'transparent'}}></div></li>
@@ -83,7 +83,7 @@ export default class SideNav extends React.Component {
                 <li>
                     <a className='waves-effect' 
                     onClick={() => {
-                        Utils.modal('new-activity').open();
+                        Utils.modal('newActivity').open();
                         this.closeSidenav()
                     }}><i className="material-icons">add_shopping_cart</i>Nuova attività</a>
                 </li>

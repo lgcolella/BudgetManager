@@ -1,21 +1,12 @@
 
 #table-data-info {
-    tr {
-        background-color: transparent;
-        th, td {
-            padding: 0px;
-            border: 1px solid $border-element-color;
-            font-size: 1.1em;
-        }
-        td {
-            font-style: italic;
-            &:hover {
-                transition: background-color 0.2s ease;
-                background-color: $background-color;
-            }
-        }
-        th {
-            text-align: center;
+    td, th {
+        padding: 2px 10px;
+    }
+    td {
+        font-style: italic;
+        &:hover {
+            @include hover-effect($background-color);
         }
     }
 }
@@ -25,23 +16,25 @@
     max-width: 700px;
     max-height: 80%;
 
-    button.btn-large, button.btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.8em;
-        height: auto;
-        width: 100%;
-        margin: 0px;
-        padding: 0px;
-        box-shadow: none;
-        border-width: 2px;
-        &:hover {
-            border-width: 2px;
+    .row .col {
+        padding: 0 0.75rem;
+    }
+
+    button {
+        &.btn-large, &.btn {
+            @include button-style($text-color, $background-element-color, $icons-color, $text-color);
+            display: flex;
+            justify-content: center;
+            font-size: 1.8em;
+            width: 100%;
+            &.operation {
+                border-color: $background-color;
+            }
         }
-        &.operation {
-            border-color: $background-color;
-            border-width: 2px;
+        &.btn-red {
+            @include button-style($text-color, $background-element-color, $icons-close-color, $text-color);
+            font-size: 1.5em;
+            text-transform: none;
         }
     }
 
@@ -52,40 +45,38 @@
     }
 
     .operations-list {
-        border-left: 2px solid $text-color;
         padding-left: 5px;
         text-align: right;
         p {
             font-size: 1em;
             margin: 0px;
         }
-        button.btn-red {
-            font-size: 1.5em;
-            text-transform: none;
-        }
     }
 
 }
 
-#homepage__search-input {
+#search {
+    margin-top: 20px;
     margin-bottom: 0px;
-}
-
-#filters-menu-wrapper {
-    padding-right: 0px;
+    input {
+        margin-bottom: 0px;
+    }
 }
 
 #filters-menu {
     background-color: $background-element-color;
-    border: 1px solid $border-element-color;
+    @include border($border-element-color);
     > div {
         width: 95%;
         margin: auto;
     }
 }
 
+
+
 #sidenav {
     background-color: $background-element-color;
+    @include border($text-color);
     li a {
         color: $text-color;
         height: 42px;
@@ -97,7 +88,7 @@
 
 #table-overview {
     &>.row {
-        background-color: $background-element-color;
+        
         margin: 0px 0px 10px 0px;
         padding: 0px;
 
@@ -107,51 +98,43 @@
         }
 
         table {
-            tbody>tr:hover {
-                background-color: $background-color;
+            td:nth-child(2) span, th:nth-child(2) span {
+                padding: 0px 15px;
             }
-            th>div, td>div {
-                display: flex;
-                justify-content: center;
-            }
-            td:first-child>i {
-                width: 100%;
-                margin: 0px;
-            }
-            th:nth-child(2) span:before, td:nth-child(2) span:before {
-                left: 0px;
+            td:last-child div i.material-icons{
+                margin-right: 5px;
             }
         }
 
         &#pagination-wrapper {
-    
+            background-color: $background-element-color;
             border: 1px solid $border-element-color;
-
             #pagination-choice {
-                margin: 0px;
-                padding: .5em 0em;
                 display: flex;
-                justify-content: center;
-                * {
-                    display: block;
-                    margin: auto;
-                    height: auto;
-                    width: 50%;
-                    float: left;
-                    text-align: center;
-                }
+                align-items: center;
+                padding: .5em;
+                text-align: center;
                 input {
-                    padding: .2em 0em;
+                    width: 50%;
+                    margin: 0px;
+                    padding: .2em;
+                    height: auto;
+                    text-align: center;
                 }
             }
             #table-overview-pagination {
                 margin: 0px;
                 padding: .5em 0em;
-                li a {
-                    padding: 0em .5em;
-                }
-                li:first-child a, li:last-child a {
-                    padding: 0em;
+                li {
+                    @include border($text-color);
+                    border-right-width: 0em;
+                    &:first-child, &:last-child {
+                        border-width: 0em;
+                        a { padding: 0em; }
+                    }
+                    &:last-child {
+                        border-left-width: 1px;
+                    }
                 }
             }
         }
@@ -159,7 +142,7 @@
 }
 
 #chart-overview {
-    border: 1px solid $border-element-color;
+    @include border($border-element-color);
     background-color: $background-element-color;
     margin: 0px;
     padding: .8em .5em .0em .5em;        

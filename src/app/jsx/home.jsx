@@ -12,10 +12,7 @@ import CalendarNote from './components/CalendarNote.jsx';
 import Calculator from './components/Calculator.jsx';
 import ExportBox from './components/ExportBox.jsx';
 
-const sideNavId = 'sidenav';
-/*const modalCalendarNoteId = 'calendar-note-modal';
-const modalCalculatorId = 'modal-calculator';
-const modalExportBoxId = 'modal-export';*/
+const searchBoxId = 'search';
 const filtersMenuId = 'filters-menu';
 const tableDataInfoId = 'table-data-info';
 const tableOverviewId = 'table-overview';
@@ -46,7 +43,7 @@ export default class Home extends React.Component {
         this.addFilter = this.addFilter.bind(this);
         this.clearFilters = this.clearFilters.bind(this);
         this.filterData = this.filterData.bind(this);
-        this.setStateProp = this.setStateProp.bind(this);
+        this.setStoreProp = this.setStoreProp.bind(this);
     }
 
     importData(data){
@@ -90,24 +87,6 @@ export default class Home extends React.Component {
         });
     }
 
-    /*addFilters(filters, event){
-        var oldFilters = (typeof this.state.filters === 'undefined' ? {} : this.state.filters);
-        var newFilters;
-        if (filters === 'searchedValue'){
-            newFilters = Object.assign({}, oldFilters, {'searchedValue' : event.target.value});
-        } else {
-            newFilters = Object.assign({}, oldFilters, filters);
-        }
-        
-        this.setState({
-            filters: newFilters
-        });
-        defaultStorage.setData({
-            filters: newFilters
-        });
-        
-    }*/
-
     addFilter(filterName, filterValue){
         var newFilters = Object.assign({}, this.state.filters, { [filterName]: filterValue });
         this.setState({
@@ -125,7 +104,6 @@ export default class Home extends React.Component {
         defaultStorage.setData({
             filters: {}
         });
-        document.getElementById(this.state.id + '__search-input').value = '';
     }
 
     filterData(){
@@ -199,7 +177,7 @@ export default class Home extends React.Component {
                     var valueFoundInActivity = object.activity.toLowerCase().indexOf(searchedValue) !== -1;
                     var valueFoundInAmount = object.amount.toString().indexOf(searchedValue) !== -1;
                     var valueFoundInDate = object.date.indexOf(searchedValue) !== -1;
-                    var valueFoundInComment = object.comment.indexOf(searchedValue) !== -1;
+                    var valueFoundInComment = typeof object.comment !== 'undefined' && object.comment.indexOf(searchedValue) !== -1;
                     return valueFoundInWallet || valueFoundInActivity || valueFoundInAmount || valueFoundInDate || valueFoundInComment;
                 } else {
                     return !check(searchedValue);
@@ -219,28 +197,21 @@ export default class Home extends React.Component {
         });
     }
 
-    setStateProp(prop, value, callback){
+    setStoreProp(prop, value, callback){
 
         var storedProp = ['data', 'showTableOrChart', 'chartWalletsColors', 'notes'];
-        var stateProp = storedProp.concat(
-            ['activityToEdit']
-        );
 
-        if(stateProp.indexOf(prop) !== -1){
+        if(storedProp.indexOf(prop) !== -1){
             this.setState({
                 [prop]: value
             }, () => {
+                defaultStorage.setData({
+                    [prop]: value,
+                });
                 typeof callback === 'function' && callback();
             });
         } else {
             throw "Prop not allowed.";
-        }
-
-        if (storedProp.indexOf(prop) !== -1){
-            
-            defaultStorage.setData({
-                [prop]: value,
-            });
         }
 
     }
@@ -265,7 +236,7 @@ export default class Home extends React.Component {
                         id={tableOverviewId}
                         data={data}
                         dataToRender={dataToRender}
-                        onChangeData={(value) => this.setStateProp('data', value)}
+                        onChangeData={(value) => this.setStoreProp('data', value)}
                         openEditActivity={(activityToEdit) => {
                             this.setState({
                                 activityToEdit,
@@ -279,7 +250,7 @@ export default class Home extends React.Component {
                         id={chartOverviewId}
                         dataToRender={dataToRender}
                         walletsColors={this.state.chartWalletsColors}
-                        onChangeWalletsColors={(value) => this.setStateProp('chartWalletsColors', value)}
+                        onChangeWalletsColors={(value) => this.setStoreProp('chartWalletsColors', value)}
                         />
                     );
             }
@@ -289,7 +260,7 @@ export default class Home extends React.Component {
 
             <div>
                 <SideNav
-                    id={sideNavId}
+                    id={Utils.modal('sidenav').id}
                     allData={this.state.data}
                     showTableOrChart={this.state.showTableOrChart}
                     tableDataInfo={{
@@ -305,27 +276,33 @@ export default class Home extends React.Component {
                         }
                     }}
                     onChangeShowTableOrChart={(value) => {
-                        this.setStateProp('showTableOrChart', value)
+                        this.setStoreProp('showTableOrChart', value)
                     }}
                     onImportData={this.importData}
                     onClearFilters={this.clearFilters}
                 ></SideNav>
 
                 <div className="fixed-action-btn">
-                    <a className='btn-floating btn-large sidenav-trigger' data-target={sideNavId} title='Apri menu'>
+                    <a href='#!'
+                    className='btn-floating btn-large'
+                    title='Apri menu'
+                    onClick={() => {
+                        Utils.modal('sidenav').open();
+                    }}>
                         <i className='material-icons'>apps</i>
                     </a>
                 </div>
 
                 <div className='row'>
-                    <div className='input-field col s6'>
+                    <div id={searchBoxId} className='input-field col s6'>
                         <i className='material-icons prefix'>search</i>
                         <input
+                        id={searchBoxId + '__input'}
                         type='text'
-                        id={this.state.id + '__search-input'}
-                        placeholder={( typeof this.state.filters !== 'undefined' && typeof this.state.filters.searchedValue !== 'undefined' ? this.state.filters.searchedValue : undefined)}
-                        onKeyUp={(event) => this.addFilters('searchedValue', event)}></input>
-                        <label htmlFor={this.state.id + '__search-input'}>Cerca</label>
+                        onChange={(event) => this.addFilter('searchedValue', event.target.value)}
+                        value={this.state.filters.searchedValue || ''}
+                        ></input>
+                        <label htmlFor={searchBoxId + '__input'}>Cerca</label>
                     </div>
                     <div className='col s6'>
                     </div>
@@ -341,9 +318,10 @@ export default class Home extends React.Component {
                 </div>
 
                 <div className='row'>
+
                     <div
-                    id='filters-menu-wrapper'
-                    className={(this.state.showFiltersMenu ? 'col s3' : 'hide')}>
+                    className={(this.state.showFiltersMenu ? 'col s3' : 'hide')}
+                    >
                         <FiltersMenu
                             id={filtersMenuId}
                             activeFilters={this.state.filters}
@@ -356,9 +334,9 @@ export default class Home extends React.Component {
                     </div>
 
                     <div
-                    id={dataVisualizationId}
-                    className={this.state.showFiltersMenu ? 'col s9' : 'col s12'}>
-                        {dataVisualization}
+                        id={dataVisualizationId}
+                        className={this.state.showFiltersMenu ? 'col s9' : 'col s12'}>
+                            {dataVisualization}
                     </div>
 
                     <Calculator></Calculator>
@@ -368,19 +346,25 @@ export default class Home extends React.Component {
                         wallets={dataInfo.allWallets}
                         activity={dataInfo.allActivities}
                         activityToEdit={this.state.activityToEdit}
-                        onSubmit={this.editActivity}
+                        onSubmit={(editedActivity) => {
+                            this.editActivity(editedActivity);
+                            Utils.modal('editActivity').close();
+                        }}
                     ></EditActivity>
 
                     <EditActivity
                         id={Utils.modal('newActivity').id}
                         wallets={dataInfo.allWallets}
                         activity={dataInfo.allActivities}
-                        onSubmit={this.addActivity}
+                        onSubmit={(newActivity) => {
+                            this.addActivity(newActivity);
+                            Utils.modal('newActivity').close();
+                        }}
                     ></EditActivity>
 
                     <CalendarNote
-                    notes={this.state.notes}
-                    onChange={(newNote) => this.setStateProp('notes', newNote)}
+                        notes={this.state.notes}
+                        onChange={(newNote) => this.setStoreProp('notes', newNote)}
                     ></CalendarNote>
 
                     <ExportBox

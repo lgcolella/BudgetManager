@@ -37,11 +37,11 @@ export default class TableOverview extends React.Component {
                 <th>Attività <i className='material-icons' onClick={(event) => this.sortColumns(event, 'activity')}>sort</i></th>
                 <th>Importo <i className='material-icons' onClick={(event) => this.sortColumns(event, 'amount')}>sort</i></th>
                 <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
-                <td>
+                <th>
                     <div>
-                        <i className='material-icons' onClick={() => {Utils.modal('newActivity').open()}}>add_shopping_cart</i>
+                        <i className='material-icons' onClick={Utils.modal('newActivity').open}>add_shopping_cart</i>
                     </div>
-                </td>
+                </th>
             </tr>
         );
     }
@@ -250,7 +250,7 @@ export default class TableOverview extends React.Component {
                 <div id='pagination-wrapper' className='row'>
                     <div id='pagination-choice' className='col s3'>
                         <label>Risultati per pagina</label>
-                        <input type='number' value={this.state.elementsInPaginationGroup} onChange={(event) => this.changePaginationGroup(event)}></input> 
+                        <input type='text' value={this.state.elementsInPaginationGroup} onChange={(event) => this.changePaginationGroup(event)}></input> 
                     </div>
                     <div className='col s9'>
                         <Pagination
@@ -283,5 +283,6 @@ TableOverview.propTypes = {
     id: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired,
     dataToRender: PropTypes.array.isRequired,
-    onChangeData: PropTypes.func.isRequired
+    onChangeData: PropTypes.func.isRequired,
+    openEditActivity: PropTypes.func.isRequired
 }

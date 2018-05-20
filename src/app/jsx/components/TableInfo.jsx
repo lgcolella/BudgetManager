@@ -16,7 +16,7 @@ export default class TableInfo extends React.Component {
 
         return(
             <div>
-                <table id={this.state.id} className='striped centered'>
+                <table id={this.state.id}>
                     <tbody>
                         <tr>
                             <th>Saldo</th><td>{dataInfo.selectedActivitiesSum + '€'}</td>

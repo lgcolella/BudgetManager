@@ -16,46 +16,69 @@
   font-weight: bold;
   font-style: normal; }
 
+.row {
+  margin-bottom: 15px; }
+  .row .col {
+    padding: 0 0.25rem; }
+
+i.material-icons {
+  width: 100%;
+  margin: 0px;
+  display: block;
+  color: #26a69a !important;
+  text-align: center; }
+  i.material-icons:hover {
+    color: #9FE7F9 !important;
+    cursor: pointer;
+    transition: color .25s ease; }
+  i.material-icons.hover-red:hover {
+    color: #F44336 !important; }
+
 .btn, .btn.btn-flat, .btn-flat, .modal-footer .btn.btn-flat {
+  height: auto;
   margin: 4px;
   background-color: #253e68;
   color: #ffffff;
-  border: 2px solid #26a69a;
+  text-align: center;
+  border: 1px solid #26a69a;
   border-radius: 0px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-  transition: background-color .25s ease; }
+  border-width: 2px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2); }
   .btn:hover, .btn.btn-flat:hover, .btn-flat:hover, .modal-footer .btn.btn-flat:hover {
+    transition: background-color 0.2s ease-in-out;
     background-color: #26a69a;
-    color: #ffffff;
-    border-color: #26a69a; }
+    color: #ffffff; }
   .btn.modal-close, .btn.datepicker-clear, .btn.btn-red, .btn.btn-flat.modal-close, .btn.btn-flat.datepicker-clear, .btn.btn-flat.btn-red, .btn-flat.modal-close, .btn-flat.datepicker-clear, .btn-flat.btn-red, .modal-footer .btn.btn-flat.modal-close, .modal-footer .btn.btn-flat.datepicker-clear, .modal-footer .btn.btn-flat.btn-red {
-    border-color: #F44336; }
+    height: auto;
+    margin: 4px;
+    background-color: #253e68;
+    color: #ffffff;
+    text-align: center;
+    border: 1px solid #F44336;
+    border-radius: 0px;
+    border-width: 2px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2); }
     .btn.modal-close:hover, .btn.datepicker-clear:hover, .btn.btn-red:hover, .btn.btn-flat.modal-close:hover, .btn.btn-flat.datepicker-clear:hover, .btn.btn-flat.btn-red:hover, .btn-flat.modal-close:hover, .btn-flat.datepicker-clear:hover, .btn-flat.btn-red:hover, .modal-footer .btn.btn-flat.modal-close:hover, .modal-footer .btn.btn-flat.datepicker-clear:hover, .modal-footer .btn.btn-flat.btn-red:hover {
+      transition: background-color 0.2s ease-in-out;
       background-color: #F44336;
-      color: #ffffff;
-      border-color: #F44336; }
-
-.btn-flat {
-  transition: background-color .25s ease; }
-  .btn-flat:hover {
-    background-color: #26a69a;
-    color: #353333; }
-  .btn-flat.modal-close:hover {
-    background-color: #F44336;
-    color: #353333; }
+      color: #ffffff; }
 
 .fixed-action-btn {
   bottom: initial; }
-  .fixed-action-btn .btn-floating.sidenav-trigger > i.material-icons {
-    color: #ffffff !important;
-    transition: background-color 0.2s ease; }
-    .fixed-action-btn .btn-floating.sidenav-trigger > i.material-icons:hover {
+  .fixed-action-btn .btn-floating > i.material-icons {
+    color: #ffffff !important; }
+    .fixed-action-btn .btn-floating > i.material-icons:hover {
+      transition: background-color 0.2s ease-in-out;
       background-color: #9FE7F9; }
 
 .modal.open {
   overflow: visible;
   outline-width: 0px; }
-  .modal.open .modal-content, .modal.open .modal-footer {
+  .modal.open .modal-content {
+    border: 1px solid #ffffff;
+    border-radius: 0px;
+    background-color: #253e68; }
+  .modal.open .modal-footer {
     background-color: #253e68; }
 
 .dropdown-content {
@@ -66,11 +89,14 @@
 
 .datepicker-modal .datepicker-table {
   margin: 10px; }
-  .datepicker-modal .datepicker-table td, .datepicker-modal .datepicker-table td > button {
-    transition: background-color 2s ease-in-out;
-    border-radius: 0%; }
-  .datepicker-modal .datepicker-table td.with-event {
-    text-decoration: underline; }
+  .datepicker-modal .datepicker-table td {
+    border-radius: 0px; }
+    .datepicker-modal .datepicker-table td button {
+      border-radius: 0px; }
+      .datepicker-modal .datepicker-table td button:focus {
+        background-color: transparent; }
+    .datepicker-modal .datepicker-table td.with-event {
+      text-decoration: underline; }
 
 .datepicker-modal .datepicker-footer {
   justify-content: flex-end; }
@@ -85,110 +111,124 @@
   .pagination li.active {
     background-color: #263238; }
 
+.material-tooltip {
+  border: 1px solid #ffffff;
+  border-radius: 0px; }
+
 body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1.1em;
   top: 0px;
   background-color: #263238;
   color: #ffffff; }
-  body input, body textarea {
-    color: #ffffff; }
-  body i.material-icons {
-    color: #26a69a !important; }
-  body i.material-icons:hover {
-    color: #9FE7F9 !important; }
-  body i.green-text {
-    color: #0cd40c !important; }
-  body i.red-text {
-    color: #F44336 !important; }
-  body label, body th {
-    color: #ffffff; }
+
+input, textarea {
+  color: #ffffff; }
+
+i.green-text {
+  color: #0cd40c !important; }
+
+i.red-text {
+  color: #F44336 !important; }
+
+label, th {
+  color: #ffffff; }
 
 table {
   background-color: #253e68; }
-  table th, table td {
+  table thead {
+    font-weight: bold; }
+  table tr th, table tr td {
+    padding: 4px;
     border: 1px solid #9e9e9e; }
-  table td {
-    padding: 5px 2px;
-    border-radius: 0px; }
-  table th i.material-icons, table td i.material-icons {
-    width: 100%;
-    margin: 0px 5px;
-    display: block;
-    text-align: center; }
-    table th i.material-icons:hover, table td i.material-icons:hover {
-      color: #9FE7F9;
-      cursor: pointer;
-      transition: color .25s ease; }
-    table th i.material-icons.delete:hover, table td i.material-icons.delete:hover {
-      color: #F44336; }
+    table tr th div, table tr td div {
+      display: flex;
+      justify-content: center; }
+  table.highlight tbody tr:hover {
+    background-color: #263238; }
 
-i.material-icons.hover-red:hover, .hover-red:hover {
+.hover-red:hover {
   color: #F44336 !important; }
 
-#table-data-info tr {
-  background-color: transparent; }
-  #table-data-info tr th, #table-data-info tr td {
-    padding: 0px;
-    border: 1px solid #9e9e9e;
-    font-size: 1.1em; }
-  #table-data-info tr td {
-    font-style: italic; }
-    #table-data-info tr td:hover {
-      transition: background-color 0.2s ease;
-      background-color: #263238; }
-  #table-data-info tr th {
-    text-align: center; }
+#table-data-info td, #table-data-info th {
+  padding: 2px 10px; }
+
+#table-data-info td {
+  font-style: italic; }
+  #table-data-info td:hover {
+    transition: background-color 0.2s ease-in-out;
+    background-color: #263238; }
 
 #modal-calculator {
   max-width: 700px;
   max-height: 80%; }
+  #modal-calculator .row .col {
+    padding: 0 0.75rem; }
   #modal-calculator button.btn-large, #modal-calculator button.btn {
+    height: auto;
+    margin: 4px;
+    background-color: #253e68;
+    color: #ffffff;
+    text-align: center;
+    border: 1px solid #26a69a;
+    border-radius: 0px;
+    border-width: 2px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
-    align-items: center;
     font-size: 1.8em;
-    height: auto;
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    box-shadow: none;
-    border-width: 2px; }
+    width: 100%; }
     #modal-calculator button.btn-large:hover, #modal-calculator button.btn:hover {
-      border-width: 2px; }
+      transition: background-color 0.2s ease-in-out;
+      background-color: #26a69a;
+      color: #ffffff; }
     #modal-calculator button.btn-large.operation, #modal-calculator button.btn.operation {
-      border-color: #263238;
-      border-width: 2px; }
+      border-color: #263238; }
+  #modal-calculator button.btn-red {
+    height: auto;
+    margin: 4px;
+    background-color: #253e68;
+    color: #ffffff;
+    text-align: center;
+    border: 1px solid #F44336;
+    border-radius: 0px;
+    border-width: 2px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    font-size: 1.5em;
+    text-transform: none; }
+    #modal-calculator button.btn-red:hover {
+      transition: background-color 0.2s ease-in-out;
+      background-color: #F44336;
+      color: #ffffff; }
   #modal-calculator .operations-live p {
     font-size: 1.9em;
     margin: 0px;
     border-bottom: 2px solid #ffffff; }
   #modal-calculator .operations-list {
-    border-left: 2px solid #ffffff;
     padding-left: 5px;
     text-align: right; }
     #modal-calculator .operations-list p {
       font-size: 1em;
       margin: 0px; }
-    #modal-calculator .operations-list button.btn-red {
-      font-size: 1.5em;
-      text-transform: none; }
 
-#homepage__search-input {
+#search {
+  margin-top: 20px;
   margin-bottom: 0px; }
-
-#filters-menu-wrapper {
-  padding-right: 0px; }
+  #search input {
+    margin-bottom: 0px; }
 
 #filters-menu {
   background-color: #253e68;
-  border: 1px solid #9e9e9e; }
+  border: 1px solid #9e9e9e;
+  border-radius: 0px; }
   #filters-menu > div {
     width: 95%;
     margin: auto; }
 
 #sidenav {
-  background-color: #253e68; }
+  background-color: #253e68;
+  border: 1px solid #ffffff;
+  border-radius: 0px; }
   #sidenav li a {
     color: #ffffff;
     height: 42px; }
@@ -196,48 +236,46 @@ i.material-icons.hover-red:hover, .hover-red:hover {
     text-align: center; }
 
 #table-overview > .row {
-  background-color: #253e68;
   margin: 0px 0px 10px 0px;
   padding: 0px; }
   #table-overview > .row .col {
     padding-left: 0px;
     padding-right: 0px; }
-  #table-overview > .row table tbody > tr:hover {
-    background-color: #263238; }
-  #table-overview > .row table th > div, #table-overview > .row table td > div {
-    display: flex;
-    justify-content: center; }
-  #table-overview > .row table td:first-child > i {
-    width: 100%;
-    margin: 0px; }
-  #table-overview > .row table th:nth-child(2) span:before, #table-overview > .row table td:nth-child(2) span:before {
-    left: 0px; }
+  #table-overview > .row table td:nth-child(2) span, #table-overview > .row table th:nth-child(2) span {
+    padding: 0px 15px; }
+  #table-overview > .row table td:last-child div i.material-icons {
+    margin-right: 5px; }
   #table-overview > .row#pagination-wrapper {
+    background-color: #253e68;
     border: 1px solid #9e9e9e; }
     #table-overview > .row#pagination-wrapper #pagination-choice {
-      margin: 0px;
-      padding: .5em 0em;
       display: flex;
-      justify-content: center; }
-      #table-overview > .row#pagination-wrapper #pagination-choice * {
-        display: block;
-        margin: auto;
-        height: auto;
-        width: 50%;
-        float: left;
-        text-align: center; }
+      align-items: center;
+      padding: .5em;
+      text-align: center; }
       #table-overview > .row#pagination-wrapper #pagination-choice input {
-        padding: .2em 0em; }
+        width: 50%;
+        margin: 0px;
+        padding: .2em;
+        height: auto;
+        text-align: center; }
     #table-overview > .row#pagination-wrapper #table-overview-pagination {
       margin: 0px;
       padding: .5em 0em; }
-      #table-overview > .row#pagination-wrapper #table-overview-pagination li a {
-        padding: 0em .5em; }
-      #table-overview > .row#pagination-wrapper #table-overview-pagination li:first-child a, #table-overview > .row#pagination-wrapper #table-overview-pagination li:last-child a {
-        padding: 0em; }
+      #table-overview > .row#pagination-wrapper #table-overview-pagination li {
+        border: 1px solid #ffffff;
+        border-radius: 0px;
+        border-right-width: 0em; }
+        #table-overview > .row#pagination-wrapper #table-overview-pagination li:first-child, #table-overview > .row#pagination-wrapper #table-overview-pagination li:last-child {
+          border-width: 0em; }
+          #table-overview > .row#pagination-wrapper #table-overview-pagination li:first-child a, #table-overview > .row#pagination-wrapper #table-overview-pagination li:last-child a {
+            padding: 0em; }
+        #table-overview > .row#pagination-wrapper #table-overview-pagination li:last-child {
+          border-left-width: 1px; }
 
 #chart-overview {
   border: 1px solid #9e9e9e;
+  border-radius: 0px;
   background-color: #253e68;
   margin: 0px;
   padding: .8em .5em .0em .5em; }

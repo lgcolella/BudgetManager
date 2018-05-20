@@ -4,59 +4,49 @@ body {
     top: 0px;
     background-color: $background-color;
     color: $text-color;
-    input, textarea {
-        color: $text-color;
-    }
-    i.material-icons {
-        color: $icons-color !important;
-    }
-    i.material-icons:hover {
-        color: $icons-hover-color !important;
-    }
-    i.green-text {
-        color: rgb(12, 212, 12) !important
-    }
-    i.red-text {
-        color: $red !important
-    }
-    label, th {
-        color: $bold-text-color;
-    }
+
 }
 
+input, textarea {
+    color: $text-color;
+}
+i {
+    &.green-text {
+        color: $green-light !important
+    }
+    &.red-text {
+        color: $red !important
+    }
+}
+label, th {
+    color: $bold-text-color;
+}
 
 table {
-
     background-color: $background-element-color;
-    th, td {
-        border: 1px solid $border-element-color;
+    thead {
+        font-weight: bold;
     }
-
-    td {
-        padding: 5px 2px;
-        border-radius: 0px;
-    }
-
-    th, td {
-        i.material-icons {
-            width: 100%;
-            margin: 0px 5px;
-            display: block;
-            text-align: center;
-            &:hover {
-                color: $icons-hover-color;
-                cursor: pointer;
-                transition: color .25s ease;
-            }
-            &.delete:hover {
-                color: $red;
+    tr {
+        th, td {
+            padding: 4px;
+            border: 1px solid $border-element-color;
+            div {
+                display: flex;
+                justify-content: center;
             }
         }
     }
-
+    &.highlight {
+        tbody { 
+            tr:hover {
+                background-color: $background-color;
+            }
+        }
+    }   
 }
 
-i.material-icons.hover-red, .hover-red {
+.hover-red {
     &:hover {
         color: $red !important;
     }
