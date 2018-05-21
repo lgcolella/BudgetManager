@@ -13,8 +13,16 @@
 
 #modal-calculator {
 
-    max-width: 700px;
-    max-height: 80%;
+    
+    @media screen and (max-width: 1440px){
+        max-width: 90%;
+    }
+    @media screen and (min-width: 1441px) and (max-width: 1919px){
+        max-width: 70%;
+    }
+    @media screen and (min-width: 1920px){
+        max-width: 40%;
+    }
 
     .row .col {
         padding: 0 0.75rem;
@@ -115,7 +123,7 @@
                 padding: .5em;
                 text-align: center;
                 input {
-                    width: 50%;
+                    width: inherit;
                     margin: 0px;
                     padding: .2em;
                     height: auto;
@@ -155,5 +163,23 @@
     .recharts-default-tooltip {
         background-color: $background-color;
         color: $text-color;
+    }
+}
+
+#modal-export {
+    .modal-content .row .col.s12 .col {
+        display: flex;
+        justify-content: center;
+        margin: 0px;
+        button {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    }
+}
+
+#modal-edit-activity, #modal-new-activity {
+    .modal.datepicker-modal.open {
+        width: 100%;
     }
 }

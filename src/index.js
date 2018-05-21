@@ -26,7 +26,9 @@ const url = require('url');
       }));
     }
     // Apertura degli strumenti per sviluppatori.
-    win.webContents.openDevTools()
+    if (process.env.NODE_ENV == 'development'){
+      win.webContents.openDevTools();
+    }
   
     // Emesso quando la finestra viene chiusa.
     win.on('closed', () => {

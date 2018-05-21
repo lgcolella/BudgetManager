@@ -8,7 +8,7 @@ export default class DatePicker extends React.Component {
         super(props);
         this.state = {
             //id: this.props.id
-            id: 'date-picker-react-component__' + Math.random().toString().slice(2)
+            id: this.props.id || 'date-picker-react-component__' + Math.random().toString().slice(2)
         };
     }
 
@@ -39,7 +39,7 @@ export default class DatePicker extends React.Component {
 
     render(){
         return(
-            <input type='text' id={this.state.id} value={this.props.value} onChange={() => {}}></input>
+            <input type='text' id={this.state.id} value={this.props.value} onChange={() => {return; /*OnChange event is under control of Materialize plugin*/}}></input>
         );
     }
 
@@ -48,4 +48,5 @@ export default class DatePicker extends React.Component {
 DatePicker.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
+    id: PropTypes.string
 }

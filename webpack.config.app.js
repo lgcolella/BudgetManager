@@ -17,6 +17,7 @@ module.exports = {
         rules: [
           { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
           { test: /\.jsx$/, exclude: /node_modules/, loader: "babel-loader" },
+          { test: /\.scss$/, use: [ 'style-loader', 'css-loader', 'sass-loader' ] },
           { test: /\.css$/, use: [ 'style-loader', 'css-loader' ] },
           {
             test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,

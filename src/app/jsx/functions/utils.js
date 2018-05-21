@@ -104,8 +104,8 @@ module.exports = {
     modal: (modalName) => {
         /**
          * This method is used for handling Materialize modals opening.
-         * I've preffered use this because I've noticed that many Materialize modals don't work really well with React architecture 
-         * cause their autofocus method.
+         * I've preffered use this because I've noticed that many Materialize modals don't work really well with React async rendering 
+         * cause its autofocus method.
          */
         let map = {
             sidenav: sideNavId,

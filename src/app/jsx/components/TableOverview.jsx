@@ -39,7 +39,9 @@ export default class TableOverview extends React.Component {
                 <th>Data <i className='material-icons' onClick={(event) => this.sortColumns(event, 'date')}>sort</i></th>
                 <th>
                     <div>
-                        <i className='material-icons' onClick={Utils.modal('newActivity').open}>add_shopping_cart</i>
+                        <i className='material-icons' onClick={() => {
+                            Utils.modal('newActivity').open();
+                        }}>add_shopping_cart</i>
                     </div>
                 </th>
             </tr>
@@ -96,6 +98,7 @@ export default class TableOverview extends React.Component {
         const aLessThanB = (() => {
             var el = event.target;
             var elSimilars = document.querySelectorAll('#'+this.state.tableId+' thead th i');
+            elSimilars = elSimilars
             var newIcon;
             var aMinusB;
             if ( el.innerText === 'sort' || el.innerText === 'arrow_drop_up' ){
@@ -105,7 +108,8 @@ export default class TableOverview extends React.Component {
                 newIcon = 'arrow_drop_up';
                 aMinusB = 1;
             }
-            Array.from(elSimilars).forEach(function(i){
+            /**Discard last elemtents */
+            Array.from(elSimilars).slice(0, -1).forEach(function(i){
                 if (i === el){
                     el.innerText = newIcon;
                 } else {

@@ -34,11 +34,15 @@ export default class Pagination extends React.Component {
 
     setActiveSiblingButton(event, siblingTarget){
         var activeButton;
+        var {  selectedButton } = this.state;
+
+        if (selectedButton === null) return;
+        
         if (siblingTarget === 'previous'){
-            activeButton = this.state.selectedButton.previousSibling;
+            activeButton = selectedButton.previousSibling;
             if (activeButton.previousSibling === null){ return; }
         } else if (siblingTarget === 'next') {
-            activeButton = this.state.selectedButton.nextSibling;
+            activeButton = selectedButton.nextSibling;
             if (activeButton.nextSibling === null){ return; }
         }
 
@@ -52,8 +56,9 @@ export default class Pagination extends React.Component {
     }
 
     componentDidMount(){
-        var firstButton = document.querySelectorAll('#'+this.state.id+' li')[1];
-        if (firstButton !== null){
+
+        var buttons = document.querySelectorAll('#'+this.state.id+' li');
+        if (buttons.length > 2 && buttons[1] !== null){
             firstButton.classList.add('active');
             if (this.state.selectedButton === null){
                 this.setState({
@@ -61,6 +66,7 @@ export default class Pagination extends React.Component {
                 });
             }
         }
+        
     }
 
     render(){

@@ -22,6 +22,13 @@ export default class EditActivity extends React.Component {
             submitError: false,
             errorText: '',
             openDatepicker: false,
+            idList: {
+                walletInput: 'wallet-input__' + Math.random().toString().slice(2),
+                activityInput: 'activity-input__' + Math.random().toString().slice(2),
+                amountInput: 'amount-input__' + Math.random().toString().slice(2),
+                dateInput: 'date-input__' + Math.random().toString().slice(2),
+                commentInput: 'comment-input__' + Math.random().toString().slice(2)
+            }
         };
         this.setActivityToEditProp = this.setActivityToEditProp.bind(this);
         this.addActivity = this.addActivity.bind(this);
@@ -103,19 +110,24 @@ export default class EditActivity extends React.Component {
             
         }
 
+
     }
 
     render(){
 
+        const { idList } = this.state;
+
         /*Choose right wallet input*/
         var walletInput;
         var buttonText;
-        if (this.state.createNewWallet){
+        if (this.state.createNewWallet || this.props.wallets.length === 0){
             walletInput = (
                 <input
                 type='text'
                 value={this.state.activityToEdit.wallet}
-                onChange={(event) => this.setActivityToEditProp('wallet', event.target.value)}></input>
+                onChange={(event) => this.setActivityToEditProp('wallet', event.target.value)}
+                id={idList.walletInput}
+                ></input>
             );
             buttonText = 'SCEGLI';
         } else {
@@ -142,6 +154,7 @@ export default class EditActivity extends React.Component {
             errorBoxStyle = {display: 'none'};
         }
         /*!Error box*/
+
         return(
             <ModalBox id={this.props.id} endingTop={'5%'}>
                 <div>
@@ -151,7 +164,7 @@ export default class EditActivity extends React.Component {
                                 <div className='input-field col s10'>
                                     <i className="material-icons prefix">list</i>
                                     {walletInput}
-                                    <label>Portafoglio</label>
+                                    <label htmlFor={idList.walletInput}>Portafoglio</label>
                                 </div>
                                 <div className='col s2'>
                                     <a className='btn waves-effect' onClick={this.handleWalletSelect}>
@@ -168,15 +181,18 @@ export default class EditActivity extends React.Component {
                                 value={this.state.activityToEdit.activity}
                                 onChange={(event) => this.setActivityToEditProp('activity', event.target.value)}
                                 list={this.props.activity}
+                                id={idList.activityInput}
                                 ></Autocomplete>
-                                <label>Attività</label>
+                                <label htmlFor={idList.activityInput}>Attività</label>
                             </div>
                         </div>
                         <div className='row'>
                             <div className='input-field col s12'>
                                 <i className="material-icons prefix">attach_money</i>
-                                <input type='number' value={this.state.activityToEdit.amount} onChange={(event) => this.setActivityToEditProp('amount', event.target.value)}></input>
-                                <label>Importo</label>
+                                <input type='number' value={this.state.activityToEdit.amount} 
+                                onChange={(event) => this.setActivityToEditProp('amount', event.target.value)}
+                                id={idList.amountInput}></input>
+                                <label htmlFor={idList.amountInput}>Importo</label>
                             </div>
                         </div>
                         <div className='row'>
@@ -187,8 +203,9 @@ export default class EditActivity extends React.Component {
                                 value={this.state.activityToEdit.date}
                                 onChange={(value) => {this.setActivityToEditProp('date', value)}}
                                 onClose={() => { this.setState({openDatepicker: false}) }}
+                                id={idList.dateInput}
                                 ></DatePicker>
-                                <label>Data</label>
+                                <label htmlFor={idList.dateInput}>Data</label>
                             </div>
                         </div>
                         <div className='row'>
@@ -196,8 +213,10 @@ export default class EditActivity extends React.Component {
                                 <i className="material-icons prefix">comment</i>
                                 <textarea
                                 value={this.state.activityToEdit.comment || ''}
-                                onChange={(event) => {this.setActivityToEditProp('comment', event.target.value)}} className='materialize-textarea'></textarea>
-                                <label>Commento</label>
+                                onChange={(event) => {this.setActivityToEditProp('comment', event.target.value)}}
+                                className='materialize-textarea'
+                                id={idList.commentInput}></textarea>
+                                <label htmlFor={idList.commentInput}>Commento</label>
                             </div>
                         </div>
                     </form>

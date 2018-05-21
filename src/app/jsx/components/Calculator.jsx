@@ -138,7 +138,7 @@ export default class Calculator extends React.Component {
         
         return(
             <ModalBox id={Utils.modal('calculator').id}>
-                <div id={modalCalculatorId} className='row'>
+                <div className='row'>
                     <h4>Calcolatrice</h4>
                     <div className='col s8'>
                         <div className='row'>

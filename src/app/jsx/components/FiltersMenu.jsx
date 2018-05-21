@@ -13,76 +13,9 @@ export default class FiltersMenu extends React.Component {
             'openFromDate': false,
             'openToDate': false
         };
-        //this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
-    /*handleFilterChange(filter, event){
-
-        var newValues = this.state.values;
-        switch (filter){
-            case 'wallet':
-                var elem = document.getElementById(this.state.id + '__wallet');
-                newValues.wallet = M.FormSelect.getInstance(elem).getSelectedValues();
-            break;
-
-            case 'activity':
-                // eslint-disable-next-line no-redeclare
-                var elem = document.getElementById(this.state.id + '__activity');
-                newValues['activity'] = M.FormSelect.getInstance(elem).getSelectedValues();
-            break;
-
-            case 'minAmount':
-                var value = event.target.value;
-                var maxValue = this.props.maxAmount;
-                newValues.minAmount = (  maxValue >= Number(value) ? value : maxValue );
-                event.target.value = (  maxValue >= Number(value) ? value : maxValue );
-            break;
-
-            case 'maxAmount':
-                // eslint-disable-next-line no-redeclare
-                var value = event.target.value;
-                var minValue = this.props.minAmount;
-                newValues.maxAmount = (  minValue <= Number(value) ? value : minValue );
-                event.target.value = (  minValue <= Number(value) ? value : minValue );
-            break;
-
-            case 'Date':
-                newValues['fromDate'] = M.Datepicker.getInstance(document.getElementById(this.state.id + '__from-date')).toString();
-                newValues['toDate'] = M.Datepicker.getInstance(document.getElementById(this.state.id + '__to-date')).toString();
-            break;
-
-        }
-        
-        this.setState({
-            'values': newValues
-        });
-        this.props.onChange(newValues);
-    }*/
-
     render(){
-
-        /*var defaultWallets;
-        var defaultActivities;
-        var defaultMinAmount;
-        var defaultMaxAmount;
-        var defaultFromDate;
-        var defaultToDate;
-
-        if (typeof this.props.activeFilters !== 'undefined'){
-            defaultWallets = ( typeof this.props.activeFilters.wallet !== 'undefined' ? this.props.activeFilters.wallet : [] );
-            defaultActivities = ( typeof this.props.activeFilters.activity !== 'undefined' ? this.props.activeFilters.activity : [] );
-            defaultMinAmount = ( typeof this.props.activeFilters.minAmount !== 'undefined' ? this.props.activeFilters.minAmount : this.props.minAmount );
-            defaultMaxAmount = ( typeof this.props.activeFilters.maxAmount !== 'undefined' ? this.props.activeFilters.maxAmount : this.props.maxAmount );
-            defaultFromDate = ( typeof this.props.activeFilters.fromDate !== 'undefined' ? this.props.activeFilters.fromDate : '' );
-            defaultToDate = ( typeof this.props.activeFilters.toDate !== 'undefined' ? this.props.activeFilters.toDate : '' );
-        } else {
-            defaultWallets = [];
-            defaultActivities = [];
-            defaultMinAmount = this.props.minAmount;
-            defaultMaxAmount = this.props.maxAmount;
-            defaultFromDate = '';
-            defaultToDate = '';
-        }*/
 
         var { activeFilters } = this.props;
 
@@ -148,8 +81,8 @@ FiltersMenu.propTypes = {
     activeFilters: PropTypes.shape({
         wallet: PropTypes.array,
         activity: PropTypes.array,
-        maxAmount: PropTypes.number,
-        minAmount: PropTypes.number,
+        maxAmount: PropTypes.string,
+        minAmount: PropTypes.string,
         fromDate: PropTypes.string,
         toDate: PropTypes.string
     })

@@ -221,6 +221,7 @@ export default class Home extends React.Component {
         if (prevState.showFiltersMenu !== this.state.showFiltersMenu && this.state.showTableOrChart === 'chart'){
             window.dispatchEvent(new Event('resize'));
         }
+        M.updateTextFields();
     }
 
     render() {

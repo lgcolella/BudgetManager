@@ -7,7 +7,7 @@ export default class Autocomplete extends React.Component {
         super(props);
         this.state = {
             //'id': this.props.id
-            id: 'autocomplete-react-component__' + Math.random().toString()
+            id: this.props.id || 'autocomplete-react-component__' + Math.random().toString().slice(2)
         }
         this.getAutocompleteData = this.getAutocompleteData.bind(this);
     }
@@ -42,5 +42,6 @@ export default class Autocomplete extends React.Component {
 Autocomplete.propTypes = {
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    list: PropTypes.array.isRequired
+    list: PropTypes.array.isRequired,
+    id: PropTypes.string
 }
