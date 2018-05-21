@@ -10,6 +10,20 @@ module.exports = {
         filename: 'index.js',
         path: path.resolve(__dirname, outputPath)
     },
+    module: {
+        rules: [
+            {
+                test: /\.png$/,
+                use: {
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    mimetype: 'application/font-ttf',
+                }
+                }
+            }
+        ]
+    },
     plugins: [
         new webpack.EnvironmentPlugin({
             NODE_ENV: 'production'
