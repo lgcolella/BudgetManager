@@ -72,7 +72,7 @@ npm run dev
 ```
 ## Come contribuire
 
-Che tu sia uno sviluppatore o un utente, ogni tuo contributo è prezioso per migliorare e far crescere l'applicazione. Ecco alcuni utili aiuti che potresti dare:
+Che tu sia uno sviluppatore o un utente, ogni contributo è prezioso per migliorare e far crescere l'applicazione. Ecco alcuni utili aiuti che potresti dare:
 * Dare nuove idee o suggerimenti per l'interfaccia grafica e l'esperienza utente.
 * Proporre e/ o presentare nuove funzionalità.
 * Trovare bug o glitch.
