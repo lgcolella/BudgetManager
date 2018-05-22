@@ -2,11 +2,11 @@
 
 ## Indice dei contenuti
 1. [Presentazione](#presentazione)
-2. Funzionalità
-3. Stack utilizzato
-4. Installazione e utilizzo
-5. Come contribuire
-6. Ringraziamenti
+2. [Funzionalità](#funzionalità)
+3. [Stack utilizzato](#stack-utilizzato)
+4. [Installazione ed utilizzo](#installazione-ed-utilizzo)
+5. [Come contribuire](#come-contribuire)
+6. [Ringraziamenti](#ringraziamenti)
 
 ## Presentazione
 
