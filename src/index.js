@@ -6,7 +6,6 @@ const url = require('url');
   let win
   
   function createWindow () {
-    // Creazione della finestra del browser.
     win = new BrowserWindow({
       width: 1280,
       height: 720,

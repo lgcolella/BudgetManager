@@ -59,6 +59,7 @@ export default class Pagination extends React.Component {
 
         var buttons = document.querySelectorAll('#'+this.state.id+' li');
         if (buttons.length > 2 && buttons[1] !== null){
+            var firstButton = buttons[1];
             firstButton.classList.add('active');
             if (this.state.selectedButton === null){
                 this.setState({
