@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var htmlmin = require('gulp-htmlmin');
-var clean = require('gulp-clean');
+var del = require('del');
+var path = require('path');
 
 const outputPath = 'build';
 
@@ -13,17 +14,21 @@ gulp.task('html', function(){
 
 /*JSON*/
 gulp.task('json', function(){
-    gulp.src(['src/package.json']).pipe( gulp.dest(outputPath) );
+    return gulp.src(['src/package.json']).pipe( gulp.dest(outputPath) );
 });
 
 /*Clean*/
 gulp.task('clean:build', function(){
-    gulp.src('build').pipe(clean());
+    return del([
+        path.resolve(__dirname, 'build')
+    ]);
 });
 
 gulp.task('clean:dist', function(){
-    gulp.src('dist').pipe(clean());
+    return del([
+        path.resolve(__dirname, 'dist')
+    ]);
 });
 
-gulp.task('assets', ['html','json']);
-gulp.task('clean', ['clean:build','clean:dist']);
+gulp.task('assets', gulp.series('html','json'));
+gulp.task('clean', gulp.series('clean:build','clean:dist'));

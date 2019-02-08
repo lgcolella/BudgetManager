@@ -7,7 +7,7 @@ const modalCalendarNoteId = 'modal-calendar-note';
 const modalCalculatorId = 'modal-calculator';
 const modalExportBoxId = 'modal-export';
 
-module.exports = {
+export default {
 
     generateId(data){
         var listOfId = data.map((activity) => {
