@@ -1,22 +1,28 @@
 # Budget Manager
 
 ## Indice dei contenuti
-1. [Presentazione](#presentazione)
-2. [Funzionalità](#funzionalità)
-3. [Stack utilizzato](#stack-utilizzato)
-4. [Installazione ed utilizzo](#installazione-ed-utilizzo)
-5. [Come contribuire](#come-contribuire)
-6. [Ringraziamenti](#ringraziamenti)
+* [Presentazione](#presentazione)
+* [Installazione ed utilizzo](#installazione-ed-utilizzo)
+* [Funzionalità](#funzionalità)
+* [Stack utilizzato](#stack-utilizzato)
+* [Sviluppo](#sviluppo)
+* [Come contribuire](#come-contribuire)
+* [Ringraziamenti](#ringraziamenti)
 
 ## Presentazione
 
 Budget Manager è un'applicazione multi-piattaforma e portatile pensata per offrire un punto di riferimento chiaro, intutivo e preciso per controllare e tenere aggiornato lo stato del proprio bilancio.
 
-Non necessita di installazione sul sistema operativo. Dopo aver compilato i file sorgente si otterrà una cartella con all'interno tutti i file necessari all'applicazione e un eseguibile per avviarla. È perciò possibile copiare/ spostare tale cartella a piacimento nel filesystem.
-Creare e ripristinare backup è facile e veloce, non importa da o verso quale versione dell'applicazione, sistema operativo o architettura.
-È inoltre possibile esportare i tabulati delle finanze registrate in vari formati.
+Permette di differenziare le proprie finanze in diversi portafogli, filtrarle o cercare tra di esse e produrre grafici e tabelle di riepilogo.
+Creare e ripristinare backup è facile e veloce, non importa da o verso quale versione dell'applicazione, sistema operativo o architettura viene fatto.
+È inoltre possibile esportare le tabelle delle finanze registrate in vari formati.
 
 Spero che la possa trovare utile e conforme alle tue esigenze.
+
+## Installazione ed utilizzo
+
+Per iniziare ad usarla subito basta scaricare l'archivio corrispondente al proprio sistema operativo da questa [pagina](https://github.com/lgcolella/BudgetManager/releases/tag/v1.0.0), scompattarlo ed avviare l'eseguibile al suo interno.
+I file necessari per far girare l'applicazione sono tutti all'interno di questa cartella perciò può essere spostata a piacimento nel proprio filesystem.
 
 ## Funzionalità
 
@@ -44,7 +50,7 @@ Altre Librerie:
 * [Recharts](https://github.com/recharts/recharts)
 * [Xlsx](https://github.com/SheetJS/js-xlsx)
 
-## Installazione ed utilizzo
+## Sviluppo
 
 Clona questo repository e installa le dipendenze
 ```
