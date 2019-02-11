@@ -2,7 +2,7 @@
   "name": "budget-manager",
   "version": "1.0.0",
   "main": "src/index.js",
-  "repository": "https://github.com/lgcolella/BudgetManager.git",
+  "repository": "https://github.com/lgcolella/budget-manager.git",
   "author": "lgcolella",
   "license": "MIT",
   "dependencies": {

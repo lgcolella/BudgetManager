@@ -21,7 +21,7 @@ Spero che la possa trovare utile e conforme alle tue esigenze.
 
 ## Installazione ed utilizzo
 
-Per iniziare ad usarla subito basta scaricare l'archivio corrispondente al proprio sistema operativo da questa [pagina](https://github.com/lgcolella/BudgetManager/releases/tag/v1.0.0), scompattarlo ed avviare l'eseguibile al suo interno.
+Per iniziare ad usarla subito basta scaricare l'archivio corrispondente al proprio sistema operativo da questa [pagina](https://github.com/lgcolella/budget-manager/releases/tag/v1.0.0), scompattarlo ed avviare l'eseguibile al suo interno.
 I file necessari per far girare l'applicazione sono tutti all'interno di questa cartella perciò può essere spostata a piacimento nel proprio filesystem.
 
 ## Funzionalità
@@ -37,14 +37,14 @@ I file necessari per far girare l'applicazione sono tutti all'interno di questa 
 * Ordinamento delle attività per campi.
 
 ## Stack utilizzato
-[![Electron JS](https://github.com/lgcolella/BudgetManager/raw/master/repo/img/96x96/electron.png "Electron JS")](https://electronjs.org/)
-[![React JS](https://github.com/lgcolella/BudgetManager/raw/master/repo/img/96x96/react.png "React JS")](https://reactjs.org/)
-[![Materialize CSS](https://github.com/lgcolella/BudgetManager/raw/master/repo/img/96x96/materialize.png "Materialize CSS")](https://materializecss.com/)
-[![Babel JS](https://github.com/lgcolella/BudgetManager/raw/master/repo/img/96x96/babel.png "Babel JS")](https://babeljs.io/)
-[![Webpack](https://github.com/lgcolella/BudgetManager/raw/master/repo/img/96x96/webpack.png "Webpack")](https://babeljs.io/)
-[![Sass](https://github.com/lgcolella/BudgetManager/raw/master/repo/img/96x96/scss.png "Sass")](https://sass-lang.com/)
-[![Eslint](https://github.com/lgcolella/BudgetManager/raw/master/repo/img/96x96/eslint.png "Eslint")](https://eslint.org/)
-[![Yarn](https://github.com/lgcolella/BudgetManager/raw/master/repo/img/96x96/yarn.png "Yarn")](https://yarnpkg.com)
+[![Electron JS](https://github.com/lgcolella/budget-manager/raw/master/repo/img/96x96/electron.png "Electron JS")](https://electronjs.org/)
+[![React JS](https://github.com/lgcolella/budget-manager/raw/master/repo/img/96x96/react.png "React JS")](https://reactjs.org/)
+[![Materialize CSS](https://github.com/lgcolella/budget-manager/raw/master/repo/img/96x96/materialize.png "Materialize CSS")](https://materializecss.com/)
+[![Babel JS](https://github.com/lgcolella/budget-manager/raw/master/repo/img/96x96/babel.png "Babel JS")](https://babeljs.io/)
+[![Webpack](https://github.com/lgcolella/budget-manager/raw/master/repo/img/96x96/webpack.png "Webpack")](https://babeljs.io/)
+[![Sass](https://github.com/lgcolella/budget-manager/raw/master/repo/img/96x96/scss.png "Sass")](https://sass-lang.com/)
+[![Eslint](https://github.com/lgcolella/budget-manager/raw/master/repo/img/96x96/eslint.png "Eslint")](https://eslint.org/)
+[![Yarn](https://github.com/lgcolella/budget-manager/raw/master/repo/img/96x96/yarn.png "Yarn")](https://yarnpkg.com)
 
 Altre Librerie:
 * [Recharts](https://github.com/recharts/recharts)
@@ -54,14 +54,14 @@ Altre Librerie:
 
 Clona questo repository e installa le dipendenze
 ```
-git clone https://github.com/lgcolella/BudgetManager.git
-cd BudgetManager
+git clone https://github.com/lgcolella/budget-manager.git
+cd budget-manager
 npm install
 ```
 oppure
 ```
-git clone https://github.com/lgcolella/BudgetManager.git
-cd BudgetManager
+git clone https://github.com/lgcolella/budget-manager.git
+cd budget-manager
 yarn install
 ```
 Compila per il sistema operativo corrente
