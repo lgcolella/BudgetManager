@@ -2,6 +2,7 @@
 
 ## Indice dei contenuti
 * [Presentazione](#presentazione)
+* [Demo](#demo)
 * [Installazione ed utilizzo](#installazione-ed-utilizzo)
 * [Funzionalità](#funzionalità)
 * [Stack utilizzato](#stack-utilizzato)
@@ -18,6 +19,11 @@ Creare e ripristinare backup è facile e veloce, non importa da o verso quale ve
 È inoltre possibile esportare le tabelle delle finanze registrate in vari formati.
 
 Spero che la possa trovare utile e conforme alle tue esigenze.
+
+## Demo
+
+![Demo 1](https://github.com/lgcolella/budget-manager/raw/master/repo/demo/1.gif "Demo 1")
+![Demo 2](https://github.com/lgcolella/budget-manager/raw/master/repo/demo/2.gif "Demo 2")
 
 ## Installazione ed utilizzo
 
